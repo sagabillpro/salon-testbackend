@@ -2,13 +2,7 @@ import { JSONSchemaType } from "ajv";
 import { RelationsFilter } from "./relations-filter.schema";
 import { RelationType } from "../types";
 
-export const FilterSchema: JSONSchemaType<{
-  name?: string;
-  fields?: object;
-  where?: object;
-  order?: object;
-  relations?: RelationType[];
-}> = {
+export const FilterSchema: any = {
   type: "object",
   properties: {
     name: {

@@ -1,0 +1,1 @@
+{"version":3,"file":"new-refresh-token.schema.js","sourceRoot":"","sources":["../../../src/app/schema/new-refresh-token.schema.ts"],"names":[],"mappings":";;;AAEa,QAAA,eAAe,GAEvB;IACD,IAAI,EAAE,QAAQ;IACd,UAAU,EAAE;QACR,KAAK,EAAE;YACH,IAAI,EAAE,QAAQ;SACjB;KACJ;IACD,QAAQ,EAAE,CAAC,OAAO,CAAC;IACnB,oBAAoB,EAAE,KAAK;CAC9B,CAAC"}
