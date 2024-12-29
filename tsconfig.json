@@ -1,0 +1,58 @@
+// {
+//     "compilerOptions": {
+//       "target": "ES6",                           // Specifies the output language level (ES6 or later for async/await support)
+//       //   "module": "commonjs",                      // Node.js uses CommonJS modules
+//       "strict": true,                            // Enable strict type-checking options
+//       "esModuleInterop": true,                   // Enables interoperability between CommonJS and ES6 modules
+//       "skipLibCheck": true,                      // Skip type checking of declaration files for performance
+//       "forceConsistentCasingInFileNames": true,  // Disallow inconsistent casing in imports
+//       "outDir": "./build",                        // Output directory for compiled files
+//       "rootDir": "./src",                        // Specifies the root directory of your source files
+//       "resolveJsonModule": true  ,             // Allows importing .json files
+//       "moduleResolution": "node",                // Use Node's module resolution strategy
+//       // "baseUrl": ".",                            // Base directory for resolving non-relative module names
+//       // "paths": {                                 // Configure paths for cleaner imports
+//       //   "@controllers/*": ["src/controllers/*"],
+//       //   "@middlewares/*": ["src/middlewares/*"],
+//       //   "@models/*": ["src/models/*"],
+//       //   "@routes/*": ["src/routes/*"]
+//       // }
+//     },
+//     "include": ["src/**/*.ts"],                  // Include all TypeScript files in the src folder
+//     // "exclude": ["node_modules", "build"]          // Exclude node_modules and dist directories
+//   }
+  
+// {
+//   "compilerOptions": {
+//     "esModuleInterop": true,   
+//   //  "experimentalDecorators": true,
+//     "outDir": "build",
+//     "rootDir": "src"
+//   },
+//   "include": [
+//     "src"
+//   ]
+// }
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    // "module": "commonjs",
+    "outDir": "./dist", // Specify the output directory
+    "rootDir": "./src",  // Specify the source directory
+    // Other options...
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "strictNullChecks":true, 
+    "sourceMap": true
+  },
+
+  "strict": true,  
+  "include": ["src/**/*.ts", "src/**/*.ejs"],
+      "paths": {                                 // Configure paths for cleaner imports
+        "@controllers/*": ["src/controllers/*"],
+        "@middlewares/*": ["src/middlewares/*"],
+        "@models/*": ["src/models/*"],
+        "@routes/*": ["src/routes/*"],
+      }
+}
