@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DPaymentType = void 0;
 var typeorm_1 = require("typeorm");
-var DPaymentType = exports.DPaymentType = /** @class */ (function () {
+var DPaymentType = /** @class */ (function () {
     function DPaymentType() {
     }
     __decorate([
@@ -39,4 +39,5 @@ var DPaymentType = exports.DPaymentType = /** @class */ (function () {
     ], DPaymentType);
     return DPaymentType;
 }());
+exports.DPaymentType = DPaymentType;
 //# sourceMappingURL=d-payment-types.entity.js.map

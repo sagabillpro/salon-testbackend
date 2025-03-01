@@ -18,9 +18,9 @@ var appointmentSchema = z.object({
     appointmentId: z.number().int().positive(),
     customerId: z.number().int().positive(),
     barberId: z.number().int().positive(),
-    date: z.string().datetime(),
+    date: z.string().datetime(), // ISO 8601 date string (e.g., "2024-11-12T04:48:03Z")
     status: z.enum(["scheduled", "in-progress", "completed"]),
-    services: z.array(menuSchema),
+    services: z.array(menuSchema), // An array of services for the appointment
     totalPrice: z.number().positive(),
 });
 // Example of combining customer and appointment data in one schema

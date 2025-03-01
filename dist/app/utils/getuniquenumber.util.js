@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = generateUniqueNumber;
 function generateUniqueNumber() {
     var date = new Date();
     var datePart = "".concat(date.getFullYear()).concat((date.getMonth() + 1)
@@ -17,5 +18,4 @@ function generateUniqueNumber() {
         .padStart(3, "0"); // 3-digit random number
     return "".concat(datePart).concat(timePart).concat(randomPart);
 }
-exports.default = generateUniqueNumber;
 //# sourceMappingURL=getuniquenumber.util.js.map

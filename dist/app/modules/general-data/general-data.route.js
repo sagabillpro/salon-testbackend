@@ -134,10 +134,10 @@ router.get("/menu-headers", authenticate_middleware_1.default, function (req, re
                 repository = appDataSource.getRepository(entities_1.Menus);
                 return [4 /*yield*/, repository.find({
                         relations: {
-                            features: true,
+                            entities: true,
                         },
                         where: {
-                            features: {
+                            entities: {
                                 isInactive: 0,
                             },
                         },
@@ -148,7 +148,7 @@ router.get("/menu-headers", authenticate_middleware_1.default, function (req, re
                 for (_i = 0, data_1 = data; _i < data_1.length; _i++) {
                     menu = data_1[_i];
                     level1 = [];
-                    for (_a = 0, _b = menu.features; _a < _b.length; _a++) {
+                    for (_a = 0, _b = menu.entities; _a < _b.length; _a++) {
                         feature = _b[_a];
                         //1.send all menus for admin
                         if (user.userType.id === 1) {

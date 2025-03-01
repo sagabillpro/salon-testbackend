@@ -59,7 +59,7 @@ router.get("/", (0, validateFilterManual_util_1.validateFilterManual)(report_sch
                         .getRepository(sale_lines_enity_1.SaleLines) // Replace 'sale_lines' with your SaleLines entity name
                         .createQueryBuilder("sl")
                         .select([
-                        'sh.code AS "code"',
+                        'sh.code AS "code"', // Use double quotes to maintain camelCase aliasing
                         'sh.txnDate AS "txnDate"',
                         'sc.name AS "serviceName"',
                         'SUM(sl.quantity) AS "totalQuantity"',

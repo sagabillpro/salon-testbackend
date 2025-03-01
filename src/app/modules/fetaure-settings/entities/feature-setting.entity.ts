@@ -10,6 +10,7 @@ import {
   ManyToOne,
 } from "typeorm";
 import { DFeatureType, Menus } from "../../general-data/entities";
+import { MenusAndFeatures } from "../../features/entities/menusandfeatures.entity";
 
 @Entity("feature_settings")
 export class FeatureSettings {
@@ -53,4 +54,10 @@ export class FeatureSettings {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+
+  @OneToMany(() => MenusAndFeatures, (line) => line.entity, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  menusAndFeatures: MenusAndFeatures[];
 }

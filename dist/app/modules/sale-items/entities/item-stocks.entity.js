@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemAvailable = void 0;
 var typeorm_1 = require("typeorm");
 var services_entity_1 = require("../../services/entities/services.entity");
-var ItemAvailable = exports.ItemAvailable = /** @class */ (function () {
+var ItemAvailable = /** @class */ (function () {
     function ItemAvailable() {
     }
     __decorate([
@@ -37,4 +37,5 @@ var ItemAvailable = exports.ItemAvailable = /** @class */ (function () {
     ], ItemAvailable);
     return ItemAvailable;
 }());
+exports.ItemAvailable = ItemAvailable;
 //# sourceMappingURL=item-stocks.entity.js.map

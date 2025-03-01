@@ -16,7 +16,7 @@ var entities_1 = require("../../general-data/entities");
 var purchase_lines_entity_1 = require("./purchase-lines.entity");
 var inventory_lines_entity_1 = require("../../sale-items/entities/inventory-lines.entity");
 var contact_entity_1 = require("../../contacts/entities/contact.entity");
-var PurchaseHeaders = exports.PurchaseHeaders = /** @class */ (function () {
+var PurchaseHeaders = /** @class */ (function () {
     function PurchaseHeaders() {
     }
     __decorate([
@@ -97,4 +97,5 @@ var PurchaseHeaders = exports.PurchaseHeaders = /** @class */ (function () {
     ], PurchaseHeaders);
     return PurchaseHeaders;
 }());
+exports.PurchaseHeaders = PurchaseHeaders;
 //# sourceMappingURL=purchase-headers.entity.js.map

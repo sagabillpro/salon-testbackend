@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DDateRangeType = void 0;
 var typeorm_1 = require("typeorm");
-var DDateRangeType = exports.DDateRangeType = /** @class */ (function () {
+var DDateRangeType = /** @class */ (function () {
     function DDateRangeType() {
     }
     __decorate([
@@ -39,4 +39,5 @@ var DDateRangeType = exports.DDateRangeType = /** @class */ (function () {
     ], DDateRangeType);
     return DDateRangeType;
 }());
+exports.DDateRangeType = DDateRangeType;
 //# sourceMappingURL=d-daterange.entity.js.map

@@ -62,10 +62,10 @@ router.get(
         const repository = appDataSource.getRepository(Menus);
         const data = await repository.find({
           relations: {
-            features: true,
+            entities: true,
           },
           where: {
-            features: {
+            entities: {
               isInactive: 0,
             },
           },
@@ -78,7 +78,7 @@ router.get(
         }[] = [];
         for (let menu of data) {
           let level1: { title: string; url: string }[] = [];
-          for (let feature of menu.features) {
+          for (let feature of menu.entities) {
             //1.send all menus for admin
             if (user.userType.id === 1) {
               level1.push({

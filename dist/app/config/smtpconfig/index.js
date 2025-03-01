@@ -12,7 +12,7 @@ var nodemailer_1 = __importDefault(require("nodemailer"));
 exports.transporter = nodemailer_1.default.createTransport({
     host: process.env.Mailer_Host,
     port: Number(process.env.Mailer_Port),
-    secure: true,
+    secure: true, // Use `true` for port 465, `false` for all other ports
     auth: {
         user: process.env.Mailer_UserName,
         pass: process.env.Mailer_Password,

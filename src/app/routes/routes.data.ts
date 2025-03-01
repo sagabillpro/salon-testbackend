@@ -17,6 +17,11 @@ import profitlossRoute from "../modules/reportroutes/profitloss.route";
 import saleReportRoute from "../modules/reportroutes/sale-report.route";
 import itemSaleRevenue from "../modules/reportroutes/item-sale-revenue.route";
 import serviceRevenueRoute from "../modules/reportroutes/service-revenue.route";
+import branchesRoutes from "../modules/branches/branches.routes";
+import companyRoutes from "../modules/company/company.routes";
+import featuresRoutes from "../modules/features/features.routes";
+import roleRoutes from "../modules/roles/role.routes";
+import usermenufeaturemapRoute from "../modules/features/usermenufeaturemap.route";
 
 export const routes: Routes = [
   itemRoute,
@@ -36,5 +41,10 @@ export const routes: Routes = [
   profitlossRoute,
   saleReportRoute,
   itemSaleRevenue,
-  serviceRevenueRoute
+  serviceRevenueRoute,
+  branchesRoutes,
+  companyRoutes,
+  featuresRoutes,
+  roleRoutes,
+  usermenufeaturemapRoute
 ];

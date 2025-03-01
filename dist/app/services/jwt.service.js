@@ -3,7 +3,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.verifyToken = exports.generateRefreshToken = exports.generateAccessToken = void 0;
+exports.generateAccessToken = generateAccessToken;
+exports.generateRefreshToken = generateRefreshToken;
+exports.verifyToken = verifyToken;
 var jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var dotenv_1 = __importDefault(require("dotenv"));
 var path_1 = __importDefault(require("path"));
@@ -15,14 +17,12 @@ function generateAccessToken(payload) {
         expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
     });
 }
-exports.generateAccessToken = generateAccessToken;
 // 2. Generate Refresh Token
 function generateRefreshToken(payload) {
     return jsonwebtoken_1.default.sign(payload, "".concat(process.env.REFRESH_TOKEN_SECRET), {
         expiresIn: process.env.REFRESH_TOKEN_EXPIRY,
     });
 }
-exports.generateRefreshToken = generateRefreshToken;
 // 3. Verify Token (for both access and refresh tokens)
 function verifyToken(token, isAccessToken) {
     if (isAccessToken === void 0) { isAccessToken = true; }
@@ -37,5 +37,4 @@ function verifyToken(token, isAccessToken) {
         return error; // Return null if verification fails
     }
 }
-exports.verifyToken = verifyToken;
 //# sourceMappingURL=jwt.service.js.map

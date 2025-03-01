@@ -71,7 +71,7 @@ exports.typeOrmToAjvTypesMapping = {
     enum: { type: "string" },
     set: { type: "string" },
     cidr: { type: "string" },
-    inet: { type: "string", format: "ipv4" },
+    inet: { type: "string", format: "ipv4" }, // or ipv6 if required
     macaddr: { type: "string", format: "mac" },
     tsvector: { type: "string" },
     tsquery: { type: "string" },

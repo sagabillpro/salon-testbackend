@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FeatureCodes = void 0;
 var typeorm_1 = require("typeorm");
 var feature_setting_entity_1 = require("./feature-setting.entity");
-var FeatureCodes = exports.FeatureCodes = /** @class */ (function () {
+var FeatureCodes = /** @class */ (function () {
     function FeatureCodes() {
     }
     __decorate([
@@ -45,4 +45,5 @@ var FeatureCodes = exports.FeatureCodes = /** @class */ (function () {
     ], FeatureCodes);
     return FeatureCodes;
 }());
+exports.FeatureCodes = FeatureCodes;
 //# sourceMappingURL=feature-codes.entity.js.map

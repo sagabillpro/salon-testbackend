@@ -6,7 +6,7 @@ exports.ReportSchema = {
     properties: {
         where: {
             type: "object",
-            nullable: true,
+            nullable: true, // Allow `null` for `where`
             properties: {
                 startDate: {
                     type: "string",
@@ -21,10 +21,10 @@ exports.ReportSchema = {
             },
             required: [], // No properties are required inside `where`
         },
-        limit: { type: "number", nullable: true },
+        limit: { type: "number", nullable: true }, // Allow `null` for `limit`
         skip: { type: "number", nullable: true }, // Allow `null` for `skip`
     },
-    required: [],
+    required: [], // No top-level properties are required
     additionalProperties: false, // Prevent extra properties
 };
 //# sourceMappingURL=report.schema.js.map

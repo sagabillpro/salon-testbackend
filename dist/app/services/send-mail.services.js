@@ -62,6 +62,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = mailer;
 var path_1 = __importDefault(require("path"));
 var smtpconfig_1 = require("../config/smtpconfig");
 var ejs = __importStar(require("ejs"));
@@ -76,8 +77,8 @@ function mailer(data) {
                     templatePath = path_1.default.join(__dirname, "../templates", "inquiry.template.ejs");
                     _b = (_a = smtpconfig_1.transporter).sendMail;
                     _c = {
-                        from: '"JH hair & Beauty Studio" <akshaysutarwebsite@gmail.com>',
-                        to: "".concat(data.email),
+                        from: '"JH hair & Beauty Studio" <akshaysutarwebsite@gmail.com>', // sender address
+                        to: "".concat(data.email), // list of receivers
                         subject: "🙏😇 Thanks for visiting JH hair & beauty studio."
                     };
                     return [4 /*yield*/, ejs.renderFile(templatePath, {
@@ -104,5 +105,4 @@ function mailer(data) {
         });
     });
 }
-exports.default = mailer;
 //# sourceMappingURL=send-mail.services.js.map

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemsStockTrack = void 0;
 var typeorm_1 = require("typeorm");
 var services_entity_1 = require("../../services/entities/services.entity");
-var ItemsStockTrack = exports.ItemsStockTrack = /** @class */ (function () {
+var ItemsStockTrack = /** @class */ (function () {
     function ItemsStockTrack() {
     }
     __decorate([
@@ -53,4 +53,5 @@ var ItemsStockTrack = exports.ItemsStockTrack = /** @class */ (function () {
     ], ItemsStockTrack);
     return ItemsStockTrack;
 }());
+exports.ItemsStockTrack = ItemsStockTrack;
 //# sourceMappingURL=item-stock-track.entity.js.map

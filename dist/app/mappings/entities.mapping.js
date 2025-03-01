@@ -21,6 +21,12 @@ var item_stocks_entity_1 = require("../modules/sale-items/entities/item-stocks.e
 var services_entity_1 = require("../modules/services/entities/services.entity");
 var item_stock_track_entity_1 = require("../modules/purchase-items/entities/item-stock-track.entity");
 var contact_entity_1 = require("../modules/contacts/entities/contact.entity");
+var branches_entity_1 = require("../modules/branches/entities/branches.entity");
+var company_entity_1 = require("../modules/company/entities/company.entity");
+var features_entity_1 = require("../modules/features/entities/features.entity");
+var menusandfeatures_entity_1 = require("../modules/features/entities/menusandfeatures.entity");
+var usermenufeaturemap_entity_1 = require("../modules/features/entities/usermenufeaturemap.entity");
+var role_entity_1 = require("../modules/roles/entities/role.entity");
 exports.entities = [
     items_entity_1.Item,
     item_images_entity_1.ItemImage,
@@ -50,6 +56,12 @@ exports.entities = [
     item_stock_track_entity_1.ItemsStockTrack,
     entities_1.DContactType,
     contact_entity_1.Contact,
-    entities_1.DDateRangeType
+    entities_1.DDateRangeType,
+    branches_entity_1.Branch,
+    company_entity_1.Company,
+    features_entity_1.Feature,
+    menusandfeatures_entity_1.MenusAndFeatures,
+    usermenufeaturemap_entity_1.UserMenusAndFeatures,
+    role_entity_1.Role
 ];
 //# sourceMappingURL=entities.mapping.js.map

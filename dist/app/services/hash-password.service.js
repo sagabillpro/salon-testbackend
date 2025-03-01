@@ -36,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.hashPassword = exports.comparePassword = void 0;
+exports.comparePassword = comparePassword;
+exports.hashPassword = hashPassword;
 var bcryptjs_1 = require("bcryptjs");
 function comparePassword(provdedPass, storedPass) {
     return __awaiter(this, void 0, void 0, function () {
@@ -51,7 +52,6 @@ function comparePassword(provdedPass, storedPass) {
         });
     });
 }
-exports.comparePassword = comparePassword;
 // round: number = 10;
 function hashPassword(password) {
     return __awaiter(this, void 0, void 0, function () {
@@ -67,5 +67,4 @@ function hashPassword(password) {
         });
     });
 }
-exports.hashPassword = hashPassword;
 //# sourceMappingURL=hash-password.service.js.map

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Menus = void 0;
 var typeorm_1 = require("typeorm");
 var feature_setting_entity_1 = require("../../fetaure-settings/entities/feature-setting.entity");
-var Menus = exports.Menus = /** @class */ (function () {
+var Menus = /** @class */ (function () {
     function Menus() {
     }
     __decorate([
@@ -46,10 +46,11 @@ var Menus = exports.Menus = /** @class */ (function () {
     __decorate([
         (0, typeorm_1.OneToMany)(function () { return feature_setting_entity_1.FeatureSettings; }, function (feature) { return feature.menu; }),
         __metadata("design:type", Array)
-    ], Menus.prototype, "features", void 0);
+    ], Menus.prototype, "entities", void 0);
     Menus = __decorate([
         (0, typeorm_1.Entity)("menus")
     ], Menus);
     return Menus;
 }());
+exports.Menus = Menus;
 //# sourceMappingURL=menus.entity.js.map

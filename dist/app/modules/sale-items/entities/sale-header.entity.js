@@ -16,7 +16,7 @@ var entities_1 = require("../../general-data/entities");
 var sale_lines_enity_1 = require("./sale-lines.enity");
 var inventory_lines_entity_1 = require("./inventory-lines.entity");
 var contact_entity_1 = require("../../contacts/entities/contact.entity");
-var SaleHeaders = exports.SaleHeaders = /** @class */ (function () {
+var SaleHeaders = /** @class */ (function () {
     function SaleHeaders() {
     }
     __decorate([
@@ -101,4 +101,5 @@ var SaleHeaders = exports.SaleHeaders = /** @class */ (function () {
     ], SaleHeaders);
     return SaleHeaders;
 }());
+exports.SaleHeaders = SaleHeaders;
 //# sourceMappingURL=sale-header.entity.js.map

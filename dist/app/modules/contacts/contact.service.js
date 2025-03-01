@@ -138,7 +138,7 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 4, , 5]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
@@ -159,15 +159,12 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, (0, contact_repo_1.default)()];
             case 3:
                 repo = _a.sent();
-                return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(14, data)];
-            case 4:
-                data = _a.sent();
                 respo = repo.updateById(id, __assign(__assign({}, data), { country: country }));
                 return [2 /*return*/, respo];
-            case 5:
+            case 4:
                 error_4 = _a.sent();
                 throw error_4;
-            case 6: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

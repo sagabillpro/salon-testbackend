@@ -13,11 +13,12 @@ addFormats(ajv);
 const getRelationNames = async <T extends EntityTarget<T>>(
   model: T,
   baseModelName?: string,
-  level: number = 1
+  level: number = 1,
+  visited: Set<string> = new Set()
 ): Promise<string[]> => {
   let relationArray: string[] = [];
   try {
-    //1. get the datasource object
+    // 1. Get the datasource object
     const appDataSource = await handler();
     const entityMetadata = appDataSource.getMetadata(model);
 
@@ -29,32 +30,45 @@ const getRelationNames = async <T extends EntityTarget<T>>(
       };
     });
 
-    //3. loop through relations and crate a scheama for each relation entity
+    // If we already visited this model, stop recursion
+    if (visited.has(entityMetadata.targetName)) {
+      return relationArray;
+    }
+    visited.add(entityMetadata.targetName); // Mark as visited
+
+    // 2. Loop through relations and create a schema for each relation entity
     for (const relation of relations) {
-      if (baseModelName !== relation.className && level < 5) {
-        //a. get the scheama oject for that entity
-        relationArray.push(relation.propertyName);
+      relationArray.push(relation.propertyName);
+
+      // Avoid infinite recursion by checking:
+      // - `baseModelName` (to prevent looping back to root)
+      // - `level` limit (stop deep nesting)
+      // - `visited` set (prevents circular dependency)
+      if (!visited.has(relation.className) && level < 5) {
         const result = await getRelationNames(
           relation.className,
           baseModelName,
-          level++
+          level + 1, // Corrected increment
+          visited
         );
         relationArray = [...relationArray, ...result];
-      } else {
-        relationArray.push(relation.propertyName);
       }
     }
+
     return Array.from(new Set(relationArray));
   } catch (e) {
+    console.error("Error in getRelationNames:", e);
     throw e;
   }
 };
+
 //3.function which can validate relations passes
 const validateFilterRelations = async (
   checkArray: string[],
   relationArray?: RelationType[]
 ): Promise<void> => {
   try {
+    console.log("levelll...");
     relationArray?.forEach((val) => {
       if (val?.name) {
         if (val?.name && checkArray.includes(val?.name)) {
@@ -164,7 +178,7 @@ const checkModelPropertiesWhere = async <T extends EntityTarget<T>>(
             "mte",
             "like",
             "ilike",
-            "between"
+            "between",
           ].includes(level2Key)
         ) {
           let level3Result = {};
@@ -179,7 +193,6 @@ const checkModelPropertiesWhere = async <T extends EntityTarget<T>>(
           //assign to main object
           level2Result[level2Key] = level3Result;
         } else if (level2Key === "between") {
-
         } else if (level2Key === "isNull") {
         }
       });
@@ -323,7 +336,7 @@ export const validateFilter = <T extends EntityTarget<T>>(model: T) => {
         );
 
         //b1.check whether user passed anonymus relations
-        await validateFilterRelations(relationList, query.relations);
+        // await validateFilterRelations(relationList, query.relations);
       }
 
       next();

@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemImage = void 0;
 var typeorm_1 = require("typeorm");
 var items_entity_1 = require("./items.entity");
-var ItemImage = exports.ItemImage = /** @class */ (function () {
+var ItemImage = /** @class */ (function () {
     function ItemImage() {
     }
     __decorate([
@@ -45,4 +45,5 @@ var ItemImage = exports.ItemImage = /** @class */ (function () {
     ], ItemImage);
     return ItemImage;
 }());
+exports.ItemImage = ItemImage;
 //# sourceMappingURL=item-images.entity.js.map

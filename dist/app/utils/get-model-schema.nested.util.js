@@ -46,6 +46,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -63,17 +72,21 @@ var ignoreRequiredCheck = ["id"];
 /**
  This function can create ajv scheama by using typeorm enitity.
  **/
-var getModelSchema = function (model, baseModel, level) {
-    if (level === void 0) { level = 1; }
-    return __awaiter(void 0, void 0, void 0, function () {
-        var appDataSource, entityMetadata, schemaObject_1, relations, _i, relations_1, relation, relativeModelSchema, modelProperties, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+var getModelSchema = function (model_1, baseModel_1) {
+    var args_1 = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args_1[_i - 2] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([model_1, baseModel_1], args_1, true), void 0, function (model, baseModel, level) {
+        var appDataSource, entityMetadata, schemaObject_1, relations, _a, relations_1, relation, relativeModelSchema, modelProperties, e_1;
+        if (level === void 0) { level = 1; }
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 6, , 7]);
+                    _b.trys.push([0, 6, , 7]);
                     return [4 /*yield*/, (0, dbconfig_1.handler)()];
                 case 1:
-                    appDataSource = _a.sent();
+                    appDataSource = _b.sent();
                     entityMetadata = appDataSource.getMetadata(model);
                     schemaObject_1 = {
                         type: "object",
@@ -88,25 +101,25 @@ var getModelSchema = function (model, baseModel, level) {
                             className: relation.inverseEntityMetadata.targetName, // Get the class name of the related entity
                         };
                     });
-                    _i = 0, relations_1 = relations;
-                    _a.label = 2;
+                    _a = 0, relations_1 = relations;
+                    _b.label = 2;
                 case 2:
-                    if (!(_i < relations_1.length)) return [3 /*break*/, 5];
-                    relation = relations_1[_i];
+                    if (!(_a < relations_1.length)) return [3 /*break*/, 5];
+                    relation = relations_1[_a];
                     if (!(relation.relationType === "many-to-one" &&
                         level < 4 &&
                         entityMetadata.targetName != baseModel)) return [3 /*break*/, 4];
                     return [4 /*yield*/, (0, exports.getModelSchema)(relation.className, baseModel, level++)];
                 case 3:
-                    relativeModelSchema = _a.sent();
+                    relativeModelSchema = _b.sent();
                     // set only id as required
                     relativeModelSchema.required = ["id"];
                     schemaObject_1["properties"][relation.propertyName] = relativeModelSchema;
                     //b. make it required
                     schemaObject_1.required.push(relation.propertyName);
-                    _a.label = 4;
+                    _b.label = 4;
                 case 4:
-                    _i++;
+                    _a++;
                     return [3 /*break*/, 2];
                 case 5:
                     level = level;
@@ -143,7 +156,7 @@ var getModelSchema = function (model, baseModel, level) {
                     });
                     return [2 /*return*/, schemaObject_1];
                 case 6:
-                    e_1 = _a.sent();
+                    e_1 = _b.sent();
                     throw e_1;
                 case 7: return [2 /*return*/];
             }

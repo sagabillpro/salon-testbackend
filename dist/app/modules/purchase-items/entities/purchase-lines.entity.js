@@ -14,7 +14,7 @@ var typeorm_1 = require("typeorm");
 var services_entity_1 = require("../../services/entities/services.entity");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var purchase_headers_entity_1 = require("./purchase-headers.entity");
-var PurchaseLines = exports.PurchaseLines = /** @class */ (function () {
+var PurchaseLines = /** @class */ (function () {
     function PurchaseLines() {
     }
     __decorate([
@@ -79,4 +79,5 @@ var PurchaseLines = exports.PurchaseLines = /** @class */ (function () {
     ], PurchaseLines);
     return PurchaseLines;
 }());
+exports.PurchaseLines = PurchaseLines;
 //# sourceMappingURL=purchase-lines.entity.js.map

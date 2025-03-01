@@ -77,7 +77,7 @@ const updateById = async (id: number, data: Contact) => {
     }
 
     const repo = await repository();
-    data = await generateCode(14, data);
+  //  data = await generateCode(14, data);
     const respo = repo.updateById(id, {
       ...data,
       country: country,

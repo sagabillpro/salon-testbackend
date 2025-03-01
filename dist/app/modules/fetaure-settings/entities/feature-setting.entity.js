@@ -12,7 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.FeatureSettings = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
-var FeatureSettings = exports.FeatureSettings = /** @class */ (function () {
+var menusandfeatures_entity_1 = require("../../features/entities/menusandfeatures.entity");
+var FeatureSettings = /** @class */ (function () {
     function FeatureSettings() {
     }
     __decorate([
@@ -69,9 +70,17 @@ var FeatureSettings = exports.FeatureSettings = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], FeatureSettings.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return menusandfeatures_entity_1.MenusAndFeatures; }, function (line) { return line.entity; }, {
+            cascade: true,
+            onDelete: "CASCADE",
+        }),
+        __metadata("design:type", Array)
+    ], FeatureSettings.prototype, "menusAndFeatures", void 0);
     FeatureSettings = __decorate([
         (0, typeorm_1.Entity)("feature_settings")
     ], FeatureSettings);
     return FeatureSettings;
 }());
+exports.FeatureSettings = FeatureSettings;
 //# sourceMappingURL=feature-setting.entity.js.map

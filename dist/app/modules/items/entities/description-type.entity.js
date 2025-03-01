@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DescriptionType = void 0;
 var typeorm_1 = require("typeorm");
-var DescriptionType = exports.DescriptionType = /** @class */ (function () {
+var DescriptionType = /** @class */ (function () {
     function DescriptionType() {
     }
     __decorate([
@@ -43,4 +43,5 @@ var DescriptionType = exports.DescriptionType = /** @class */ (function () {
     ], DescriptionType);
     return DescriptionType;
 }());
+exports.DescriptionType = DescriptionType;
 //# sourceMappingURL=description-type.entity.js.map

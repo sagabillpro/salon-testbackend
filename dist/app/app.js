@@ -50,7 +50,6 @@ var dbconfig_1 = require("./config/dbconfig");
  * Start logic
  */
 var dataSource;
-exports.dataSource = dataSource;
 var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     var app, _a, App_Port_1, NODE_ENV, httpServer, error_1;
     return __generator(this, function (_b) {

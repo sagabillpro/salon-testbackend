@@ -238,7 +238,7 @@ var where = {
         //1. not equal to
         neq: {
             property: "value",
-        },
+        }, //6. less than eqaul
         mte: {
             property: "value",
         },

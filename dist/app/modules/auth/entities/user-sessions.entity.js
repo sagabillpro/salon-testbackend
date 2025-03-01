@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserSessions = void 0;
 var typeorm_1 = require("typeorm");
 var user_entity_1 = require("./user.entity");
-var UserSessions = exports.UserSessions = /** @class */ (function () {
+var UserSessions = /** @class */ (function () {
     function UserSessions() {
     }
     __decorate([
@@ -45,4 +45,5 @@ var UserSessions = exports.UserSessions = /** @class */ (function () {
     ], UserSessions);
     return UserSessions;
 }());
+exports.UserSessions = UserSessions;
 //# sourceMappingURL=user-sessions.entity.js.map

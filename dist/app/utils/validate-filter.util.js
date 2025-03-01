@@ -67,20 +67,25 @@ var dbconfig_1 = require("../config/dbconfig");
 var ajv = new ajv_1.default({ allErrors: true });
 (0, ajv_formats_1.default)(ajv);
 //2. get relation names relations
-var getRelationNames = function (model, baseModelName, level) {
-    if (level === void 0) { level = 1; }
-    return __awaiter(void 0, void 0, void 0, function () {
-        var relationArray, appDataSource, entityMetadata, relations, _i, relations_1, relation, result, e_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+var getRelationNames = function (model_1, baseModelName_1) {
+    var args_1 = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args_1[_i - 2] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([model_1, baseModelName_1], args_1, true), void 0, function (model, baseModelName, level, visited) {
+        var relationArray, appDataSource, entityMetadata, relations, _a, relations_1, relation, result, e_1;
+        if (level === void 0) { level = 1; }
+        if (visited === void 0) { visited = new Set(); }
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
                     relationArray = [];
-                    _a.label = 1;
+                    _b.label = 1;
                 case 1:
-                    _a.trys.push([1, 8, , 9]);
+                    _b.trys.push([1, 7, , 8]);
                     return [4 /*yield*/, (0, dbconfig_1.handler)()];
                 case 2:
-                    appDataSource = _a.sent();
+                    appDataSource = _b.sent();
                     entityMetadata = appDataSource.getMetadata(model);
                     relations = entityMetadata.relations.map(function (relation) {
                         return {
@@ -89,30 +94,33 @@ var getRelationNames = function (model, baseModelName, level) {
                             className: relation.inverseEntityMetadata.targetName,
                         };
                     });
-                    _i = 0, relations_1 = relations;
-                    _a.label = 3;
+                    // If we already visited this model, stop recursion
+                    if (visited.has(entityMetadata.targetName)) {
+                        return [2 /*return*/, relationArray];
+                    }
+                    visited.add(entityMetadata.targetName); // Mark as visited
+                    _a = 0, relations_1 = relations;
+                    _b.label = 3;
                 case 3:
-                    if (!(_i < relations_1.length)) return [3 /*break*/, 7];
-                    relation = relations_1[_i];
-                    if (!(baseModelName !== relation.className && level < 5)) return [3 /*break*/, 5];
-                    //a. get the scheama oject for that entity
+                    if (!(_a < relations_1.length)) return [3 /*break*/, 6];
+                    relation = relations_1[_a];
                     relationArray.push(relation.propertyName);
-                    return [4 /*yield*/, getRelationNames(relation.className, baseModelName, level++)];
+                    if (!(!visited.has(relation.className) && level < 5)) return [3 /*break*/, 5];
+                    return [4 /*yield*/, getRelationNames(relation.className, baseModelName, level + 1, // Corrected increment
+                        visited)];
                 case 4:
-                    result = _a.sent();
+                    result = _b.sent();
                     relationArray = __spreadArray(__spreadArray([], relationArray, true), result, true);
-                    return [3 /*break*/, 6];
+                    _b.label = 5;
                 case 5:
-                    relationArray.push(relation.propertyName);
-                    _a.label = 6;
-                case 6:
-                    _i++;
+                    _a++;
                     return [3 /*break*/, 3];
-                case 7: return [2 /*return*/, Array.from(new Set(relationArray))];
-                case 8:
-                    e_1 = _a.sent();
+                case 6: return [2 /*return*/, Array.from(new Set(relationArray))];
+                case 7:
+                    e_1 = _b.sent();
+                    console.error("Error in getRelationNames:", e_1);
                     throw e_1;
-                case 9: return [2 /*return*/];
+                case 8: return [2 /*return*/];
             }
         });
     });
@@ -121,6 +129,7 @@ var getRelationNames = function (model, baseModelName, level) {
 var validateFilterRelations = function (checkArray, relationArray) { return __awaiter(void 0, void 0, void 0, function () {
     return __generator(this, function (_a) {
         try {
+            console.log("levelll...");
             relationArray === null || relationArray === void 0 ? void 0 : relationArray.forEach(function (val) {
                 if (val === null || val === void 0 ? void 0 : val.name) {
                     if ((val === null || val === void 0 ? void 0 : val.name) && checkArray.includes(val === null || val === void 0 ? void 0 : val.name)) {
@@ -239,7 +248,7 @@ var checkModelPropertiesWhere = function (model, where) { return __awaiter(void 
                                 "mte",
                                 "like",
                                 "ilike",
-                                "between"
+                                "between",
                             ].includes(level2Key)) {
                                 var level3Result = {};
                                 //get key and values from inner object
@@ -270,16 +279,20 @@ var checkModelPropertiesWhere = function (model, where) { return __awaiter(void 
         }
     });
 }); };
-var sanitizeFilterObject = function (
-// model: T,
-filter, mapping, level) {
-    if (level === void 0) { level = 1; }
-    return __awaiter(void 0, void 0, void 0, function () {
-        var processedFields, processedWhere, processedOrder, processedRelations, _i, _a, relation, sanitizedRelation, e_4;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
+var sanitizeFilterObject = function (filter_1, mapping_1) {
+    var args_1 = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args_1[_i - 2] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([filter_1, mapping_1], args_1, true), void 0, function (
+    // model: T,
+    filter, mapping, level) {
+        var processedFields, processedWhere, processedOrder, processedRelations, _a, _b, relation, sanitizedRelation, e_4;
+        if (level === void 0) { level = 1; }
+        return __generator(this, function (_c) {
+            switch (_c.label) {
                 case 0:
-                    _b.trys.push([0, 17, , 18]);
+                    _c.trys.push([0, 17, , 18]);
                     processedFields = {};
                     processedWhere = {};
                     processedOrder = {};
@@ -287,59 +300,59 @@ filter, mapping, level) {
                     if (!(level === 1)) return [3 /*break*/, 2];
                     return [4 /*yield*/, checkModelProperties(mapping["baseModel"], filter.fields)];
                 case 1:
-                    processedFields = _b.sent();
+                    processedFields = _c.sent();
                     return [3 /*break*/, 4];
                 case 2:
                     if (!(filter.name && mapping[filter.name])) return [3 /*break*/, 4];
                     return [4 /*yield*/, checkModelProperties(mapping[filter.name], filter.fields)];
                 case 3:
-                    processedFields = _b.sent();
-                    _b.label = 4;
+                    processedFields = _c.sent();
+                    _c.label = 4;
                 case 4:
                     if (!filter.where) return [3 /*break*/, 8];
                     if (!(level === 1)) return [3 /*break*/, 6];
                     return [4 /*yield*/, checkModelPropertiesWhere(mapping["baseModel"], filter.where)];
                 case 5:
-                    processedWhere = _b.sent();
+                    processedWhere = _c.sent();
                     return [3 /*break*/, 8];
                 case 6:
                     if (!(filter.name && mapping[filter.name])) return [3 /*break*/, 8];
                     return [4 /*yield*/, checkModelPropertiesWhere(mapping[filter.name], filter.where)];
                 case 7:
-                    processedWhere = _b.sent();
-                    _b.label = 8;
+                    processedWhere = _c.sent();
+                    _c.label = 8;
                 case 8:
                     if (!filter.order) return [3 /*break*/, 12];
                     if (!(level === 1)) return [3 /*break*/, 10];
                     return [4 /*yield*/, checkModelOrder(mapping["baseModel"], filter.order)];
                 case 9:
-                    processedOrder = _b.sent();
+                    processedOrder = _c.sent();
                     return [3 /*break*/, 12];
                 case 10:
                     if (!(filter.name && mapping[filter.name])) return [3 /*break*/, 12];
                     return [4 /*yield*/, checkModelOrder(mapping[filter.name], filter.order)];
                 case 11:
-                    processedOrder = _b.sent();
-                    _b.label = 12;
+                    processedOrder = _c.sent();
+                    _c.label = 12;
                 case 12:
                     processedRelations = [];
                     if (!filter.relations) return [3 /*break*/, 16];
-                    _i = 0, _a = filter.relations;
-                    _b.label = 13;
+                    _a = 0, _b = filter.relations;
+                    _c.label = 13;
                 case 13:
-                    if (!(_i < _a.length)) return [3 /*break*/, 16];
-                    relation = _a[_i];
+                    if (!(_a < _b.length)) return [3 /*break*/, 16];
+                    relation = _b[_a];
                     return [4 /*yield*/, (0, exports.sanitizeFilterObject)(relation, mapping, level + 1)];
                 case 14:
-                    sanitizedRelation = _b.sent();
+                    sanitizedRelation = _c.sent();
                     processedRelations.push(sanitizedRelation);
-                    _b.label = 15;
+                    _c.label = 15;
                 case 15:
-                    _i++;
+                    _a++;
                     return [3 /*break*/, 13];
                 case 16: return [2 /*return*/, __assign(__assign({}, (filter.name ? { name: filter.name } : {})), { fields: processedFields, relations: processedRelations, where: processedWhere, order: processedOrder })];
                 case 17:
-                    e_4 = _b.sent();
+                    e_4 = _c.sent();
                     throw e_4;
                 case 18: return [2 /*return*/];
             }
@@ -353,8 +366,8 @@ var validateFilter = function (model) {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 5, , 6]);
-                    if (!req.query.filter) return [3 /*break*/, 4];
+                    _a.trys.push([0, 4, , 5]);
+                    if (!req.query.filter) return [3 /*break*/, 3];
                     query = JSON.parse("".concat(req.query.filter));
                     validate = ajv.compile(schema_1.FilterSchema);
                     valid = validate(query);
@@ -368,20 +381,15 @@ var validateFilter = function (model) {
                     return [4 /*yield*/, getRelationNames(model, entityMetadata.targetName)];
                 case 2:
                     relationList = _a.sent();
-                    //b1.check whether user passed anonymus relations
-                    return [4 /*yield*/, validateFilterRelations(relationList, query.relations)];
+                    _a.label = 3;
                 case 3:
-                    //b1.check whether user passed anonymus relations
-                    _a.sent();
-                    _a.label = 4;
-                case 4:
                     next();
-                    return [3 /*break*/, 6];
-                case 5:
+                    return [3 /*break*/, 5];
+                case 4:
                     error_1 = _a.sent();
                     res.status(422).json(error_1);
-                    return [3 /*break*/, 6];
-                case 6: return [2 /*return*/];
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
             }
         });
     }); };
@@ -394,7 +402,7 @@ var where = {
         //1. not equal to
         neq: {
             property: "value",
-        },
+        }, //6. less than eqaul
         mte: {
             property: "value",
         },

@@ -59,11 +59,11 @@ router.get("/", (0, validateFilterManual_util_1.validateFilterManual)(report_sch
                         .getRepository(sale_lines_enity_1.SaleLines) // Replace 'sale_lines' with your actual SaleLines entity name
                         .createQueryBuilder("sl")
                         .select([
-                        'sc.name AS "name"',
-                        'SUM(sl.quantity) AS "totalQuantity"',
-                        'SUM(sl.rate * sl.quantity) AS "totalSaleAmount"',
-                        'SUM(sl.taxAmount) AS "totalTaxAmount"',
-                        'SUM(sl.discountAmount) AS "totalDiscountAmount"',
+                        'sc.name AS "name"', // Service name
+                        'SUM(sl.quantity) AS "totalQuantity"', // Total quantity
+                        'SUM(sl.rate * sl.quantity) AS "totalSaleAmount"', // Total sale amount
+                        'SUM(sl.taxAmount) AS "totalTaxAmount"', // Total tax amount
+                        'SUM(sl.discountAmount) AS "totalDiscountAmount"', // Total discount amount
                         'SUM(sl.amount) AS "grandTotal"', // Grand total
                     ])
                         .innerJoin(sale_header_entity_1.SaleHeaders, "sh", "sl.txnHeaderId = sh.id")

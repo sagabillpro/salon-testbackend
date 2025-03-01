@@ -14,7 +14,7 @@ var typeorm_1 = require("typeorm");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var entities_1 = require("../../general-data/entities");
 var item_stocks_entity_1 = require("../../sale-items/entities/item-stocks.entity");
-var Services = exports.Services = /** @class */ (function () {
+var Services = /** @class */ (function () {
     function Services() {
     }
     __decorate([
@@ -125,4 +125,5 @@ var Services = exports.Services = /** @class */ (function () {
     ], Services);
     return Services;
 }());
+exports.Services = Services;
 //# sourceMappingURL=services.entity.js.map

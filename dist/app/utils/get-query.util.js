@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = getQuery;
 var query_builder_1 = require("./query-builder");
 function getQuery(req, model) {
     return __awaiter(this, void 0, void 0, function () {
@@ -52,5 +53,4 @@ function getQuery(req, model) {
         });
     });
 }
-exports.default = getQuery;
 //# sourceMappingURL=get-query.util.js.map

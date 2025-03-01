@@ -46,6 +46,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -101,10 +110,14 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 //3. create single record
-var create = function (data, isService) {
-    if (isService === void 0) { isService = false; }
-    return __awaiter(void 0, void 0, void 0, function () {
+var create = function (data_1) {
+    var args_1 = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args_1[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isService) {
         var repo, dataSource, itemStocksRepo, itemIds_1, inventory_1, resultItemStock, itemStockResponse, respo, error_3;
+        if (isService === void 0) { isService = false; }
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -155,10 +168,14 @@ var create = function (data, isService) {
     });
 };
 //4. update single record by id
-var updateById = function (id, data, isService) {
-    if (isService === void 0) { isService = false; }
-    return __awaiter(void 0, void 0, void 0, function () {
+var updateById = function (id_1, data_1) {
+    var args_1 = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args_1[_i - 2] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([id_1, data_1], args_1, true), void 0, function (id, data, isService) {
         var repo, inventory_2, respo, error_4;
+        if (isService === void 0) { isService = false; }
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -213,10 +230,14 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 //3. create single record
-var createBulk = function (data, isService) {
-    if (isService === void 0) { isService = false; }
-    return __awaiter(void 0, void 0, void 0, function () {
+var createBulk = function (data_1) {
+    var args_1 = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args_1[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isService) {
         var dataSource, itemIds_2, inventory_3, itemRepo, skuMap_1, relatedItems, error_6;
+        if (isService === void 0) { isService = false; }
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:

@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.City = void 0;
 var typeorm_1 = require("typeorm");
-var City = exports.City = /** @class */ (function () {
+var City = /** @class */ (function () {
     function City() {
     }
     __decorate([
@@ -39,4 +39,5 @@ var City = exports.City = /** @class */ (function () {
     ], City);
     return City;
 }());
+exports.City = City;
 //# sourceMappingURL=city.entity.js.map

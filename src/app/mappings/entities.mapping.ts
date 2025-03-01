@@ -30,6 +30,13 @@ import { ItemAvailable } from "../modules/sale-items/entities/item-stocks.entity
 import { Services } from "../modules/services/entities/services.entity";
 import { ItemsStockTrack } from "../modules/purchase-items/entities/item-stock-track.entity";
 import { Contact } from "../modules/contacts/entities/contact.entity";
+import { Branch } from "../modules/branches/entities/branches.entity";
+import { Company } from "../modules/company/entities/company.entity";
+import { Feature } from "../modules/features/entities/features.entity";
+import { MenusAndFeatures } from "../modules/features/entities/menusandfeatures.entity";
+import { UserMenusAndFeatures } from "../modules/features/entities/usermenufeaturemap.entity";
+import { Role } from "../modules/roles/entities/role.entity";
+
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -62,5 +69,11 @@ export const entities:
   ItemsStockTrack,
   DContactType,
   Contact,
-  DDateRangeType
+  DDateRangeType,
+  Branch,
+  Company,
+  Feature,
+  MenusAndFeatures,
+  UserMenusAndFeatures,
+  Role
 ];

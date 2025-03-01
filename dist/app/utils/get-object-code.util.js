@@ -46,15 +46,28 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.generateCode = void 0;
 var dbconfig_1 = require("../config/dbconfig");
 var feature_codes_entity_1 = require("../modules/fetaure-settings/entities/feature-codes.entity");
 var feature_setting_entity_1 = require("../modules/fetaure-settings/entities/feature-setting.entity");
-var generateCode = function (featureId, record, isAdd) {
-    if (isAdd === void 0) { isAdd = true; }
-    return __awaiter(void 0, void 0, void 0, function () {
+var generateCode = function (featureId_1, record_1) {
+    var args_1 = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args_1[_i - 2] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([featureId_1, record_1], args_1, true), void 0, function (featureId, record, isAdd) {
         var dataSource, featureSettingRepo, objectCodesRepo, date, format2, feature, series, foundSeries, resultCode, currentDate, respo;
+        if (isAdd === void 0) { isAdd = true; }
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];

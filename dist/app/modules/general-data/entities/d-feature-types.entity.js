@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DFeatureType = void 0;
 var typeorm_1 = require("typeorm");
-var DFeatureType = exports.DFeatureType = /** @class */ (function () {
+var DFeatureType = /** @class */ (function () {
     function DFeatureType() {
     }
     __decorate([
@@ -39,4 +39,5 @@ var DFeatureType = exports.DFeatureType = /** @class */ (function () {
     ], DFeatureType);
     return DFeatureType;
 }());
+exports.DFeatureType = DFeatureType;
 //# sourceMappingURL=d-feature-types.entity.js.map

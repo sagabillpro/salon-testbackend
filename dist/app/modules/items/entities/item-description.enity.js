@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemDescription = void 0;
 var typeorm_1 = require("typeorm");
 var items_entity_1 = require("./items.entity");
-var ItemDescription = exports.ItemDescription = /** @class */ (function () {
+var ItemDescription = /** @class */ (function () {
     function ItemDescription() {
     }
     __decorate([
@@ -53,4 +53,5 @@ var ItemDescription = exports.ItemDescription = /** @class */ (function () {
     ], ItemDescription);
     return ItemDescription;
 }());
+exports.ItemDescription = ItemDescription;
 //# sourceMappingURL=item-description.enity.js.map

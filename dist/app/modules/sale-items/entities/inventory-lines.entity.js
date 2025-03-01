@@ -15,7 +15,7 @@ var sale_header_entity_1 = require("./sale-header.entity");
 var services_entity_1 = require("../../services/entities/services.entity");
 var purchase_headers_entity_1 = require("../../purchase-items/entities/purchase-headers.entity");
 var item_stock_track_entity_1 = require("../../purchase-items/entities/item-stock-track.entity");
-var InventoryLines = exports.InventoryLines = /** @class */ (function () {
+var InventoryLines = /** @class */ (function () {
     function InventoryLines() {
     }
     __decorate([
@@ -63,4 +63,5 @@ var InventoryLines = exports.InventoryLines = /** @class */ (function () {
     ], InventoryLines);
     return InventoryLines;
 }());
+exports.InventoryLines = InventoryLines;
 //# sourceMappingURL=inventory-lines.entity.js.map

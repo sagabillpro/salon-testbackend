@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Supplier = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
-var Supplier = exports.Supplier = /** @class */ (function () {
+var Supplier = /** @class */ (function () {
     function Supplier() {
     }
     __decorate([
@@ -71,4 +71,5 @@ var Supplier = exports.Supplier = /** @class */ (function () {
     ], Supplier);
     return Supplier;
 }());
+exports.Supplier = Supplier;
 //# sourceMappingURL=supplier.entity.js.map

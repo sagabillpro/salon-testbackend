@@ -59,7 +59,7 @@ const create = async (data: Services) => {
 const updateById = async (id: number, data: Services) => {
   try {
     const repo = await repository();
-    data = await generateCode(15, data);
+  //  data = await generateCode(15, data);
     const respo = repo.updateById(id, {
       ...data,
     });

@@ -22,6 +22,11 @@ var profitloss_route_1 = __importDefault(require("../modules/reportroutes/profit
 var sale_report_route_1 = __importDefault(require("../modules/reportroutes/sale-report.route"));
 var item_sale_revenue_route_1 = __importDefault(require("../modules/reportroutes/item-sale-revenue.route"));
 var service_revenue_route_1 = __importDefault(require("../modules/reportroutes/service-revenue.route"));
+var branches_routes_1 = __importDefault(require("../modules/branches/branches.routes"));
+var company_routes_1 = __importDefault(require("../modules/company/company.routes"));
+var features_routes_1 = __importDefault(require("../modules/features/features.routes"));
+var role_routes_1 = __importDefault(require("../modules/roles/role.routes"));
+var usermenufeaturemap_route_1 = __importDefault(require("../modules/features/usermenufeaturemap.route"));
 exports.routes = [
     items_routes_1.default,
     general_data_route_1.default,
@@ -40,6 +45,11 @@ exports.routes = [
     profitloss_route_1.default,
     sale_report_route_1.default,
     item_sale_revenue_route_1.default,
-    service_revenue_route_1.default
+    service_revenue_route_1.default,
+    branches_routes_1.default,
+    company_routes_1.default,
+    features_routes_1.default,
+    role_routes_1.default,
+    usermenufeaturemap_route_1.default
 ];
 //# sourceMappingURL=routes.data.js.map

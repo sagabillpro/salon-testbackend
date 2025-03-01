@@ -12,7 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Taxes = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
-var Taxes = exports.Taxes = /** @class */ (function () {
+var Taxes = /** @class */ (function () {
     function Taxes() {
     }
     __decorate([
@@ -57,4 +57,5 @@ var Taxes = exports.Taxes = /** @class */ (function () {
     ], Taxes);
     return Taxes;
 }());
+exports.Taxes = Taxes;
 //# sourceMappingURL=taxes.entity.js.map

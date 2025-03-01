@@ -135,19 +135,16 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 3, , 4]);
+                _a.trys.push([0, 2, , 3]);
                 return [4 /*yield*/, (0, services_repo_1.default)()];
             case 1:
                 repo = _a.sent();
-                return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(15, data)];
-            case 2:
-                data = _a.sent();
                 respo = repo.updateById(id, __assign({}, data));
                 return [2 /*return*/, respo];
-            case 3:
+            case 2:
                 error_4 = _a.sent();
                 throw error_4;
-            case 4: return [2 /*return*/];
+            case 3: return [2 /*return*/];
         }
     });
 }); };

@@ -32,6 +32,7 @@ export class Menus {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+  
   @OneToMany(() => FeatureSettings, (feature) => feature.menu)
-  features: FeatureSettings[];
+  entities: FeatureSettings[];
 }

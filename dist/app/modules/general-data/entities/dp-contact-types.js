@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DContactType = void 0;
 var typeorm_1 = require("typeorm");
-var DContactType = exports.DContactType = /** @class */ (function () {
+var DContactType = /** @class */ (function () {
     function DContactType() {
     }
     __decorate([
@@ -39,4 +39,5 @@ var DContactType = exports.DContactType = /** @class */ (function () {
     ], DContactType);
     return DContactType;
 }());
+exports.DContactType = DContactType;
 //# sourceMappingURL=dp-contact-types.js.map

@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DItemType = void 0;
 var typeorm_1 = require("typeorm");
-var DItemType = exports.DItemType = /** @class */ (function () {
+var DItemType = /** @class */ (function () {
     function DItemType() {
     }
     __decorate([
@@ -39,4 +39,5 @@ var DItemType = exports.DItemType = /** @class */ (function () {
     ], DItemType);
     return DItemType;
 }());
+exports.DItemType = DItemType;
 //# sourceMappingURL=d-item-types.entity.js.map

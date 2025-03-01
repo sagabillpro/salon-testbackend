@@ -14,7 +14,7 @@ var typeorm_1 = require("typeorm");
 var sale_header_entity_1 = require("./sale-header.entity");
 var services_entity_1 = require("../../services/entities/services.entity");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
-var SaleLines = exports.SaleLines = /** @class */ (function () {
+var SaleLines = /** @class */ (function () {
     function SaleLines() {
     }
     __decorate([
@@ -79,6 +79,7 @@ var SaleLines = exports.SaleLines = /** @class */ (function () {
     ], SaleLines);
     return SaleLines;
 }());
+exports.SaleLines = SaleLines;
 // const data: SaleLines = {
 //   amount: 11,
 //   createdDate: "",

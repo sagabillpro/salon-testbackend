@@ -13,7 +13,7 @@ exports.Item = void 0;
 var typeorm_1 = require("typeorm");
 var item_description_enity_1 = require("./item-description.enity");
 var item_images_entity_1 = require("./item-images.entity");
-var Item = exports.Item = /** @class */ (function () {
+var Item = /** @class */ (function () {
     function Item() {
     }
     __decorate([
@@ -73,4 +73,5 @@ var Item = exports.Item = /** @class */ (function () {
     ], Item);
     return Item;
 }());
+exports.Item = Item;
 //# sourceMappingURL=items.entity.js.map

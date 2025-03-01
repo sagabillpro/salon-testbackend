@@ -11,7 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.DUserType = void 0;
 var typeorm_1 = require("typeorm");
-var DUserType = exports.DUserType = /** @class */ (function () {
+var DUserType = /** @class */ (function () {
     function DUserType() {
     }
     __decorate([
@@ -39,4 +39,5 @@ var DUserType = exports.DUserType = /** @class */ (function () {
     ], DUserType);
     return DUserType;
 }());
+exports.DUserType = DUserType;
 //# sourceMappingURL=d-user-types.entity.js.map
