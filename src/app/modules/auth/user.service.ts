@@ -1,4 +1,4 @@
-import { FindManyOptions, FindOneOptions } from "typeorm";
+import { FindManyOptions, FindOneOptions, Not } from "typeorm";
 
 import { generateCode } from "../../utils/get-object-code.util";
 import { handler } from "../../config/dbconfig";
@@ -13,6 +13,7 @@ import {
   verifyToken,
 } from "../../services";
 import { UserSessions } from "./entities/user-sessions.entity";
+import { UserMenusAndFeatures } from "../features/entities/usermenufeaturemap.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Users>) => {
@@ -68,6 +69,136 @@ const create = async (data: Users) => {
     throw error;
   }
 };
+//4. create record in bulk
+const createBulk = async (data: Users) => {
+  try {
+    // 1. Get the database connection
+    const dataSource = await handler();
+
+    // 2. Get the repository for the Users entity
+    const repo = await repository();
+
+    // 3. Check if a user with the same userName already exists
+    if (data.id) {
+      const respo = await repo.find({
+        where: {
+          userName: data.userName,
+          id: Not(data.id),
+        },
+      });
+
+      // 4. If user already exists, throw an error with status code 409 (Conflict)
+      if (respo.length) {
+        throw {
+          message: "User with this user name already exists.",
+          statusCode: 409,
+        };
+      }
+    } else {
+      const respo = await repo.find({
+        where: {
+          userName: data.userName,
+        },
+      });
+
+      // 4. If user already exists, throw an error with status code 409 (Conflict)
+      if (respo.length) {
+        throw {
+          message: "User with this user name already exists.",
+          statusCode: 409,
+        };
+      }
+    }
+
+    // 5. Get the repository for the UserType entity
+    const userTypeRepo = dataSource.getRepository(DUserType);
+
+    // 6. Check if the provided userType ID exists in the database
+    const userType = await userTypeRepo.findOne({
+      where: {
+        id: data.userType.id,
+      },
+    });
+
+    // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
+    if (!userType) {
+      throw {
+        message: "Record not found with id: " + data.userType.id,
+        statusCode: 404,
+      };
+    }
+
+    // 8. Start a database transaction with SERIALIZABLE isolation level
+    await dataSource.manager.transaction(
+      "SERIALIZABLE",
+      async (transactionalEntityManager) => {
+        // 9. Generate a unique code for the user
+        data = await generateCode(18, data);
+
+        // 10. Hash the user's password before storing it
+
+        let hashedPassword = "";
+        if (data.password != "") {
+          hashedPassword = await hashPassword(data.password);
+        }
+
+        // 11. Create a new user entry with the provided data
+        let headerEntry = new Users();
+        if (!data.id || (data.id && data.password != "")) {
+          headerEntry = transactionalEntityManager.create(Users, {
+            ...data,
+            password: hashedPassword,
+            userType,
+          });
+        } else {
+          console.log("inside thsi ....");
+          // 6. Check if the provided userType ID exists in the database
+          const currentUser = await repo.findOne({
+            where: {
+              id: data.id,
+            },
+          });
+
+          // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
+          if (!currentUser) {
+            throw {
+              message: "Record not found with id: " + data.id,
+              statusCode: 404,
+            };
+          }
+
+          headerEntry = { ...data, password: currentUser.password };
+        }
+
+        // 12. Create an array to store user's menu and feature permissions
+        const userMenusAndFeatures: UserMenusAndFeatures[] = [];
+
+        // 13. Iterate over userMenusAndFeatures data and create instances
+        data.userMenusAndFeatures.forEach((value, index) => {
+          let userMenusAndFeaturesInstance = new UserMenusAndFeatures();
+          userMenusAndFeaturesInstance = {
+            ...value,
+          };
+          userMenusAndFeatures.push(userMenusAndFeaturesInstance);
+          // return userMenusAndFeaturesInstance;
+        });
+
+        // 14. Assign the userMenusAndFeatures array to the user entry
+        headerEntry.userMenusAndFeatures = userMenusAndFeatures;
+
+        // 15. Save the new user entry into the database
+        console.log("headerEntry", headerEntry);
+        data = await transactionalEntityManager.save(Users, headerEntry);
+      }
+    );
+
+    // 16. Return the created user data
+    return data;
+  } catch (error) {
+    // 17. Throw the error to be handled by the caller
+    throw error;
+  }
+};
 
 //4. update single record by id
 const updateById = async (id: number, data: Users) => {
@@ -114,9 +245,9 @@ const login = async (data: {
   password: string;
 }): Promise<
   | {
-    refreshTokenToken: string;
-    accessToken: string;
-  }
+      refreshTokenToken: string;
+      accessToken: string;
+    }
   | Error
 > => {
   //1. find user with UserName
@@ -174,16 +305,13 @@ const login = async (data: {
 };
 
 //6. user login
-const logout = async (data: {
-  token: string
-}) => {
-
+const logout = async (data: { token: string }) => {
   try {
     const dataSource = await handler();
     const userSessionRepo = dataSource.getRepository(UserSessions);
     //1. check if active refresh token is present decoded user
     const userData: {
-      userId: number,
+      userId: number;
       userName: string;
       email: string;
       userType: {
@@ -197,19 +325,22 @@ const logout = async (data: {
           token: data.token,
           isInactive: 0,
           user: {
-            id: userData?.userId
-          }
-        }
-      })
+            id: userData?.userId,
+          },
+        },
+      });
       if (foundSession) {
         //make session inactive
         await userSessionRepo.save({
           ...foundSession,
           isInactive: 1,
         });
-        return { status: 200, message: "user logged out succesfully..." }
+        return { status: 200, message: "user logged out succesfully..." };
       } else {
-        throw { message: "Active Session not found for this user", statusCode: 404 };
+        throw {
+          message: "Active Session not found for this user",
+          statusCode: 404,
+        };
       }
     }
   } catch (err) {
@@ -218,15 +349,13 @@ const logout = async (data: {
 };
 
 //6. user login
-const generateNewAccessToken = async (data: {
-  token: string
-}) => {
+const generateNewAccessToken = async (data: { token: string }) => {
   try {
     const dataSource = await handler();
     const userSessionRepo = dataSource.getRepository(UserSessions);
     //1. check if active refresh token is present decoded user
     const userData: {
-      userId: number,
+      userId: number;
       userName: string;
       email: string;
       userType: {
@@ -238,12 +367,12 @@ const generateNewAccessToken = async (data: {
       const foundSession = await userSessionRepo.findOne({
         where: {
           token: data.token,
-          isInactive:0,
+          isInactive: 0,
           user: {
-            id: userData?.userId
-          }
-        }
-      })
+            id: userData?.userId,
+          },
+        },
+      });
       if (foundSession) {
         const accessToken = generateAccessToken({
           userId: userData.userId,
@@ -251,15 +380,17 @@ const generateNewAccessToken = async (data: {
           email: userData.email,
           userType: userData.userType,
         });
-        return { accessToken }
+        return { accessToken };
       } else {
-        throw { message: "Active Session not found for this user", statusCode: 404 };
+        throw {
+          message: "Active Session not found for this user",
+          statusCode: 404,
+        };
       }
     }
   } catch (err) {
     throw err;
   }
-
 };
 export default {
   find,
@@ -270,4 +401,5 @@ export default {
   login,
   generateNewAccessToken,
   logout,
+  createBulk,
 };

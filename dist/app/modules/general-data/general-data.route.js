@@ -62,7 +62,9 @@ var services_entity_1 = require("../services/entities/services.entity");
 var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
 var router = (0, express_1.Router)();
 var _loop_1 = function (key, value) {
-    router.get(key, (0, validate_filter_util_1.validateFilter)(value), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    // Define a GET route for each key in the map
+    router.get(key, (0, validate_filter_util_1.validateFilter)(value), // Apply the validateFilter middleware
+    function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var appDataSource, repository, data, _a, _b, error_1;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -77,10 +79,13 @@ var _loop_1 = function (key, value) {
                 case 2: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
                 case 3:
                     data = _c.sent();
+                    // Send the fetched data as a JSON response with status 200
                     res.status(200).json(data);
                     return [3 /*break*/, 5];
                 case 4:
                     error_1 = _c.sent();
+                    console.log(error_1);
+                    // Handle errors by sending a 500 status and error message
                     res
                         .status(500)
                         .json({ message: "Error fetching DescriptionType", error: error_1 });
@@ -89,7 +94,9 @@ var _loop_1 = function (key, value) {
             }
         });
     }); });
-    router.post(key, (0, get_model_schema_util_1.validateRequestBody)(value), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    // Define a POST route for each key in the map
+    router.post(key, (0, get_model_schema_util_1.validateRequestBody)(value), // Apply the validateRequestBody middleware
+    function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var appDataSource, repository, data, respo, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -103,10 +110,12 @@ var _loop_1 = function (key, value) {
                     return [4 /*yield*/, repository.save(data)];
                 case 2:
                     respo = _a.sent();
+                    // Send the saved entity as a JSON response with status 200
                     res.status(200).json(respo);
                     return [3 /*break*/, 4];
                 case 3:
                     error_2 = _a.sent();
+                    // Handle errors by sending a 500 status and error message
                     res
                         .status(500)
                         .json({ message: "Error fetching DescriptionType", error: error_2 });
@@ -116,6 +125,7 @@ var _loop_1 = function (key, value) {
         });
     }); });
 };
+// Loop through each entry in the routeToEntityMap
 for (var _i = 0, _a = Object.entries(modeltoroutemapping_mapping_1.routeToEntityMap); _i < _a.length; _i++) {
     var _b = _a[_i], key = _b[0], value = _b[1];
     _loop_1(key, value);

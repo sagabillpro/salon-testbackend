@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
+var usermenufeaturemap_entity_1 = require("../../features/entities/usermenufeaturemap.entity");
 var Users = /** @class */ (function () {
     function Users() {
     }
@@ -32,7 +33,7 @@ var Users = /** @class */ (function () {
         __metadata("design:type", String)
     ], Users.prototype, "userName", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
     ], Users.prototype, "password", void 0);
     __decorate([
@@ -64,6 +65,13 @@ var Users = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], Users.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {
+            cascade: true,
+            onDelete: "CASCADE",
+        }),
+        __metadata("design:type", Array)
+    ], Users.prototype, "userMenusAndFeatures", void 0);
     Users = __decorate([
         (0, typeorm_1.Entity)("users")
     ], Users);

@@ -10,6 +10,7 @@ import {
   ManyToOne,
 } from "typeorm";
 import { City, Country, DUserType, States } from "../../general-data/entities";
+import { UserMenusAndFeatures } from "../../features/entities/usermenufeaturemap.entity";
 
 @Entity("users")
 export class Users {
@@ -25,7 +26,7 @@ export class Users {
   @Column({ type: "varchar", length: 255, nullable: false, unique: true })
   userName: string;
 
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Column({ type: "varchar", length: 255, nullable: true })
   password: string;
 
   @ManyToOne(() => DUserType)
@@ -49,4 +50,10 @@ export class Users {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+
+    @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
+      cascade: true,
+      onDelete: "CASCADE",
+    })
+    userMenusAndFeatures: UserMenusAndFeatures[];
 }
