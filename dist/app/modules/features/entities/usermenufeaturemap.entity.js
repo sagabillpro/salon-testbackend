@@ -50,6 +50,10 @@ var UserMenusAndFeatures = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "timestamp" }),
         __metadata("design:type", Date)
     ], UserMenusAndFeatures.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0, nullable: true }),
+        __metadata("design:type", Number)
+    ], UserMenusAndFeatures.prototype, "isSystem", void 0);
     UserMenusAndFeatures = __decorate([
         (0, typeorm_1.Entity)("user_menus_and_features"),
         (0, typeorm_1.Unique)(["user", "entity", "feature"]) // Ensures uniqueness for a user-menu-feature combination

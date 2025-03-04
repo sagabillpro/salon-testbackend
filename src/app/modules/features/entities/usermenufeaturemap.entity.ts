@@ -41,5 +41,8 @@ export class UserMenusAndFeatures {
 
   @UpdateDateColumn({ type: "timestamp" })
   modifiedDate: Date;
+
+  @Column({ type: "int", default: 0, nullable: true })
+  isSystem: number;
 }
 
