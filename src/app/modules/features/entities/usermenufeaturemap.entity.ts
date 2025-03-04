@@ -42,3 +42,4 @@ export class UserMenusAndFeatures {
   @UpdateDateColumn({ type: "timestamp" })
   modifiedDate: Date;
 }
+

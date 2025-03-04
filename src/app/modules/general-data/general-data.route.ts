@@ -15,34 +15,50 @@ import {
   validateRequestBody,
 } from "../../utils/get-model-schema.util";
 const router = Router();
+// Loop through each entry in the routeToEntityMap
 for (let [key, value] of Object.entries(routeToEntityMap)) {
+  // Define a GET route for each key in the map
   router.get(
     key,
-    validateFilter(value),
+    validateFilter(value), // Apply the validateFilter middleware
     async (req: Request, res: Response) => {
       try {
+        // Get the data source
         const appDataSource = await handler();
+        // Get the repository for the current entity
         const repository = appDataSource.getRepository(value);
+        // Fetch data using the repository and query built from the request
         const data = await repository.find(await getQuery(req, value));
+        // Send the fetched data as a JSON response with status 200
         res.status(200).json(data);
       } catch (error) {
+        console.log(error);
+        // Handle errors by sending a 500 status and error message
         res
           .status(500)
           .json({ message: "Error fetching DescriptionType", error });
       }
     }
   );
+
+  // Define a POST route for each key in the map
   router.post(
     key,
-    validateRequestBody(value),
+    validateRequestBody(value), // Apply the validateRequestBody middleware
     async (req: Request, res: Response) => {
       try {
+        // Get the data source
         const appDataSource = await handler();
+        // Get the repository for the current entity
         const repository = appDataSource.getRepository(value);
+        // Create a new entity instance from the request body
         const data = repository.create(req.body);
+        // Save the new entity instance to the database
         const respo = await repository.save(data);
+        // Send the saved entity as a JSON response with status 200
         res.status(200).json(respo);
       } catch (error) {
+        // Handle errors by sending a 500 status and error message
         res
           .status(500)
           .json({ message: "Error fetching DescriptionType", error });

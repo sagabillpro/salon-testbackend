@@ -50,12 +50,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var typeorm_1 = require("typeorm");
 var get_object_code_util_1 = require("../../utils/get-object-code.util");
 var dbconfig_1 = require("../../config/dbconfig");
 var entities_1 = require("../general-data/entities");
 var user_repo_1 = __importDefault(require("./user.repo"));
+var user_entity_1 = require("./entities/user.entity");
 var services_1 = require("../../services");
 var user_sessions_entity_1 = require("./entities/user-sessions.entity");
+var usermenufeaturemap_entity_1 = require("../features/entities/usermenufeaturemap.entity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -137,9 +140,141 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
         }
     });
 }); };
+//4. create record in bulk
+var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, repo_1, respo, respo, userTypeRepo, userType_1, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 9, , 10]);
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _a.sent();
+                return [4 /*yield*/, (0, user_repo_1.default)()];
+            case 2:
+                repo_1 = _a.sent();
+                if (!data.id) return [3 /*break*/, 4];
+                return [4 /*yield*/, repo_1.find({
+                        where: {
+                            userName: data.userName,
+                            id: (0, typeorm_1.Not)(data.id),
+                        },
+                    })];
+            case 3:
+                respo = _a.sent();
+                // 4. If user already exists, throw an error with status code 409 (Conflict)
+                if (respo.length) {
+                    throw {
+                        message: "User with this user name already exists.",
+                        statusCode: 409,
+                    };
+                }
+                return [3 /*break*/, 6];
+            case 4: return [4 /*yield*/, repo_1.find({
+                    where: {
+                        userName: data.userName,
+                    },
+                })];
+            case 5:
+                respo = _a.sent();
+                // 4. If user already exists, throw an error with status code 409 (Conflict)
+                if (respo.length) {
+                    throw {
+                        message: "User with this user name already exists.",
+                        statusCode: 409,
+                    };
+                }
+                _a.label = 6;
+            case 6:
+                userTypeRepo = dataSource.getRepository(entities_1.DUserType);
+                return [4 /*yield*/, userTypeRepo.findOne({
+                        where: {
+                            id: data.userType.id,
+                        },
+                    })];
+            case 7:
+                userType_1 = _a.sent();
+                // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
+                if (!userType_1) {
+                    throw {
+                        message: "Record not found with id: " + data.userType.id,
+                        statusCode: 404,
+                    };
+                }
+                // 8. Start a database transaction with SERIALIZABLE isolation level
+                return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
+                        var hashedPassword, headerEntry, currentUser, userMenusAndFeatures;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(18, data)];
+                                case 1:
+                                    // 9. Generate a unique code for the user
+                                    data = _a.sent();
+                                    hashedPassword = "";
+                                    if (!(data.password != "")) return [3 /*break*/, 3];
+                                    return [4 /*yield*/, (0, services_1.hashPassword)(data.password)];
+                                case 2:
+                                    hashedPassword = _a.sent();
+                                    _a.label = 3;
+                                case 3:
+                                    headerEntry = new user_entity_1.Users();
+                                    if (!(!data.id || (data.id && data.password != ""))) return [3 /*break*/, 4];
+                                    headerEntry = transactionalEntityManager.create(user_entity_1.Users, __assign(__assign({}, data), { password: hashedPassword, userType: userType_1 }));
+                                    return [3 /*break*/, 6];
+                                case 4:
+                                    console.log("inside thsi ....");
+                                    return [4 /*yield*/, repo_1.findOne({
+                                            where: {
+                                                id: data.id,
+                                            },
+                                        })];
+                                case 5:
+                                    currentUser = _a.sent();
+                                    // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
+                                    if (!currentUser) {
+                                        throw {
+                                            message: "Record not found with id: " + data.id,
+                                            statusCode: 404,
+                                        };
+                                    }
+                                    headerEntry = __assign(__assign({}, data), { password: currentUser.password });
+                                    _a.label = 6;
+                                case 6:
+                                    userMenusAndFeatures = [];
+                                    // 13. Iterate over userMenusAndFeatures data and create instances
+                                    data.userMenusAndFeatures.forEach(function (value, index) {
+                                        var userMenusAndFeaturesInstance = new usermenufeaturemap_entity_1.UserMenusAndFeatures();
+                                        userMenusAndFeaturesInstance = __assign({}, value);
+                                        userMenusAndFeatures.push(userMenusAndFeaturesInstance);
+                                        // return userMenusAndFeaturesInstance;
+                                    });
+                                    // 14. Assign the userMenusAndFeatures array to the user entry
+                                    headerEntry.userMenusAndFeatures = userMenusAndFeatures;
+                                    // 15. Save the new user entry into the database
+                                    console.log("headerEntry", headerEntry);
+                                    return [4 /*yield*/, transactionalEntityManager.save(user_entity_1.Users, headerEntry)];
+                                case 7:
+                                    data = _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            case 8:
+                // 8. Start a database transaction with SERIALIZABLE isolation level
+                _a.sent();
+                // 16. Return the created user data
+                return [2 /*return*/, data];
+            case 9:
+                error_4 = _a.sent();
+                // 17. Throw the error to be handled by the caller
+                throw error_4;
+            case 10: return [2 /*return*/];
+        }
+    });
+}); };
 //4. update single record by id
 var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, userTypeRepo, userType, repo, respo, error_4;
+    var dataSource, userTypeRepo, userType, repo, respo, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -170,15 +305,15 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 respo = repo.updateById(id, __assign(__assign({}, data), { userType: userType }));
                 return [2 /*return*/, respo];
             case 5:
-                error_4 = _a.sent();
-                throw error_4;
+                error_5 = _a.sent();
+                throw error_5;
             case 6: return [2 /*return*/];
         }
     });
 }); };
 //5. delete single record by id
 var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var repo, error_5;
+    var repo, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -191,8 +326,8 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
                 _a.sent();
                 return [3 /*break*/, 4];
             case 3:
-                error_5 = _a.sent();
-                throw error_5;
+                error_6 = _a.sent();
+                throw error_6;
             case 4: return [2 /*return*/];
         }
     });
@@ -277,9 +412,9 @@ var logout = function (data) { return __awaiter(void 0, void 0, void 0, function
                             token: data.token,
                             isInactive: 0,
                             user: {
-                                id: userData === null || userData === void 0 ? void 0 : userData.userId
-                            }
-                        }
+                                id: userData === null || userData === void 0 ? void 0 : userData.userId,
+                            },
+                        },
                     })];
             case 2:
                 foundSession = _a.sent();
@@ -290,7 +425,10 @@ var logout = function (data) { return __awaiter(void 0, void 0, void 0, function
                 //make session inactive
                 _a.sent();
                 return [2 /*return*/, { status: 200, message: "user logged out succesfully..." }];
-            case 4: throw { message: "Active Session not found for this user", statusCode: 404 };
+            case 4: throw {
+                message: "Active Session not found for this user",
+                statusCode: 404,
+            };
             case 5: return [3 /*break*/, 7];
             case 6:
                 err_1 = _a.sent();
@@ -317,9 +455,9 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
                             token: data.token,
                             isInactive: 0,
                             user: {
-                                id: userData === null || userData === void 0 ? void 0 : userData.userId
-                            }
-                        }
+                                id: userData === null || userData === void 0 ? void 0 : userData.userId,
+                            },
+                        },
                     })];
             case 2:
                 foundSession = _a.sent();
@@ -333,7 +471,10 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
                     return [2 /*return*/, { accessToken: accessToken }];
                 }
                 else {
-                    throw { message: "Active Session not found for this user", statusCode: 404 };
+                    throw {
+                        message: "Active Session not found for this user",
+                        statusCode: 404,
+                    };
                 }
                 _a.label = 3;
             case 3: return [3 /*break*/, 5];
@@ -353,5 +494,6 @@ exports.default = {
     login: login,
     generateNewAccessToken: generateNewAccessToken,
     logout: logout,
+    createBulk: createBulk,
 };
 //# sourceMappingURL=user.service.js.map

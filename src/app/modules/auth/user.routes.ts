@@ -11,6 +11,7 @@ import { LoginSchema } from "../../schema";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { NewRefreshToken } from "../../schema/new-refresh-token.schema";
 import { verifyToken } from "../../services";
+import { UserSchema } from "../../schema/user-schema";
 const router = Router();
 
 router.get(
@@ -79,7 +80,19 @@ router.delete(
     }
   }
 );
-
+//bulk create
+router.post(
+  "/bulk",
+  validateBodyManual(UserSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await userService.createBulk(req.body);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 //login route
 router.post(
   "/login",
