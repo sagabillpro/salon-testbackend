@@ -142,23 +142,23 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // const result = await userService.find(await getQuery(req, Users));
-      const authHeader = req.headers["authorization"];
-      const token = authHeader && authHeader.split(" ")[1];
-      if (!token) {
-        return res.status(401).json({ message: "Access Token Required" });
-      }
-      // res.send(result);
-      const userData: {
-        userId: number;
-        userName: string;
-        email: string;
-        userType: {
-          id: number;
-          name: string;
-        };
-      } = await verifyToken(token);
+      // const authHeader = req.headers["authorization"];
+      // const token = authHeader && authHeader.split(" ")[1];
+      // if (!token) {
+      //   return res.status(401).json({ message: "Access Token Required" });
+      // }
+      // // res.send(result);
+      // const userData: {
+      //   userId: number;
+      //   userName: string;
+      //   email: string;
+      //   userType: {
+      //     id: number;
+      //     name: string;
+      //   };
+      // } = await verifyToken(token);
+      const userData = userService.decodedToken(req, res, next);
       res.send(userData);
-      next();
     } catch (error) {
       console.log(error);
       next(error);

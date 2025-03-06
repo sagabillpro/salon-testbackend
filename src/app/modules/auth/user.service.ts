@@ -14,6 +14,7 @@ import {
 } from "../../services";
 import { UserSessions } from "./entities/user-sessions.entity";
 import { UserMenusAndFeatures } from "../features/entities/usermenufeaturemap.entity";
+import { NextFunction, Request, Response } from "express";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Users>) => {
@@ -392,6 +393,34 @@ const generateNewAccessToken = async (data: { token: string }) => {
     throw err;
   }
 };
+//6. user login
+const decodedToken = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    // const result = await userService.find(await getQuery(req, Users));
+    const authHeader = req.headers["authorization"];
+    const token = authHeader && authHeader.split(" ")[1];
+    if (!token) {
+      return res.status(401).json({ message: "Access Token Required" });
+    }
+    // res.send(result);
+    const userData: {
+      userId: number;
+      userName: string;
+      email: string;
+      userType: {
+        id: number;
+        name: string;
+      };
+    } = await verifyToken(token);
+    return userData;
+  } catch (err) {
+    throw err;
+  }
+};
 export default {
   find,
   findById,
@@ -402,4 +431,5 @@ export default {
   generateNewAccessToken,
   logout,
   createBulk,
+  decodedToken
 };
