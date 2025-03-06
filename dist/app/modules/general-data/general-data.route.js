@@ -377,9 +377,8 @@ router.get("/get-user-features", authenticate_middleware_1.default, function (re
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 4, , 5]);
+                _a.trys.push([0, 2, , 3]);
                 user = req.user;
-                if (!user.userType) return [3 /*break*/, 2];
                 mappingObj_2 = {};
                 return [4 /*yield*/, usermenufeaturemap_service_1.default.find({
                         relations: {
@@ -416,17 +415,12 @@ router.get("/get-user-features", authenticate_middleware_1.default, function (re
                 });
                 res.status(200).json(mappingObj_2);
                 return [3 /*break*/, 3];
-            case 2: throw {
-                message: "No metadata found for given user..",
-                statusCode: 401,
-            };
-            case 3: return [3 /*break*/, 5];
-            case 4:
+            case 2:
                 error_6 = _a.sent();
                 console.log(error_6);
                 res.status(500).json({ message: "Error fetching menus", error: error_6 });
-                return [3 /*break*/, 5];
-            case 5: return [2 /*return*/];
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
         }
     });
 }); });
