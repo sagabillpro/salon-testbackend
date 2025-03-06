@@ -485,6 +485,29 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
         }
     });
 }); };
+//6. user login
+var decodedToken = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var authHeader, token, userData, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                authHeader = req.headers["authorization"];
+                token = authHeader && authHeader.split(" ")[1];
+                if (!token) {
+                    return [2 /*return*/, res.status(401).json({ message: "Access Token Required" })];
+                }
+                return [4 /*yield*/, (0, services_1.verifyToken)(token)];
+            case 1:
+                userData = _a.sent();
+                return [2 /*return*/, userData];
+            case 2:
+                err_3 = _a.sent();
+                throw err_3;
+            case 3: return [2 /*return*/];
+        }
+    });
+}); };
 exports.default = {
     find: find,
     findById: findById,
@@ -495,5 +518,6 @@ exports.default = {
     generateNewAccessToken: generateNewAccessToken,
     logout: logout,
     createBulk: createBulk,
+    decodedToken: decodedToken
 };
 //# sourceMappingURL=user.service.js.map

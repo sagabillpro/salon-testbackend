@@ -49,7 +49,6 @@ var user_entity_1 = require("./entities/user.entity");
 var schema_1 = require("../../schema");
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var new_refresh_token_schema_1 = require("../../schema/new-refresh-token.schema");
-var services_1 = require("../../services");
 var user_schema_1 = require("../../schema/user-schema");
 var router = (0, express_1.Router)();
 router.get("/", (0, validate_filter_util_1.validateFilter)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
@@ -239,29 +238,17 @@ router.post("/logout", (0, validate_req_body_util_1.validateBodyManual)(new_refr
     });
 }); });
 router.get("/me/data", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var authHeader, token, userData, error_10;
+    var userData;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                authHeader = req.headers["authorization"];
-                token = authHeader && authHeader.split(" ")[1];
-                if (!token) {
-                    return [2 /*return*/, res.status(401).json({ message: "Access Token Required" })];
-                }
-                return [4 /*yield*/, (0, services_1.verifyToken)(token)];
-            case 1:
-                userData = _a.sent();
-                res.send(userData);
-                next();
-                return [3 /*break*/, 3];
-            case 2:
-                error_10 = _a.sent();
-                console.log(error_10);
-                next(error_10);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
+        try {
+            userData = user_service_1.default.decodedToken(req, res, next);
+            res.send(userData);
         }
+        catch (error) {
+            console.log(error);
+            next(error);
+        }
+        return [2 /*return*/];
     });
 }); });
 exports.default = new routes_types_1.Route("/users", router);

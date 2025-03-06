@@ -8,12 +8,13 @@ import { Menus } from "./entities";
 import authenticateToken from "../../middlewares/authenticate.middleware";
 import { AuthenticatedRequest } from "../../types";
 import { Services } from "../services/entities/services.entity";
-import { Customer } from "../customer/entities/customer.entity";
-import { SaleHeaders } from "../sale-items/entities/sale-header.entity";
+import UserMenusAndFeaturesService from "../features/usermenufeaturemap.service";
 import {
   getModelSchema,
   validateRequestBody,
 } from "../../utils/get-model-schema.util";
+import { verifyToken } from "../../services";
+import userService from "../auth/user.service";
 const router = Router();
 // Loop through each entry in the routeToEntityMap
 for (let [key, value] of Object.entries(routeToEntityMap)) {
@@ -199,5 +200,157 @@ router.get(
     }
   }
 );
+//updated route to get menus for user
+router.get(
+  "/menu-headers-new",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      //1 . get user specific menus
+      const user: any = req.user;
+      if (user.userType) {
+        const appDataSource = await handler();
+        const repository = appDataSource.getRepository(Menus);
+        ///  const userMenuRepo = appDataSource.getRepository(User);
+        let mappingObj: {
+          [key: number]: boolean;
+        } = {};
+        const userData = await UserMenusAndFeaturesService.find({
+          relations: {
+            user: true,
+            entity: true,
+            feature: true,
+          },
+          select: {
+            user: {
+              id: true,
+              name: true,
+            },
+            entity: {
+              id: true,
+            },
+            feature: {
+              id: true,
+            },
+          },
+          where: {
+            user: {
+              id: user.userId,
+            },
+            feature: {
+              id: 5,
+            },
+          },
+        });
+        //create mapping object
+        userData.forEach((element) => {
+          if (element?.feature?.id === 5) {
+            // Set the feature ID to true in the mapping object for the current entity ID
+            mappingObj[element.entity.id] = true;
+          }
+        });
 
+        const data = await repository.find({
+          relations: {
+            entities: true,
+          },
+          where: {
+            entities: {
+              isInactive: 0,
+            },
+          },
+        });
+
+        const respo: {
+          title: string;
+          url: string;
+          icon: string;
+          subItems: { title: string; url: string }[];
+        }[] = [];
+        for (let menu of data) {
+          let level1: { title: string; url: string }[] = [];
+          for (let entity of menu.entities) {
+            //1.send all menus for admin
+            if (false) {
+              //ad condition which will check for SAGA User and show all menus
+            }
+            if (mappingObj[entity.id]) {
+              level1.push({
+                title: entity.displayName,
+                url: entity.route,
+              });
+            }
+          }
+          level1.length &&
+            respo.push({
+              title: menu.name,
+              url: "#",
+              icon: menu.icon,
+              subItems: level1,
+            });
+        }
+        res.status(200).json(respo);
+      } else {
+        throw {
+          message: "No metadata found for given user..",
+          statusCode: 401,
+        };
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching menus", error });
+    }
+  }
+);
+//get object for user menus and screens
+router.get(
+  "/get-user-features",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      //1 . get user specific menus
+      const user: any = req.user;
+        let mappingObj: {
+          [key: number]: {
+            [key: number]: boolean;
+          };
+        } = {};
+        const userData = await UserMenusAndFeaturesService.find({
+          relations: {
+            user: true,
+            entity: true,
+            feature: true,
+          },
+          select: {
+            user: {
+              id: true,
+              name: true,
+            },
+            entity: {
+              id: true,
+            },
+            feature: {
+              id: true,
+            },
+          },
+          where: {
+            user: {
+              id: user.userId,
+            },
+          },
+        });
+        //create mapping object
+        userData.forEach((element) => {
+          if (!mappingObj[element.entity.id]) {
+            mappingObj[element.entity.id] = {};
+          }
+          mappingObj[element.entity.id][element.feature.id] = true;
+        });
+        res.status(200).json(mappingObj);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching menus", error });
+    }
+  }
+);
 export default new Route("", router);
