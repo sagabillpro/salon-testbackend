@@ -23,7 +23,7 @@ var UserMenusAndFeatures = /** @class */ (function () {
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "id", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int" }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "userId", void 0);
     __decorate([
@@ -35,12 +35,12 @@ var UserMenusAndFeatures = /** @class */ (function () {
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "featureId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int" }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "roleId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }, { nullable: true, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)({ referencedColumnName: "userId" }),
+        (0, typeorm_1.JoinColumn)({ name: "userId" }),
         __metadata("design:type", user_entity_1.Users)
     ], UserMenusAndFeatures.prototype, "user", void 0);
     __decorate([
@@ -55,7 +55,7 @@ var UserMenusAndFeatures = /** @class */ (function () {
     ], UserMenusAndFeatures.prototype, "feature", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return role_entity_1.Role; }, { nullable: true, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)({ referencedColumnName: "roleId" }),
+        (0, typeorm_1.JoinColumn)({ name: "roleId" }),
         __metadata("design:type", role_entity_1.Role)
     ], UserMenusAndFeatures.prototype, "role", void 0);
     __decorate([
@@ -70,6 +70,10 @@ var UserMenusAndFeatures = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "int", default: 0, nullable: true }),
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "isSystem", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0, nullable: false }),
+        __metadata("design:type", Number)
+    ], UserMenusAndFeatures.prototype, "isActive", void 0);
     UserMenusAndFeatures = __decorate([
         (0, typeorm_1.Entity)("user_menus_and_features"),
         (0, typeorm_1.Unique)(["user", "entity", "feature"]) // Ensures uniqueness for a user-menu-feature combination

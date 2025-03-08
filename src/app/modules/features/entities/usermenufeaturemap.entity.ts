@@ -20,7 +20,7 @@ export class UserMenusAndFeatures {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
-  @Column({ type: "int" , nullable: true})
+  @Column({ type: "int", nullable: true })
   userId: number;
 
   @Column({ type: "int" })
@@ -29,7 +29,7 @@ export class UserMenusAndFeatures {
   @Column({ type: "int" })
   featureId: number;
 
-  @Column({ type: "int" })
+  @Column({ type: "int", nullable: true })
   roleId: number;
 
   @ManyToOne(() => Users, { nullable: true, onDelete: "CASCADE" })

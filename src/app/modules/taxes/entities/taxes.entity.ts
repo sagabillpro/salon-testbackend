@@ -16,7 +16,7 @@ export class Taxes {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
-  @Column({ type: "varchar", length: 255, nullable: true, unique: true })
+  @Column({ type: "varchar", length: 255, nullable: true, })
   code: string;
 
   @Column({ type: "varchar", length: 255, nullable: false })
