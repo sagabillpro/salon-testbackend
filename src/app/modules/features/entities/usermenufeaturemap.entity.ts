@@ -33,7 +33,7 @@ export class UserMenusAndFeatures {
   roleId: number;
 
   @ManyToOne(() => Users, { nullable: true, onDelete: "CASCADE" })
-  @JoinColumn({ referencedColumnName: "userId" })
+  @JoinColumn({ name: "userId" })
   user: Users;
 
   @ManyToOne(() => FeatureSettings, { nullable: false, onDelete: "CASCADE" })
