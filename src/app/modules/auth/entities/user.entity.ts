@@ -56,5 +56,5 @@ export class Users {
     // onDelete: "CASCADE",
    // orphanedRowAction: "preserve",
   })
-  userMenusAndFeatures: UserMenusAndFeatures[];
+  userMenusAndFeatures?: UserMenusAndFeatures[];
 }

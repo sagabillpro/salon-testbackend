@@ -147,12 +147,13 @@ const createBulk = async (data: Users) => {
         if (data.password != "") {
           hashedPassword = await hashPassword(data.password);
         }
-
+        
+        const { userMenusAndFeatures, ...headerWithoutLines } = data;
         // 11. Create a new user entry with the provided data
         let headerEntry = new Users();
         if (!data.id || (data.id && data.password != "")) {
           headerEntry = transactionalEntityManager.create(Users, {
-            ...data,
+            ...headerWithoutLines,
             password: hashedPassword,
             userType,
           });
@@ -175,7 +176,7 @@ const createBulk = async (data: Users) => {
 
           headerEntry = { ...data, password: currentUser.password };
         }
-        const { userMenusAndFeatures, ...headerWithoutLines } = headerEntry;
+
         // 12. Create an array to store user's menu and feature permissions
         const userMenusAndFeaturesNew: UserMenusAndFeatures[] = [];
         response = await transactionalEntityManager.save(
@@ -183,7 +184,7 @@ const createBulk = async (data: Users) => {
           headerWithoutLines
         );
         // 13. Iterate over userMenusAndFeatures data and create instances
-        userMenusAndFeatures.forEach((value, index) => {
+        userMenusAndFeatures?.forEach((value, index) => {
           let userMenusAndFeaturesInstance = new UserMenusAndFeatures();
           userMenusAndFeaturesInstance = {
             ...value,
@@ -200,7 +201,7 @@ const createBulk = async (data: Users) => {
 
         await transactionalEntityManager.save(
           UserMenusAndFeatures,
-          userMenusAndFeatures
+          userMenusAndFeatures ? userMenusAndFeatures : []
         );
       }
     );

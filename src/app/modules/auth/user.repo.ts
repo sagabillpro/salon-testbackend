@@ -80,7 +80,7 @@ const repository = async () => {
           //2. update items availability
           await transactionalEntityManager.save(
             UserMenusAndFeatures,
-            data.userMenusAndFeatures
+            data.userMenusAndFeatures ? data.userMenusAndFeatures : []
           );
         }
       );
