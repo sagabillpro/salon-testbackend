@@ -185,7 +185,11 @@ const createBulk = async (data: Users) => {
         });
 
         // 14. Assign the userMenusAndFeatures array to the user entry
-        headerEntry.userMenusAndFeatures = userMenusAndFeatures;
+        //  headerEntry.userMenusAndFeatures = userMenusAndFeatures;
+        await transactionalEntityManager.save(
+          UserMenusAndFeatures,
+          userMenusAndFeatures
+        );
 
         // 15. Save the new user entry into the database
         console.log("headerEntry", headerEntry);
@@ -431,5 +435,5 @@ export default {
   generateNewAccessToken,
   logout,
   createBulk,
-  decodedToken
+  decodedToken,
 };
