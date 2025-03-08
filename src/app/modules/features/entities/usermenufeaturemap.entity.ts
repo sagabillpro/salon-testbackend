@@ -37,15 +37,15 @@ export class UserMenusAndFeatures {
   user: Users;
 
   @ManyToOne(() => FeatureSettings, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn({name: "entityId"})
+  @JoinColumn({ name: "entityId" })
   entity: FeatureSettings;
 
   @ManyToOne(() => Feature, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn({name: "featureId"})
+  @JoinColumn({ name: "featureId" })
   feature: Feature;
 
   @ManyToOne(() => Role, { nullable: true, onDelete: "CASCADE" })
-  @JoinColumn({ referencedColumnName: "roleId" })
+  @JoinColumn({ name: "roleId" })
   role: Role;
 
   @CreateDateColumn({ type: "timestamp" })
