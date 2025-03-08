@@ -83,7 +83,7 @@ router.delete(
 //bulk create
 router.post(
   "/bulk",
-  validateBodyManual(UserSchema),
+  validateRequestBody(Users),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await userService.createBulk(req.body);
@@ -96,7 +96,7 @@ router.post(
 
 router.post(
   "/bulk/:id",
-  validateBodyManual(UserSchema),
+  validateRequestBody(Users),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
