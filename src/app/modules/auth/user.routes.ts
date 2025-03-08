@@ -93,6 +93,20 @@ router.post(
     }
   }
 );
+
+router.post(
+  "/bulk/:id",
+  validateBodyManual(UserSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const result = await userService.updateById(id, req.body);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 //login route
 router.post(
   "/login",
