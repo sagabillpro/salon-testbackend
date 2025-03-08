@@ -150,9 +150,9 @@ const createBulk = async (data: Users) => {
 
         let { userMenusAndFeatures, ...headerWithoutLines } = data;
         // 11. Create a new user entry with the provided data
-        let headerEntry = new Users();
+        //let headerEntry = new Users();
         if (!data.id) {
-          headerEntry = transactionalEntityManager.create(Users, {
+          headerWithoutLines = transactionalEntityManager.create(Users, {
             ...headerWithoutLines,
             password: hashedPassword,
             userType,
@@ -174,7 +174,10 @@ const createBulk = async (data: Users) => {
             };
           }
 
-          headerWithoutLines = { ...headerWithoutLines, password: currentUser.password };
+          headerWithoutLines = {
+            ...headerWithoutLines,
+            password: currentUser.password,
+          };
         }
 
         // 12. Create an array to store user's menu and feature permissions
@@ -198,7 +201,7 @@ const createBulk = async (data: Users) => {
         //  headerEntry.userMenusAndFeatures = userMenusAndFeatures;
 
         // 15. Save the new user entry into the database
-
+        console.log("userMenusAndFeaturesNew", userMenusAndFeaturesNew);
         await transactionalEntityManager.save(
           UserMenusAndFeatures,
           userMenusAndFeatures ? userMenusAndFeatures : []
