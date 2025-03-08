@@ -14,7 +14,7 @@ import {
 } from "../../services";
 import { UserSessions } from "./entities/user-sessions.entity";
 import { UserMenusAndFeatures } from "../features/entities/usermenufeaturemap.entity";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Users>) => {
@@ -73,6 +73,7 @@ const create = async (data: Users) => {
 //4. create record in bulk
 const createBulk = async (data: Users) => {
   try {
+    let response = new Users();
     // 1. Get the database connection
     const dataSource = await handler();
 
@@ -173,12 +174,13 @@ const createBulk = async (data: Users) => {
 
         // 12. Create an array to store user's menu and feature permissions
         const userMenusAndFeatures: UserMenusAndFeatures[] = [];
-
+        response = await transactionalEntityManager.save(Users, headerEntry);
         // 13. Iterate over userMenusAndFeatures data and create instances
         data.userMenusAndFeatures.forEach((value, index) => {
           let userMenusAndFeaturesInstance = new UserMenusAndFeatures();
           userMenusAndFeaturesInstance = {
             ...value,
+            user: response,
           };
           userMenusAndFeatures.push(userMenusAndFeaturesInstance);
           // return userMenusAndFeaturesInstance;
@@ -186,14 +188,13 @@ const createBulk = async (data: Users) => {
 
         // 14. Assign the userMenusAndFeatures array to the user entry
         //  headerEntry.userMenusAndFeatures = userMenusAndFeatures;
+
+        // 15. Save the new user entry into the database
+
         await transactionalEntityManager.save(
           UserMenusAndFeatures,
           userMenusAndFeatures
         );
-
-        // 15. Save the new user entry into the database
-        console.log("headerEntry", headerEntry);
-        data = await transactionalEntityManager.save(Users, headerEntry);
       }
     );
 
