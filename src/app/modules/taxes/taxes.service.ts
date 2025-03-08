@@ -34,6 +34,7 @@ const create = async (data: Taxes) => {
   try {
     const repo = await repository();
     data = await generateCode(14, data);
+
     const respo = repo.create({
       ...data,
     });
@@ -47,7 +48,7 @@ const create = async (data: Taxes) => {
 const updateById = async (id: number, data: Taxes) => {
   try {
     const repo = await repository();
-    data = await generateCode(14, data);
+    data = { ...data };
     const respo = repo.updateById(id, {
       ...data,
     });

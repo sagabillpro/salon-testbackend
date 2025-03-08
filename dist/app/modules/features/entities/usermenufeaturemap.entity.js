@@ -55,7 +55,7 @@ var UserMenusAndFeatures = /** @class */ (function () {
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "isSystem", void 0);
     UserMenusAndFeatures = __decorate([
-        (0, typeorm_1.Entity)("user_menus_and_features"),
+        (0, typeorm_1.Entity)(""),
         (0, typeorm_1.Unique)(["user", "entity", "feature"]) // Ensures uniqueness for a user-menu-feature combination
     ], UserMenusAndFeatures);
     return UserMenusAndFeatures;

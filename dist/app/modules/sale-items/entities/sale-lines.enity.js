@@ -15,6 +15,7 @@ var sale_header_entity_1 = require("./sale-header.entity");
 var services_entity_1 = require("../../services/entities/services.entity");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var SaleLines = /** @class */ (function () {
+    //@Unique(["recordId", "id"])
     function SaleLines() {
     }
     __decorate([
@@ -22,20 +23,53 @@ var SaleLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleLines.prototype, "id", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "txnHeaderId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "txnHeaderRecordId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return sale_header_entity_1.SaleHeaders; }, {
             onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
         }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.JoinColumn)([
+            { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
+            { name: "txnHeaderId", referencedColumnName: "id" },
+        ]),
         __metadata("design:type", sale_header_entity_1.SaleHeaders)
     ], SaleLines.prototype, "txnHeader", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "serviceId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "serviceRecordId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return services_entity_1.Services; }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.JoinColumn)([
+            { name: "serviceRecordId", referencedColumnName: "recordId" },
+            { name: "serviceId", referencedColumnName: "id" },
+        ]),
         __metadata("design:type", services_entity_1.Services)
     ], SaleLines.prototype, "service", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "taxId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "taxRecordId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)([
+            { name: "taxRecordId", referencedColumnName: "recordId" },
+            { name: "taxId", referencedColumnName: "id" },
+        ]),
         __metadata("design:type", taxes_entity_1.Taxes)
     ], SaleLines.prototype, "tax", void 0);
     __decorate([
@@ -74,8 +108,18 @@ var SaleLines = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], SaleLines.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0 }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "isInactive", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], SaleLines.prototype, "deletedAt", void 0);
     SaleLines = __decorate([
         (0, typeorm_1.Entity)("sale_lines")
+        //@Unique(["recordId", "id"])
     ], SaleLines);
     return SaleLines;
 }());

@@ -16,15 +16,24 @@ export class Branch {
   id: number;
   @Column({ type: "varchar", length: 255, nullable: true, unique: true })
   code: string;
-  
+
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
 
   @Column({ type: "varchar", length: 100, nullable: false, unique: true })
   branchCode: string;
 
-  @ManyToOne(() => Company, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn({ name: "companyId" })
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @Column({ type: "int", nullable: true })
+  companyRecordId: number;
+
+  @ManyToOne(() => Company)
+  @JoinColumn([
+    { name: "companyRecordId", referencedColumnName: "recordId" },
+    { name: "companyId", referencedColumnName: "id" },
+  ])
   company: Company;
 
   @Column({ type: "varchar", length: 255, nullable: true })

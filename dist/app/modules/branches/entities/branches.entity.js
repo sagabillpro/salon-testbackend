@@ -33,8 +33,19 @@ var Branch = /** @class */ (function () {
         __metadata("design:type", String)
     ], Branch.prototype, "branchCode", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: false, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)({ name: "companyId" }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Branch.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Branch.prototype, "companyRecordId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }),
+        (0, typeorm_1.JoinColumn)([
+            { name: "companyRecordId", referencedColumnName: "recordId" },
+            { name: "companyId", referencedColumnName: "id" },
+        ]),
         __metadata("design:type", company_entity_1.Company)
     ], Branch.prototype, "company", void 0);
     __decorate([

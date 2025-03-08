@@ -67,10 +67,12 @@ var sale_header_repo_1 = __importDefault(require("./sale-header.repo"));
 var inventory_lines_entity_1 = require("./entities/inventory-lines.entity");
 var send_invoice_mail_service_1 = __importDefault(require("../../services/send-invoice-mail.service"));
 var item_stocks_entity_1 = require("./entities/item-stocks.entity");
+var services_entity_1 = require("../services/entities/services.entity");
 var item_stock_track_entity_1 = require("../purchase-items/entities/item-stock-track.entity");
 var customer_entity_1 = require("../customer/entities/customer.entity");
 var contact_entity_1 = require("../contacts/entities/contact.entity");
 var contact_service_1 = __importDefault(require("../contacts/contact.service"));
+var sale_lines_enity_1 = require("./entities/sale-lines.enity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -243,19 +245,226 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); };
-//3. create single record
+// //3. create single record
+// const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
+//   try {
+//     const repo = await repository();
+//     const dataSource = await handler();
+//     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
+//     const itemStockTrack = dataSource.getRepository(ItemsStockTrack);
+//     data = await generateCode(19, data);
+//     let result: SaleHeaders = new SaleHeaders();
+//     const invoiceItems: {
+//       name: string;
+//       quantity: number;
+//       unitPrice: number;
+//       total: number;
+//       tax: number;
+//       taxName: string;
+//     }[] = [];
+//     const inventory: InventoryLines[] = [];
+//     const itemIds: number[] = [];
+//     const errors: string[] = [];
+//     const itemToQauntityMap: {
+//       [key: number]: {
+//         quantity: number;
+//         name: string;
+//         idx: number;
+//       };
+//     } = {};
+//     //get customer data custo
+//     let customer = await contactService.findById(data.customer.id);
+//     data.saleLines.forEach((value) => {
+//       invoiceItems.push({
+//         name: value.service.name,
+//         quantity: value.quantity,
+//         unitPrice: value.rate,
+//         total: Number(value.amount),
+//         tax: value.taxAmount,
+//         taxName: value.tax.name,
+//       });
+//       itemIds.push(value.service.id);
+//     });
+//     // get items available as per item demand
+//     //! check if item  with isInavtive=0 is not present
+//     let itemsAvailable = await itemAvailableRepo.find({
+//       where: {
+//         service: {
+//           id: In(itemIds),
+//         },
+//       },
+//       relations: {
+//         service: true,
+//       },
+//       select: {
+//         id: true,
+//         quantity: true,
+//         service: {
+//           id: true,
+//           name: true,
+//         },
+//       },
+//     });
+//     //add data to map
+//     itemsAvailable.forEach((val, index) => {
+//       itemToQauntityMap[val.service.id] = {
+//         name: val.service.name,
+//         quantity: val.quantity,
+//         idx: index,
+//       };
+//     });
+//     //check availabilty
+//     data.saleLines.forEach((value) => {
+//       if (itemToQauntityMap[value.service.id]) {
+//         if (itemToQauntityMap[value.service.id]?.quantity < value.quantity) {
+//           errors.push(
+//             `${
+//               itemToQauntityMap[value.service.id].name
+//             } is out of stock : available stock is ${
+//               itemToQauntityMap[value.service.id]?.quantity
+//                 ? itemToQauntityMap[value.service.id]?.quantity
+//                 : 0
+//             }`
+//           );
+//         }
+//       } else {
+//         errors.push(
+//           `${value.service.name} is out of stock : available stock is ${0}`
+//         );
+//       }
+//     });
+//     //throw error if applicable
+//     if (errors.length) {
+//       throw { message: errors, statusCode: 409 };
+//     }
+//     //get related stock track records
+//     const stockMap: {
+//       [key: number]: {
+//         id: number;
+//         idx: number;
+//         aQuanity: number;
+//       };
+//     } = {};
+//     let stockTrack = await itemStockTrack.find({
+//       where: {
+//         service: {
+//           id: In(itemIds),
+//         },
+//       },
+//       order: {
+//         id: "ASC",
+//       },
+//       relations: {
+//         service: true,
+//       },
+//     });
+//     stockTrack.forEach((val, index) => {
+//       stockMap[val.id] = {
+//         id: val.id,
+//         idx: index,
+//         aQuanity: val?.quantityUvailable,
+//       };
+//     });
+//     data.saleLines.forEach((value) => {
+//       //1. filter out stock entries for each item
+//       let idx = 0;
+//       let itmRemain = value.quantity;
+//       let uvailableForItem = stockTrack.filter(
+//         (val) => val.service.id === value.service.id
+//       );
+//       while (itmRemain) {
+//         //1. update current entry
+//         let _uvailableForItem = uvailableForItem[idx];
+//         //create inventory records here
+//         const il = new InventoryLines();
+//         il.service = value.service;
+//         il.createdDate = value.createdDate;
+//         il.modifiedDate = value.modifiedDate;
+//         il.stock = _uvailableForItem;
+//         let sold = _uvailableForItem.quantityUvailable - itmRemain;
+//         _uvailableForItem = {
+//           ..._uvailableForItem,
+//           quantityUvailable: sold > 0 ? sold : 0,
+//         };
+//         if (stockMap[_uvailableForItem.id]) {
+//           stockTrack[stockMap[_uvailableForItem.id].idx] = _uvailableForItem;
+//         }
+//         if (sold < 0) {
+//           il.quantity = -Number(itmRemain + sold);
+//           inventory.push(il);
+//           itmRemain = Math.abs(sold);
+//         } else {
+//           il.quantity = -Number(itmRemain);
+//           inventory.push(il);
+//           itmRemain = 0;
+//         }
+//         idx++;
+//       }
+//       //decrease item availabilty
+//       if (itemToQauntityMap[value.service.id]) {
+//         let _itemsAvailable =
+//           itemsAvailable[itemToQauntityMap[value.service.id].idx];
+//         _itemsAvailable = {
+//           ..._itemsAvailable,
+//           id: _itemsAvailable.id,
+//           quantity: _itemsAvailable.quantity - value.quantity,
+//         };
+//         itemsAvailable[itemToQauntityMap[value.service.id].idx] =
+//           _itemsAvailable;
+//       }
+//     });
+//     data.inventoryLines = inventory;
+//     //3. start transaction
+//     await dataSource.manager.transaction(
+//       "SERIALIZABLE",
+//       async (transactionalEntityManager) => {
+//         //2. update items availability
+//         //2. update items availability
+//         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
+//         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
+//         const headerEntry = transactionalEntityManager.create(
+//           SaleHeaders,
+//           data
+//         );
+//         const headerEntryResult = await transactionalEntityManager.save(
+//           SaleHeaders,
+//           headerEntry
+//         );
+//         result = headerEntryResult;
+//       }
+//     );
+//     if (customer.email) {
+//       await invoiceMailer({
+//         customer: customer.name,
+//         txnDate: new Date(data.txnDate).toLocaleDateString(),
+//         txnId: data.code,
+//         mobile: customer.mobile,
+//         subTotal: data.subTotal,
+//         grandTotal: data.grandTotal,
+//         tax: data.totalTax,
+//         discount: data.totalDiscount,
+//         email: customer.email,
+//         itemData: invoiceItems,
+//       });
+//     }
+//     return result;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// (""); // Function to create a single sale record with inventory tracking and stock management
 var createBulk = function (data_1) {
     var args_1 = [];
     for (var _i = 1; _i < arguments.length; _i++) {
         args_1[_i - 1] = arguments[_i];
     }
     return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isService) {
-        var repo, dataSource, itemAvailableRepo, itemStockTrack, result_1, invoiceItems_2, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
+        var repo, dataSource, itemAvailableRepo, itemStockTrack, result_1, invoiceItems_2, inventory_2, itemIds_1, errors_1, itemToQuantityMap_1, customer, itemsAvailable_1, itemRepo, relatedItems, latestItemMap_1, stockMap_1, stockTrack_1, error_6;
         if (isService === void 0) { isService = false; }
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    _a.trys.push([0, 10, , 11]);
+                    _a.trys.push([0, 11, , 12]);
                     return [4 /*yield*/, (0, sale_header_repo_1.default)()];
                 case 1:
                     repo = _a.sent();
@@ -266,148 +475,138 @@ var createBulk = function (data_1) {
                     itemStockTrack = dataSource.getRepository(item_stock_track_entity_1.ItemsStockTrack);
                     return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(19, data)];
                 case 3:
+                    // Generate unique sale code
                     data = _a.sent();
                     result_1 = new sale_header_entity_1.SaleHeaders();
                     invoiceItems_2 = [];
                     inventory_2 = [];
                     itemIds_1 = [];
                     errors_1 = [];
-                    itemToQauntityMap_1 = {};
+                    itemToQuantityMap_1 = {};
                     return [4 /*yield*/, contact_service_1.default.findById(data.customer.id)];
                 case 4:
                     customer = _a.sent();
-                    data.saleLines.forEach(function (value) {
+                    // Prepare invoice items and collect item IDs
+                    data.saleLines.forEach(function (_a) {
+                        var service = _a.service, quantity = _a.quantity, rate = _a.rate, amount = _a.amount, taxAmount = _a.taxAmount, tax = _a.tax;
                         invoiceItems_2.push({
-                            name: value.service.name,
-                            quantity: value.quantity,
-                            unitPrice: value.rate,
-                            total: Number(value.amount),
-                            tax: value.taxAmount,
-                            taxName: value.tax.name,
+                            name: service.name,
+                            quantity: quantity,
+                            unitPrice: rate,
+                            total: Number(amount),
+                            tax: taxAmount,
+                            taxName: tax.name,
                         });
-                        itemIds_1.push(value.service.id);
+                        itemIds_1.push(service.id);
                     });
                     return [4 /*yield*/, itemAvailableRepo.find({
-                            where: {
-                                service: {
-                                    id: (0, typeorm_1.In)(itemIds_1),
-                                },
-                            },
-                            relations: {
-                                service: true,
-                            },
-                            select: {
-                                id: true,
-                                quantity: true,
-                                service: {
-                                    id: true,
-                                    name: true,
-                                },
-                            },
+                            //take only active records for items
+                            where: { service: { id: (0, typeorm_1.In)(itemIds_1), isInactive: 0 }, isInactive: 0 },
+                            relations: { service: true },
+                            select: { id: true, quantity: true, service: { id: true, name: true } },
                         })];
                 case 5:
                     itemsAvailable_1 = _a.sent();
-                    //add data to map
-                    itemsAvailable_1.forEach(function (val, index) {
-                        itemToQauntityMap_1[val.service.id] = {
-                            name: val.service.name,
-                            quantity: val.quantity,
+                    // Map item stock availability
+                    itemsAvailable_1.forEach(function (_a, index) {
+                        var service = _a.service, quantity = _a.quantity;
+                        itemToQuantityMap_1[service.id] = {
+                            name: service.name,
+                            quantity: quantity,
                             idx: index,
                         };
                     });
-                    //check availabilty
-                    data.saleLines.forEach(function (value) {
-                        var _a, _b, _c;
-                        if (itemToQauntityMap_1[value.service.id]) {
-                            if (((_a = itemToQauntityMap_1[value.service.id]) === null || _a === void 0 ? void 0 : _a.quantity) < value.quantity) {
-                                errors_1.push("".concat(itemToQauntityMap_1[value.service.id].name, " is out of stock : available stock is ").concat(((_b = itemToQauntityMap_1[value.service.id]) === null || _b === void 0 ? void 0 : _b.quantity)
-                                    ? (_c = itemToQauntityMap_1[value.service.id]) === null || _c === void 0 ? void 0 : _c.quantity
-                                    : 0));
+                    // Validate item availability
+                    data.saleLines.forEach(function (_a) {
+                        var service = _a.service, quantity = _a.quantity;
+                        if (itemToQuantityMap_1[service.id]) {
+                            if (itemToQuantityMap_1[service.id].quantity < quantity) {
+                                errors_1.push("".concat(itemToQuantityMap_1[service.id].name, " is out of stock: available stock is ").concat(itemToQuantityMap_1[service.id].quantity || 0));
                             }
                         }
                         else {
-                            errors_1.push("".concat(value.service.name, " is out of stock : available stock is ").concat(0));
+                            errors_1.push("".concat(service.name, " is out of stock: available stock is 0"));
                         }
                     });
-                    //throw error if applicable
-                    if (errors_1.length) {
+                    if (errors_1.length)
                         throw { message: errors_1, statusCode: 409 };
-                    }
-                    stockMap_1 = {};
-                    return [4 /*yield*/, itemStockTrack.find({
-                            where: {
-                                service: {
-                                    id: (0, typeorm_1.In)(itemIds_1),
-                                },
-                            },
-                            order: {
-                                id: "ASC",
-                            },
-                            relations: {
-                                service: true,
-                            },
+                    itemRepo = dataSource.getRepository(services_entity_1.Services);
+                    return [4 /*yield*/, itemRepo.find({
+                            where: { id: (0, typeorm_1.In)(itemIds_1), isInactive: 0 },
+                            select: { sku: true, id: true, recordId: true },
                         })];
                 case 6:
-                    stockTrack_1 = _a.sent();
-                    stockTrack_1.forEach(function (val, index) {
-                        stockMap_1[val.id] = {
-                            id: val.id,
-                            idx: index,
-                            aQuanity: val === null || val === void 0 ? void 0 : val.quantityUvailable,
-                        };
+                    relatedItems = _a.sent();
+                    latestItemMap_1 = {};
+                    relatedItems.forEach(function (item) {
+                        latestItemMap_1[item.recordId] = item.id;
                     });
-                    data.saleLines.forEach(function (value) {
-                        //1. filter out stock entries for each item
+                    stockMap_1 = {};
+                    return [4 /*yield*/, itemStockTrack.find({
+                            where: { service: { id: (0, typeorm_1.In)(itemIds_1), isInactive: 0 } },
+                            order: { id: "ASC" },
+                            relations: { service: true },
+                        })];
+                case 7:
+                    stockTrack_1 = _a.sent();
+                    //create map for stock track records
+                    stockTrack_1.forEach(function (_a, index) {
+                        var id = _a.id, quantityUvailable = _a.quantityUvailable;
+                        stockMap_1[id] = { id: id, idx: index, availableQuantity: quantityUvailable };
+                    });
+                    // Manage inventory and stock tracking
+                    data.saleLines.forEach(function (_a) {
+                        var service = _a.service, quantity = _a.quantity, createdDate = _a.createdDate, modifiedDate = _a.modifiedDate;
+                        var remainingQty = quantity;
+                        //get the records only for specific item from stock track
+                        var stockEntries = stockTrack_1.filter(function (_a) {
+                            var stockService = _a.service;
+                            return stockService.id === service.id;
+                        });
                         var idx = 0;
-                        var itmRemain = value.quantity;
-                        var uvailableForItem = stockTrack_1.filter(function (val) { return val.service.id === value.service.id; });
-                        while (itmRemain) {
-                            //1. update current entry
-                            var _uvailableForItem = uvailableForItem[idx];
-                            //create inventory records here
-                            var il = new inventory_lines_entity_1.InventoryLines();
-                            il.service = value.service;
-                            il.createdDate = value.createdDate;
-                            il.modifiedDate = value.modifiedDate;
-                            il.stock = _uvailableForItem;
-                            var sold = _uvailableForItem.quantityUvailable - itmRemain;
-                            _uvailableForItem = __assign(__assign({}, _uvailableForItem), { quantityUvailable: sold > 0 ? sold : 0 });
-                            if (stockMap_1[_uvailableForItem.id]) {
-                                stockTrack_1[stockMap_1[_uvailableForItem.id].idx] = _uvailableForItem;
+                        while (remainingQty > 0) {
+                            var stockEntry = stockEntries[idx];
+                            var inventoryLine = new inventory_lines_entity_1.InventoryLines();
+                            inventoryLine.service = service;
+                            inventoryLine.serviceId = latestItemMap_1[service.recordId];
+                            inventoryLine.serviceRecordId = service.id;
+                            inventoryLine.createdDate = createdDate;
+                            inventoryLine.modifiedDate = modifiedDate;
+                            //!make changed here in future if required
+                            inventoryLine.stock = stockEntry;
+                            var updatedStockQty = stockEntry.quantityUvailable - remainingQty;
+                            stockEntry.quantityUvailable = Math.max(updatedStockQty, 0);
+                            // stockEntry.serviceId = latestItemMap[service.recordId];
+                            // stockEntry.serviceRecordId = service.id;
+                            //update the stokc track record at correct position
+                            if (stockMap_1[stockEntry.id]) {
+                                stockTrack_1[stockMap_1[stockEntry.id].idx] = stockEntry;
                             }
-                            if (sold < 0) {
-                                il.quantity = -Number(itmRemain + sold);
-                                inventory_2.push(il);
-                                itmRemain = Math.abs(sold);
-                            }
-                            else {
-                                il.quantity = -Number(itmRemain);
-                                inventory_2.push(il);
-                                itmRemain = 0;
-                            }
+                            inventoryLine.quantity =
+                                updatedStockQty < 0
+                                    ? -(remainingQty + updatedStockQty) // If stock is insufficient, store the fulfilled part.
+                                    : -remainingQty; // Otherwise, store the entire deducted quantity.
+                            inventory_2.push(inventoryLine);
+                            //set the remainig quanoty which will be used in next iteration, stock will be deducted in next iteration
+                            remainingQty = updatedStockQty < 0 ? Math.abs(updatedStockQty) : 0;
                             idx++;
                         }
-                        //decrease item availabilty
-                        if (itemToQauntityMap_1[value.service.id]) {
-                            var _itemsAvailable = itemsAvailable_1[itemToQauntityMap_1[value.service.id].idx];
-                            _itemsAvailable = __assign(__assign({}, _itemsAvailable), { id: _itemsAvailable.id, quantity: _itemsAvailable.quantity - value.quantity });
-                            itemsAvailable_1[itemToQauntityMap_1[value.service.id].idx] =
-                                _itemsAvailable;
+                        // Update available stock
+                        if (itemToQuantityMap_1[service.id]) {
+                            var itemIndex = itemToQuantityMap_1[service.id].idx;
+                            itemsAvailable_1[itemIndex].quantity -= quantity;
                         }
                     });
+                    //data for sale lines already included
+                    //add data for inventory lines
                     data.inventoryLines = inventory_2;
-                    //3. start transaction
+                    // Start transaction
                     return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
-                            var headerEntry, headerEntryResult;
+                            var headerEntry;
                             return __generator(this, function (_a) {
                                 switch (_a.label) {
-                                    case 0: 
-                                    //2. update items availability
-                                    //2. update items availability
-                                    return [4 /*yield*/, transactionalEntityManager.save(item_stock_track_entity_1.ItemsStockTrack, stockTrack_1)];
+                                    case 0: return [4 /*yield*/, transactionalEntityManager.save(item_stock_track_entity_1.ItemsStockTrack, stockTrack_1)];
                                     case 1:
-                                        //2. update items availability
-                                        //2. update items availability
                                         _a.sent();
                                         return [4 /*yield*/, transactionalEntityManager.save(item_stocks_entity_1.ItemAvailable, itemsAvailable_1)];
                                     case 2:
@@ -415,16 +614,15 @@ var createBulk = function (data_1) {
                                         headerEntry = transactionalEntityManager.create(sale_header_entity_1.SaleHeaders, data);
                                         return [4 /*yield*/, transactionalEntityManager.save(sale_header_entity_1.SaleHeaders, headerEntry)];
                                     case 3:
-                                        headerEntryResult = _a.sent();
-                                        result_1 = headerEntryResult;
+                                        result_1 = _a.sent();
                                         return [2 /*return*/];
                                 }
                             });
                         }); })];
-                case 7:
-                    //3. start transaction
+                case 8:
+                    // Start transaction
                     _a.sent();
-                    if (!customer.email) return [3 /*break*/, 9];
+                    if (!customer.email) return [3 /*break*/, 10];
                     return [4 /*yield*/, (0, send_invoice_mail_service_1.default)({
                             customer: customer.name,
                             txnDate: new Date(data.txnDate).toLocaleDateString(),
@@ -437,17 +635,147 @@ var createBulk = function (data_1) {
                             email: customer.email,
                             itemData: invoiceItems_2,
                         })];
-                case 8:
+                case 9:
                     _a.sent();
-                    _a.label = 9;
-                case 9: return [2 /*return*/, result_1];
-                case 10:
+                    _a.label = 10;
+                case 10: return [2 /*return*/, result_1];
+                case 11:
                     error_6 = _a.sent();
                     throw error_6;
-                case 11: return [2 /*return*/];
+                case 12: return [2 /*return*/];
             }
         });
     });
 };
-exports.default = { find: find, findById: findById, create: create, deleteById: deleteById, updateById: updateById, createBulk: createBulk };
+var editBulk = function (data_1) {
+    var args_1 = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        args_1[_i - 1] = arguments[_i];
+    }
+    return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isService) {
+        var dataSource, headerRepo, saleLinesRepo, itemAvailableRepo, itemsStockTrackRepo, inventoryLinesRepo, headerResponse_1, saleLines_1, inventoryLines_1, inventoryMap_1, stockMap_2, itemAvailable, itemAvailableMap_1, itemAvailableUpdate_1, itemStockTrack_1, error_7;
+        if (isService === void 0) { isService = false; }
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 8, , 9]);
+                    return [4 /*yield*/, (0, dbconfig_1.handler)()];
+                case 1:
+                    dataSource = _a.sent();
+                    headerRepo = dataSource.getRepository(sale_header_entity_1.SaleHeaders);
+                    saleLinesRepo = dataSource.getRepository(sale_lines_enity_1.SaleLines);
+                    itemAvailableRepo = dataSource.getRepository(item_stocks_entity_1.ItemAvailable);
+                    itemsStockTrackRepo = dataSource.getRepository(item_stock_track_entity_1.ItemsStockTrack);
+                    inventoryLinesRepo = dataSource.getRepository(inventory_lines_entity_1.InventoryLines);
+                    return [4 /*yield*/, headerRepo.findOne({
+                            where: { recordId: data.recordId, isInactive: 0 },
+                        })];
+                case 2:
+                    headerResponse_1 = _a.sent();
+                    return [4 /*yield*/, saleLinesRepo.find({
+                            where: { txnHeaderRecordId: data.recordId, isInactive: 0 },
+                        })];
+                case 3:
+                    saleLines_1 = _a.sent();
+                    return [4 /*yield*/, inventoryLinesRepo.find({
+                            where: { saleRecordId: data.recordId, isInactive: 0 },
+                            relations: { stock: true },
+                        })];
+                case 4:
+                    inventoryLines_1 = _a.sent();
+                    inventoryMap_1 = {};
+                    stockMap_2 = {};
+                    inventoryLines_1.forEach(function (line) {
+                        // Accumulate deducted quantity per service
+                        inventoryMap_1[line.serviceId] = (inventoryMap_1[line.serviceId] || 0) + line.quantity;
+                        // Accumulate deducted quantity per stock entry
+                        stockMap_2[line.stock.id] = (stockMap_2[line.stock.id] || 0) + line.quantity;
+                    });
+                    return [4 /*yield*/, itemAvailableRepo.find({
+                            where: { serviceId: (0, typeorm_1.In)(Object.keys(inventoryMap_1)), isInactive: 0 },
+                        })];
+                case 5:
+                    itemAvailable = _a.sent();
+                    itemAvailableMap_1 = {};
+                    itemAvailable.forEach(function (item) {
+                        itemAvailableMap_1[item.serviceId] = item.quantity;
+                    });
+                    // For each service, add back the deducted inventory quantity to available stock
+                    Object.keys(inventoryMap_1).forEach(function (key) {
+                        // Convert key to number if needed
+                        var serviceId = Number(key);
+                        itemAvailableMap_1[serviceId] = (itemAvailableMap_1[serviceId] || 0) + inventoryMap_1[serviceId];
+                    });
+                    itemAvailableUpdate_1 = itemAvailable.map(function (item) {
+                        item.quantity = itemAvailableMap_1[item.serviceId];
+                        return item;
+                    });
+                    return [4 /*yield*/, itemsStockTrackRepo.find({
+                            where: { txnHeaderRecordId: data.recordId, isInactive: 0 },
+                        })];
+                case 6:
+                    itemStockTrack_1 = _a.sent();
+                    // For each stock track record, add back the deducted quantity from stockMap
+                    itemStockTrack_1 = itemStockTrack_1.map(function (stock) {
+                        stock.quantityUvailable = stock.quantityUvailable + (stockMap_2[stock.id] || 0);
+                        return stock;
+                    });
+                    // 7. Begin transaction to perform rollback and create new sale transaction
+                    return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (manager) { return __awaiter(void 0, void 0, void 0, function () {
+                            var newSale;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: 
+                                    // Update item available records (restoring stock)
+                                    return [4 /*yield*/, manager.save(item_stocks_entity_1.ItemAvailable, itemAvailableUpdate_1)];
+                                    case 1:
+                                        // Update item available records (restoring stock)
+                                        _a.sent();
+                                        // Mark all sale lines as inactive
+                                        return [4 /*yield*/, manager.save(sale_lines_enity_1.SaleLines, saleLines_1.map(function (line) {
+                                                line.isInactive = 1;
+                                                return line;
+                                            }))];
+                                    case 2:
+                                        // Mark all sale lines as inactive
+                                        _a.sent();
+                                        // Save updated stock track records (restoring available quantities)
+                                        return [4 /*yield*/, manager.save(item_stock_track_entity_1.ItemsStockTrack, itemStockTrack_1)];
+                                    case 3:
+                                        // Save updated stock track records (restoring available quantities)
+                                        _a.sent();
+                                        // Mark all inventory lines as inactive
+                                        return [4 /*yield*/, manager.save(inventory_lines_entity_1.InventoryLines, inventoryLines_1.map(function (line) {
+                                                line.isInactive = 1;
+                                                return line;
+                                            }))];
+                                    case 4:
+                                        // Mark all inventory lines as inactive
+                                        _a.sent();
+                                        return [4 /*yield*/, manager.save(sale_header_entity_1.SaleHeaders, __assign(__assign({}, headerResponse_1), { isInactive: 1 }))];
+                                    case 5:
+                                        // Mark the current sale header as inactive
+                                        headerResponse_1 = _a.sent();
+                                        return [4 /*yield*/, createBulk(__assign(__assign({}, data), { recordId: headerResponse_1.recordId, code: headerResponse_1.code }), true)];
+                                    case 6:
+                                        newSale = _a.sent();
+                                        // Update data with the newly created sale transaction
+                                        data = newSale;
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
+                case 7:
+                    // 7. Begin transaction to perform rollback and create new sale transaction
+                    _a.sent();
+                    return [2 /*return*/, data];
+                case 8:
+                    error_7 = _a.sent();
+                    throw error_7;
+                case 9: return [2 /*return*/];
+            }
+        });
+    });
+};
+exports.default = { find: find, findById: findById, create: create, deleteById: deleteById, updateById: updateById, createBulk: createBulk, editBulk: editBulk };
 //# sourceMappingURL=sale-header.service.js.map

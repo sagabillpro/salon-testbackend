@@ -8,6 +8,9 @@ import {
   JoinColumn,
   OneToOne,
   ManyToOne,
+  DeleteDateColumn,
+  BeforeInsert,
+  Unique,
 } from "typeorm";
 import {
   City,
@@ -15,8 +18,12 @@ import {
   DContactType,
   States,
 } from "../../general-data/entities";
+import { handler } from "../../../config/dbconfig";
+import { Branch } from "../../branches/entities/branches.entity";
+import { Users } from "../../auth/entities/user.entity";
 
 @Entity("contacts")
+@Unique(["recordId", "id"])
 export class Contact {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
@@ -63,4 +70,30 @@ export class Contact {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+
+  @Column({ type: "int", nullable: true })
+  recordId: number;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  createdBy: Users;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  modifiedBy: Users;
+
+  @BeforeInsert()
+  async generateRecordId?() {
+    if (!this.recordId) {
+      const dataSource = await handler();
+      const lastRecord = await dataSource.getRepository(Contact).findOne({
+        where: {},
+        order: { recordId: "DESC" },
+      });
+      this.recordId = lastRecord ? lastRecord.recordId + 1 : 1;
+    }
+  }
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
 }

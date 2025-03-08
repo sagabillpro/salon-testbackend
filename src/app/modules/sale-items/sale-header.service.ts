@@ -15,6 +15,7 @@ import { ItemsStockTrack } from "../purchase-items/entities/item-stock-track.ent
 import { Customer } from "../customer/entities/customer.entity";
 import { Contact } from "../contacts/entities/contact.entity";
 import contactService from "../contacts/contact.service";
+import { SaleLines } from "./entities/sale-lines.enity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -134,15 +135,230 @@ const deleteById = async (id: number) => {
     throw error;
   }
 };
-//3. create single record
+// //3. create single record
+// const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
+//   try {
+//     const repo = await repository();
+//     const dataSource = await handler();
+//     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
+//     const itemStockTrack = dataSource.getRepository(ItemsStockTrack);
+//     data = await generateCode(19, data);
+//     let result: SaleHeaders = new SaleHeaders();
+//     const invoiceItems: {
+//       name: string;
+//       quantity: number;
+//       unitPrice: number;
+//       total: number;
+//       tax: number;
+//       taxName: string;
+//     }[] = [];
+
+//     const inventory: InventoryLines[] = [];
+//     const itemIds: number[] = [];
+//     const errors: string[] = [];
+//     const itemToQauntityMap: {
+//       [key: number]: {
+//         quantity: number;
+//         name: string;
+//         idx: number;
+//       };
+//     } = {};
+//     //get customer data custo
+//     let customer = await contactService.findById(data.customer.id);
+
+//     data.saleLines.forEach((value) => {
+//       invoiceItems.push({
+//         name: value.service.name,
+//         quantity: value.quantity,
+//         unitPrice: value.rate,
+//         total: Number(value.amount),
+//         tax: value.taxAmount,
+//         taxName: value.tax.name,
+//       });
+//       itemIds.push(value.service.id);
+//     });
+//     // get items available as per item demand
+//     //! check if item  with isInavtive=0 is not present
+//     let itemsAvailable = await itemAvailableRepo.find({
+//       where: {
+//         service: {
+//           id: In(itemIds),
+//         },
+//       },
+//       relations: {
+//         service: true,
+//       },
+//       select: {
+//         id: true,
+//         quantity: true,
+//         service: {
+//           id: true,
+//           name: true,
+//         },
+//       },
+//     });
+//     //add data to map
+//     itemsAvailable.forEach((val, index) => {
+//       itemToQauntityMap[val.service.id] = {
+//         name: val.service.name,
+//         quantity: val.quantity,
+//         idx: index,
+//       };
+//     });
+//     //check availabilty
+//     data.saleLines.forEach((value) => {
+//       if (itemToQauntityMap[value.service.id]) {
+//         if (itemToQauntityMap[value.service.id]?.quantity < value.quantity) {
+//           errors.push(
+//             `${
+//               itemToQauntityMap[value.service.id].name
+//             } is out of stock : available stock is ${
+//               itemToQauntityMap[value.service.id]?.quantity
+//                 ? itemToQauntityMap[value.service.id]?.quantity
+//                 : 0
+//             }`
+//           );
+//         }
+//       } else {
+//         errors.push(
+//           `${value.service.name} is out of stock : available stock is ${0}`
+//         );
+//       }
+//     });
+//     //throw error if applicable
+//     if (errors.length) {
+//       throw { message: errors, statusCode: 409 };
+//     }
+//     //get related stock track records
+//     const stockMap: {
+//       [key: number]: {
+//         id: number;
+//         idx: number;
+//         aQuanity: number;
+//       };
+//     } = {};
+//     let stockTrack = await itemStockTrack.find({
+//       where: {
+//         service: {
+//           id: In(itemIds),
+//         },
+//       },
+//       order: {
+//         id: "ASC",
+//       },
+//       relations: {
+//         service: true,
+//       },
+//     });
+//     stockTrack.forEach((val, index) => {
+//       stockMap[val.id] = {
+//         id: val.id,
+//         idx: index,
+//         aQuanity: val?.quantityUvailable,
+//       };
+//     });
+
+//     data.saleLines.forEach((value) => {
+//       //1. filter out stock entries for each item
+//       let idx = 0;
+//       let itmRemain = value.quantity;
+//       let uvailableForItem = stockTrack.filter(
+//         (val) => val.service.id === value.service.id
+//       );
+//       while (itmRemain) {
+//         //1. update current entry
+//         let _uvailableForItem = uvailableForItem[idx];
+//         //create inventory records here
+//         const il = new InventoryLines();
+//         il.service = value.service;
+
+//         il.createdDate = value.createdDate;
+//         il.modifiedDate = value.modifiedDate;
+//         il.stock = _uvailableForItem;
+//         let sold = _uvailableForItem.quantityUvailable - itmRemain;
+//         _uvailableForItem = {
+//           ..._uvailableForItem,
+//           quantityUvailable: sold > 0 ? sold : 0,
+//         };
+//         if (stockMap[_uvailableForItem.id]) {
+//           stockTrack[stockMap[_uvailableForItem.id].idx] = _uvailableForItem;
+//         }
+//         if (sold < 0) {
+//           il.quantity = -Number(itmRemain + sold);
+//           inventory.push(il);
+//           itmRemain = Math.abs(sold);
+//         } else {
+//           il.quantity = -Number(itmRemain);
+//           inventory.push(il);
+//           itmRemain = 0;
+//         }
+//         idx++;
+//       }
+
+//       //decrease item availabilty
+//       if (itemToQauntityMap[value.service.id]) {
+//         let _itemsAvailable =
+//           itemsAvailable[itemToQauntityMap[value.service.id].idx];
+//         _itemsAvailable = {
+//           ..._itemsAvailable,
+//           id: _itemsAvailable.id,
+//           quantity: _itemsAvailable.quantity - value.quantity,
+//         };
+//         itemsAvailable[itemToQauntityMap[value.service.id].idx] =
+//           _itemsAvailable;
+//       }
+//     });
+//     data.inventoryLines = inventory;
+//     //3. start transaction
+//     await dataSource.manager.transaction(
+//       "SERIALIZABLE",
+//       async (transactionalEntityManager) => {
+//         //2. update items availability
+//         //2. update items availability
+//         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
+//         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
+//         const headerEntry = transactionalEntityManager.create(
+//           SaleHeaders,
+//           data
+//         );
+//         const headerEntryResult = await transactionalEntityManager.save(
+//           SaleHeaders,
+//           headerEntry
+//         );
+//         result = headerEntryResult;
+//       }
+//     );
+//     if (customer.email) {
+//       await invoiceMailer({
+//         customer: customer.name,
+//         txnDate: new Date(data.txnDate).toLocaleDateString(),
+//         txnId: data.code,
+//         mobile: customer.mobile,
+//         subTotal: data.subTotal,
+//         grandTotal: data.grandTotal,
+//         tax: data.totalTax,
+//         discount: data.totalDiscount,
+//         email: customer.email,
+//         itemData: invoiceItems,
+//       });
+//     }
+//     return result;
+//   } catch (error) {
+//     throw error;
+//   }
+// };
+// (""); // Function to create a single sale record with inventory tracking and stock management
 const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
   try {
     const repo = await repository();
     const dataSource = await handler();
     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
     const itemStockTrack = dataSource.getRepository(ItemsStockTrack);
+
+    // Generate unique sale code
     data = await generateCode(19, data);
     let result: SaleHeaders = new SaleHeaders();
+
     const invoiceItems: {
       name: string;
       quantity: number;
@@ -151,181 +367,168 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       tax: number;
       taxName: string;
     }[] = [];
-
     const inventory: InventoryLines[] = [];
     const itemIds: number[] = [];
     const errors: string[] = [];
-    const itemToQauntityMap: {
-      [key: number]: {
-        quantity: number;
-        name: string;
-        idx: number;
-      };
-    } = {};
-    //get customer data custo
-    let customer = await contactService.findById(data.customer.id);
+    const itemToQuantityMap: Record<
+      number,
+      { quantity: number; name: string; idx: number }
+    > = {};
 
-    data.saleLines.forEach((value) => {
-      invoiceItems.push({
-        name: value.service.name,
-        quantity: value.quantity,
-        unitPrice: value.rate,
-        total: Number(value.amount),
-        tax: value.taxAmount,
-        taxName: value.tax.name,
-      });
-      itemIds.push(value.service.id);
+    // Fetch customer data
+    const customer = await contactService.findById(data.customer.id);
+
+    // Prepare invoice items and collect item IDs
+    data.saleLines.forEach(
+      ({ service, quantity, rate, amount, taxAmount, tax }) => {
+        invoiceItems.push({
+          name: service.name,
+          quantity,
+          unitPrice: rate,
+          total: Number(amount),
+          tax: taxAmount,
+          taxName: tax.name,
+        });
+        itemIds.push(service.id);
+      }
+    );
+
+    // Fetch available stock for items
+    //!fetch only active records
+    const itemsAvailable = await itemAvailableRepo.find({
+      //take only active records for items
+      where: { service: { id: In(itemIds), isInactive: 0 }, isInactive: 0 },
+      relations: { service: true },
+      select: { id: true, quantity: true, service: { id: true, name: true } },
     });
-    // get items available as per item demand
-    let itemsAvailable = await itemAvailableRepo.find({
-      where: {
-        service: {
-          id: In(itemIds),
-        },
-      },
-      relations: {
-        service: true,
-      },
-      select: {
-        id: true,
-        quantity: true,
-        service: {
-          id: true,
-          name: true,
-        },
-      },
-    });
-    //add data to map
-    itemsAvailable.forEach((val, index) => {
-      itemToQauntityMap[val.service.id] = {
-        name: val.service.name,
-        quantity: val.quantity,
+
+    // Map item stock availability
+    itemsAvailable.forEach(({ service, quantity }, index) => {
+      itemToQuantityMap[service.id] = {
+        name: service.name,
+        quantity,
         idx: index,
       };
     });
-    //check availabilty
-    data.saleLines.forEach((value) => {
-      if (itemToQauntityMap[value.service.id]) {
-        if (itemToQauntityMap[value.service.id]?.quantity < value.quantity) {
+
+    // Validate item availability
+    data.saleLines.forEach(({ service, quantity }) => {
+      if (itemToQuantityMap[service.id]) {
+        if (itemToQuantityMap[service.id].quantity < quantity) {
           errors.push(
             `${
-              itemToQauntityMap[value.service.id].name
-            } is out of stock : available stock is ${
-              itemToQauntityMap[value.service.id]?.quantity
-                ? itemToQauntityMap[value.service.id]?.quantity
-                : 0
+              itemToQuantityMap[service.id].name
+            } is out of stock: available stock is ${
+              itemToQuantityMap[service.id].quantity || 0
             }`
           );
         }
       } else {
-        errors.push(
-          `${value.service.name} is out of stock : available stock is ${0}`
-        );
+        errors.push(`${service.name} is out of stock: available stock is 0`);
       }
     });
-    //throw error if applicable
-    if (errors.length) {
-      throw { message: errors, statusCode: 409 };
-    }
-    //get related stock track records
-    const stockMap: {
-      [key: number]: {
-        id: number;
-        idx: number;
-        aQuanity: number;
-      };
-    } = {};
+
+    if (errors.length) throw { message: errors, statusCode: 409 };
+    const itemRepo = dataSource.getRepository(Services);
+
+    // Fetch related (active) services with required fields
+    const relatedItems = await itemRepo.find({
+      where: { id: In(itemIds), isInactive: 0 },
+      select: { sku: true, id: true, recordId: true },
+    });
+
+    // Build mappings for latest service and SKU generation
+    const latestItemMap: Record<number, number> = {};
+    relatedItems.forEach((item) => {
+      latestItemMap[item.recordId] = item.id;
+    });
+    // Fetch stock tracking records
+    const stockMap: Record<
+      number,
+      { id: number; idx: number; availableQuantity: number }
+    > = {};
+    // Fetch stock tracking records for items in the sale, ordered by ID in ascending order
+    //!fetch only active records
     let stockTrack = await itemStockTrack.find({
-      where: {
-        service: {
-          id: In(itemIds),
-        },
-      },
-      order: {
-        id: "ASC",
-      },
-      relations: {
-        service: true,
-      },
+      where: { service: { id: In(itemIds), isInactive: 0 } },
+      order: { id: "ASC" },
+      relations: { service: true },
     });
-    stockTrack.forEach((val, index) => {
-      stockMap[val.id] = {
-        id: val.id,
-        idx: index,
-        aQuanity: val?.quantityUvailable,
-      };
+    //create map for stock track records
+    stockTrack.forEach(({ id, quantityUvailable }, index) => {
+      stockMap[id] = { id, idx: index, availableQuantity: quantityUvailable };
     });
 
-    data.saleLines.forEach((value) => {
-      //1. filter out stock entries for each item
-      let idx = 0;
-      let itmRemain = value.quantity;
-      let uvailableForItem = stockTrack.filter(
-        (val) => val.service.id === value.service.id
-      );
-      while (itmRemain) {
-        //1. update current entry
-        let _uvailableForItem = uvailableForItem[idx];
-        //create inventory records here
-        const il = new InventoryLines();
-        il.service = value.service;
+    // Manage inventory and stock tracking
+    data.saleLines.forEach(
+      ({ service, quantity, createdDate, modifiedDate }) => {
+        let remainingQty = quantity;
+        //get the records only for specific item from stock track
+        let stockEntries = stockTrack.filter(
+          ({ service: stockService }) => stockService.id === service.id
+        );
+        let idx = 0;
 
-        il.createdDate = value.createdDate;
-        il.modifiedDate = value.modifiedDate;
-        il.stock = _uvailableForItem;
-        let sold = _uvailableForItem.quantityUvailable - itmRemain;
-        _uvailableForItem = {
-          ..._uvailableForItem,
-          quantityUvailable: sold > 0 ? sold : 0,
-        };
-        if (stockMap[_uvailableForItem.id]) {
-          stockTrack[stockMap[_uvailableForItem.id].idx] = _uvailableForItem;
+        while (remainingQty > 0) {
+          let stockEntry = stockEntries[idx];
+          let inventoryLine = new InventoryLines();
+          inventoryLine.service = service;
+          inventoryLine.serviceId = latestItemMap[service.recordId];
+          inventoryLine.serviceRecordId = service.id;
+          inventoryLine.createdDate = createdDate;
+          inventoryLine.modifiedDate = modifiedDate;
+          //!make changed here in future if required
+          inventoryLine.stock = stockEntry;
+
+          let updatedStockQty = stockEntry.quantityUvailable - remainingQty;
+          stockEntry.quantityUvailable = Math.max(updatedStockQty, 0);
+          // stockEntry.serviceId = latestItemMap[service.recordId];
+          // stockEntry.serviceRecordId = service.id;
+          //update the stokc track record at correct position
+          if (stockMap[stockEntry.id]) {
+            stockTrack[stockMap[stockEntry.id].idx] = stockEntry;
+          }
+
+          inventoryLine.quantity =
+            updatedStockQty < 0
+              ? -(remainingQty + updatedStockQty) // If stock is insufficient, store the fulfilled part.
+              : -remainingQty; // Otherwise, store the entire deducted quantity.
+          inventory.push(inventoryLine);
+          //set the remainig quanoty which will be used in next iteration, stock will be deducted in next iteration
+          remainingQty = updatedStockQty < 0 ? Math.abs(updatedStockQty) : 0;
+
+          idx++;
         }
-        if (sold < 0) {
-          il.quantity = -Number(itmRemain + sold);
-          inventory.push(il);
-          itmRemain = Math.abs(sold);
-        } else {
-          il.quantity = -Number(itmRemain);
-          inventory.push(il);
-          itmRemain = 0;
-        }
-        idx++;
-      }
 
-      //decrease item availabilty
-      if (itemToQauntityMap[value.service.id]) {
-        let _itemsAvailable =
-          itemsAvailable[itemToQauntityMap[value.service.id].idx];
-        _itemsAvailable = {
-          ..._itemsAvailable,
-          id: _itemsAvailable.id,
-          quantity: _itemsAvailable.quantity - value.quantity,
-        };
-        itemsAvailable[itemToQauntityMap[value.service.id].idx] =
-          _itemsAvailable;
+        // Update available stock
+        if (itemToQuantityMap[service.id]) {
+          let itemIndex = itemToQuantityMap[service.id].idx;
+          itemsAvailable[itemIndex].quantity -= quantity;
+        }
       }
-    });
+    );
+    //data for sale lines already included
+    //add data for inventory lines
     data.inventoryLines = inventory;
-    //3. start transaction
+
+    // Start transaction
     await dataSource.manager.transaction(
       "SERIALIZABLE",
       async (transactionalEntityManager) => {
-        //2. update items availability
-        //2. update items availability
         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
         const headerEntry = transactionalEntityManager.create(
           SaleHeaders,
           data
         );
-        const headerEntryResult = await transactionalEntityManager.save(
+        result = await transactionalEntityManager.save(
           SaleHeaders,
           headerEntry
         );
-        result = headerEntryResult;
       }
     );
+
+    // Send invoice email if customer has an email
     if (customer.email) {
       await invoiceMailer({
         customer: customer.name,
@@ -340,9 +543,134 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         itemData: invoiceItems,
       });
     }
+
     return result;
   } catch (error) {
     throw error;
   }
 };
-export default { find, findById, create, deleteById, updateById, createBulk };
+const editBulk = async (data: SaleHeaders, isService: boolean = false) => {
+  try {
+    const dataSource = await handler();
+
+    // Repositories for different entities
+    const headerRepo = dataSource.getRepository(SaleHeaders);
+    const saleLinesRepo = dataSource.getRepository(SaleLines);
+    const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
+    const itemsStockTrackRepo = dataSource.getRepository(ItemsStockTrack);
+    const inventoryLinesRepo = dataSource.getRepository(InventoryLines);
+
+    // 1. Fetch the active sale header by recordId
+    let headerResponse = await headerRepo.findOne({
+      where: { recordId: data.recordId, isInactive: 0 },
+    });
+
+    // 2. Fetch all active sale lines for the sale header
+    const saleLines = await saleLinesRepo.find({
+      where: { txnHeaderRecordId: data.recordId, isInactive: 0 },
+    });
+
+    // 3. Fetch all active inventory lines for the sale header, including their stock details
+    const inventoryLines = await inventoryLinesRepo.find({
+      where: { saleRecordId: data.recordId, isInactive: 0 },
+      relations: { stock: true },
+    });
+
+    // 4. Build mapping objects for inventory and stock deductions:
+    const inventoryMap: Record<number, number> = {};
+    const stockMap: Record<number, number> = {};
+    inventoryLines.forEach((line) => {
+      // Accumulate deducted quantity per service
+      inventoryMap[line.serviceId] = (inventoryMap[line.serviceId] || 0) + line.quantity;
+      // Accumulate deducted quantity per stock entry
+      stockMap[line.stock.id] = (stockMap[line.stock.id] || 0) + line.quantity;
+    });
+
+    // 5. Restore available stock by fetching item available records for the affected services
+    const itemAvailable = await itemAvailableRepo.find({
+      where: { serviceId: In(Object.keys(inventoryMap)), isInactive: 0 },
+    });
+
+    // Build a mapping of available quantity by serviceId
+    const itemAvailableMap: Record<number, number> = {};
+    itemAvailable.forEach((item) => {
+      itemAvailableMap[item.serviceId] = item.quantity;
+    });
+
+    // For each service, add back the deducted inventory quantity to available stock
+    Object.keys(inventoryMap).forEach((key) => {
+      // Convert key to number if needed
+      const serviceId = Number(key);
+      itemAvailableMap[serviceId] = (itemAvailableMap[serviceId] || 0) + inventoryMap[serviceId];
+    });
+
+    // Update each item available record with the new quantity from the mapping
+    const itemAvailableUpdate = itemAvailable.map((item) => {
+      item.quantity = itemAvailableMap[item.serviceId];
+      return item;
+    });
+
+    // 6. Restore stock track records:
+    // Fetch active stock track records for the sale header
+    let itemStockTrack = await itemsStockTrackRepo.find({
+      where: { txnHeaderRecordId: data.recordId, isInactive: 0 },
+    });
+
+    // For each stock track record, add back the deducted quantity from stockMap
+    itemStockTrack = itemStockTrack.map((stock) => {
+      stock.quantityUvailable = stock.quantityUvailable + (stockMap[stock.id] || 0);
+      return stock;
+    });
+
+    // 7. Begin transaction to perform rollback and create new sale transaction
+    await dataSource.manager.transaction("SERIALIZABLE", async (manager) => {
+      // Update item available records (restoring stock)
+      await manager.save(ItemAvailable, itemAvailableUpdate);
+
+      // Mark all sale lines as inactive
+      await manager.save(
+        SaleLines,
+        saleLines.map((line) => {
+          line.isInactive = 1;
+          return line;
+        })
+      );
+
+      // Save updated stock track records (restoring available quantities)
+      await manager.save(ItemsStockTrack, itemStockTrack);
+
+      // Mark all inventory lines as inactive
+      await manager.save(
+        InventoryLines,
+        inventoryLines.map((line) => {
+          line.isInactive = 1;
+          return line;
+        })
+      );
+
+      // Mark the current sale header as inactive
+      headerResponse = await manager.save(SaleHeaders, {
+        ...headerResponse,
+        isInactive: 1,
+      });
+
+      // Create a new sale transaction by calling createBulk
+      const newSale = await createBulk(
+        {
+          ...data,
+          recordId: headerResponse.recordId,
+          code: headerResponse.code,
+        },
+        true
+      );
+      // Update data with the newly created sale transaction
+      data = newSale;
+    });
+
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export default { find, findById, create, deleteById, updateById, createBulk,editBulk };

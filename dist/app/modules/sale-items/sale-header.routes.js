@@ -172,5 +172,24 @@ router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(sale_heade
         }
     });
 }); });
+router.put("bulk", (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var result, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, sale_header_service_1.default.editBulk(req.body)];
+            case 1:
+                result = _a.sent();
+                res.send(result);
+                return [3 /*break*/, 3];
+            case 2:
+                error_7 = _a.sent();
+                next(error_7);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 exports.default = new routes_types_1.Route("/sale-headers", router);
 //# sourceMappingURL=sale-header.routes.js.map
