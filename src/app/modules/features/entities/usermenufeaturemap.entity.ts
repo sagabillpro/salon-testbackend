@@ -56,4 +56,7 @@ export class UserMenusAndFeatures {
 
   @Column({ type: "int", default: 0, nullable: true })
   isSystem: number;
+
+  @Column({ type: "int", default: 0, nullable: false })
+  isActive: number;
 }
