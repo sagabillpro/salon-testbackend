@@ -20,7 +20,7 @@ export class UserMenusAndFeatures {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
-  @Column({ type: "int" })
+  @Column({ type: "int" , nullable: true})s
   userId: number;
 
   @Column({ type: "int" })
