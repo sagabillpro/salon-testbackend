@@ -54,6 +54,7 @@ export class Users {
   @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
     // cascade: true,
     // onDelete: "CASCADE",
+   // orphanedRowAction: "preserve",
   })
   userMenusAndFeatures: UserMenusAndFeatures[];
 }
