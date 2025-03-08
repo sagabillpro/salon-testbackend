@@ -94,7 +94,7 @@ router.post(
   }
 );
 
-router.post(
+router.put(
   "/bulk/:id",
   validateRequestBody(Users),
   async (req: Request, res: Response, next: NextFunction) => {
