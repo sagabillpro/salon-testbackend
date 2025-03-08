@@ -144,14 +144,14 @@ const createBulk = async (data: Users) => {
         // 10. Hash the user's password before storing it
 
         let hashedPassword = "";
-        if (data.password != "") {
+        if (!data.id) {
           hashedPassword = await hashPassword(data.password);
         }
-        
-        const { userMenusAndFeatures, ...headerWithoutLines } = data;
+
+        let { userMenusAndFeatures, ...headerWithoutLines } = data;
         // 11. Create a new user entry with the provided data
         let headerEntry = new Users();
-        if (!data.id || (data.id && data.password != "")) {
+        if (!data.id) {
           headerEntry = transactionalEntityManager.create(Users, {
             ...headerWithoutLines,
             password: hashedPassword,
@@ -174,7 +174,7 @@ const createBulk = async (data: Users) => {
             };
           }
 
-          headerEntry = { ...data, password: currentUser.password };
+          headerWithoutLines = { ...headerWithoutLines, password: currentUser.password };
         }
 
         // 12. Create an array to store user's menu and feature permissions
