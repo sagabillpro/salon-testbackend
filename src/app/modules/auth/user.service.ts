@@ -204,7 +204,7 @@ const createBulk = async (data: Users) => {
         console.log("userMenusAndFeaturesNew", userMenusAndFeaturesNew);
         await transactionalEntityManager.save(
           UserMenusAndFeatures,
-          userMenusAndFeatures ? userMenusAndFeatures : []
+          userMenusAndFeaturesNew ? userMenusAndFeaturesNew : []
         );
       }
     );
