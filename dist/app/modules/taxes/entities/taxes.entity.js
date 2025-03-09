@@ -70,6 +70,7 @@ var Taxes = /** @class */ (function () {
                             })];
                     case 2:
                         lastRecord = _a.sent();
+                        console.log("lastRecord", lastRecord);
                         this.recordId = lastRecord ? lastRecord.recordId + 1 : 1;
                         _a.label = 3;
                     case 3: return [2 /*return*/];

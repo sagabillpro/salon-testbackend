@@ -244,7 +244,7 @@ router.get(
         });
         //create mapping object
         userData.forEach((element) => {
-          if (element?.feature?.id === 5) {
+          if (element?.feature?.id === 5 && element.isActive === 1) {
             // Set the feature ID to true in the mapping object for the current entity ID
             mappingObj[element.entity.id] = true;
           }
@@ -310,43 +310,43 @@ router.get(
     try {
       //1 . get user specific menus
       const user: any = req.user;
-        let mappingObj: {
-          [key: number]: {
-            [key: number]: boolean;
-          };
-        } = {};
-        const userData = await UserMenusAndFeaturesService.find({
-          relations: {
-            user: true,
-            entity: true,
-            feature: true,
+      let mappingObj: {
+        [key: number]: {
+          [key: number]: boolean;
+        };
+      } = {};
+      const userData = await UserMenusAndFeaturesService.find({
+        relations: {
+          user: true,
+          entity: true,
+          feature: true,
+        },
+        select: {
+          user: {
+            id: true,
+            name: true,
           },
-          select: {
-            user: {
-              id: true,
-              name: true,
-            },
-            entity: {
-              id: true,
-            },
-            feature: {
-              id: true,
-            },
+          entity: {
+            id: true,
           },
-          where: {
-            user: {
-              id: user.userId,
-            },
+          feature: {
+            id: true,
           },
-        });
-        //create mapping object
-        userData.forEach((element) => {
-          if (!mappingObj[element.entity.id]) {
-            mappingObj[element.entity.id] = {};
-          }
-          mappingObj[element.entity.id][element.feature.id] = true;
-        });
-        res.status(200).json(mappingObj);
+        },
+        where: {
+          user: {
+            id: user.userId,
+          },
+        },
+      });
+      //create mapping object
+      userData.forEach((element) => {
+        if (!mappingObj[element.entity.id]) {
+          mappingObj[element.entity.id] = {};
+        }
+        mappingObj[element.entity.id][element.feature.id] = true;
+      });
+      res.status(200).json(mappingObj);
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Error fetching menus", error });

@@ -136,8 +136,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                             case 0:
                                 _a.trys.push([0, 4, , 5]);
                                 return [4 /*yield*/, repo.findOneBy({
-                                        recordId: id,
-                                        isInactive: 0,
+                                        id: id,
                                     })];
                             case 1:
                                 respo = _a.sent();
@@ -173,8 +172,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                             case 0:
                                 _a.trys.push([0, 5, , 6]);
                                 return [4 /*yield*/, repo.findOneBy({
-                                        recordId: id,
-                                        isInactive: 0,
+                                        id: id,
                                     })];
                             case 1:
                                 respo = _a.sent();

@@ -64,6 +64,7 @@ export class Taxes {
         where: {},
         order: { recordId: "DESC" },
       });
+      console.log("lastRecord", lastRecord);
       this.recordId = lastRecord ? lastRecord.recordId + 1 : 1;
     }
   }

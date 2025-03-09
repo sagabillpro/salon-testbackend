@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  DeleteDateColumn,
 } from "typeorm";
 import { Country, States, City } from "../../general-data/entities";
 import { Company } from "../../company/entities/company.entity";
@@ -71,4 +72,7 @@ export class Branch {
 
   @UpdateDateColumn({ type: "timestamp" })
   modifiedDate: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 }

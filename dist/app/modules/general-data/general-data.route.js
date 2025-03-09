@@ -313,7 +313,7 @@ router.get("/menu-headers-new", authenticate_middleware_1.default, function (req
                 //create mapping object
                 userData.forEach(function (element) {
                     var _a;
-                    if (((_a = element === null || element === void 0 ? void 0 : element.feature) === null || _a === void 0 ? void 0 : _a.id) === 5) {
+                    if (((_a = element === null || element === void 0 ? void 0 : element.feature) === null || _a === void 0 ? void 0 : _a.id) === 5 && element.isActive === 1) {
                         // Set the feature ID to true in the mapping object for the current entity ID
                         mappingObj_1[element.entity.id] = true;
                     }
