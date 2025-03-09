@@ -85,19 +85,19 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Company.prototype, "id", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, unique: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
     ], Company.prototype, "code", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false, unique: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
         __metadata("design:type", String)
-    ], Company.prototype, "companyName", void 0);
+    ], Company.prototype, "name", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: false, unique: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: false }),
         __metadata("design:type", String)
     ], Company.prototype, "registrationNumber", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)
     ], Company.prototype, "taxId", void 0);
     __decorate([
@@ -105,15 +105,7 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Company.prototype, "taxRecordId", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "taxRecordId", referencedColumnName: "recordId" },
-            { name: "taxId", referencedColumnName: "id" },
-        ]),
-        __metadata("design:type", taxes_entity_1.Taxes)
-    ], Company.prototype, "tax", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 150, nullable: false, unique: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 150, nullable: false }),
         __metadata("design:type", String)
     ], Company.prototype, "email", void 0);
     __decorate([
@@ -133,20 +125,25 @@ var Company = /** @class */ (function () {
         __metadata("design:type", String)
     ], Company.prototype, "addressLine2", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.City; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", entities_1.City)
-    ], Company.prototype, "city", void 0);
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Company.prototype, "cityId", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.States; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", entities_1.States)
-    ], Company.prototype, "state", void 0);
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], Company.prototype, "createdById", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.Country; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", entities_1.Country)
-    ], Company.prototype, "country", void 0);
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], Company.prototype, "modifiedById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Company.prototype, "stateId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], Company.prototype, "countryId", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 20, nullable: true }),
         __metadata("design:type", String)
@@ -180,13 +177,6 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Date)
     ], Company.prototype, "modifiedDate", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return branches_entity_1.Branch; }, function (line) { return line.company; }, {
-            cascade: true,
-            onDelete: "CASCADE",
-        }),
-        __metadata("design:type", Array)
-    ], Company.prototype, "branches", void 0);
-    __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
     ], Company.prototype, "isInactive", void 0);
@@ -194,6 +184,35 @@ var Company = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
     ], Company.prototype, "recordId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)([
+            { name: "taxRecordId", referencedColumnName: "recordId" },
+            { name: "taxId", referencedColumnName: "id" },
+        ]),
+        __metadata("design:type", taxes_entity_1.Taxes)
+    ], Company.prototype, "tax", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return branches_entity_1.Branch; }, function (line) { return line.company; }, {
+            cascade: ["soft-remove"],
+        }),
+        __metadata("design:type", Array)
+    ], Company.prototype, "branches", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.City; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", entities_1.City)
+    ], Company.prototype, "city", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.States; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", entities_1.States)
+    ], Company.prototype, "state", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.Country; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", entities_1.Country)
+    ], Company.prototype, "country", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),

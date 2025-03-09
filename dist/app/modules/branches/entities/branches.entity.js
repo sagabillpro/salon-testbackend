@@ -95,6 +95,10 @@ var Branch = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "timestamp" }),
         __metadata("design:type", Date)
     ], Branch.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)({ nullable: true }),
+        __metadata("design:type", Date)
+    ], Branch.prototype, "deletedAt", void 0);
     Branch = __decorate([
         (0, typeorm_1.Entity)("branches")
     ], Branch);

@@ -65,8 +65,7 @@ const repository = async () => {
     try {
       // Find the existing record by ID and ensure it is not inactive
       const respo = await repo.findOneBy({
-        recordId: id,
-        isInactive: 0,
+        id: id,
       });
 
       // If the record is not found, throw a 404 error
@@ -103,8 +102,7 @@ const repository = async () => {
     try {
       // Find the existing record by ID and ensure it is not inactive
       const respo = await repo.findOneBy({
-        recordId: id,
-        isInactive: 0,
+        id: id,
       });
   
       // If the record is not found, throw a 404 error

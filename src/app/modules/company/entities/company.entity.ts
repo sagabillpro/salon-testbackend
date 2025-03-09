@@ -23,29 +23,22 @@ export class Company {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
-  @Column({ type: "varchar", length: 255, nullable: true, unique: true })
+  @Column({ type: "varchar", length: 255, nullable: true })
   code: string;
 
-  @Column({ type: "varchar", length: 255, nullable: false, unique: true })
-  companyName: string;
+  @Column({ type: "varchar", length: 255, nullable: false })
+  name: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false, unique: true })
+  @Column({ type: "varchar", length: 100, nullable: false })
   registrationNumber: string;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "int", nullable: false })
   taxId: number;
 
   @Column({ type: "int", nullable: true })
   taxRecordId: number;
 
-  @ManyToOne(() => Taxes, { nullable: true })
-  @JoinColumn([
-    { name: "taxRecordId", referencedColumnName: "recordId" },
-    { name: "taxId", referencedColumnName: "id" },
-  ])
-  tax: Taxes;
-
-  @Column({ type: "varchar", length: 150, nullable: false, unique: true })
+  @Column({ type: "varchar", length: 150, nullable: false })
   email: string;
 
   @Column({ type: "varchar", length: 20, nullable: true })
@@ -60,17 +53,20 @@ export class Company {
   @Column({ type: "varchar", length: 255, nullable: true })
   addressLine2: string;
 
-  @ManyToOne(() => City, { nullable: true })
-  @JoinColumn()
-  city: City;
+  @Column({ type: "int", nullable: true })
+  cityId: number;
 
-  @ManyToOne(() => States, { nullable: true })
-  @JoinColumn()
-  state: States;
+  @Column({ type: "int", nullable: false })
+  createdById: number;
 
-  @ManyToOne(() => Country, { nullable: true })
-  @JoinColumn()
-  country: Country;
+  @Column({ type: "int", nullable: false })
+  modifiedById: number;
+
+  @Column({ type: "int", nullable: true })
+  stateId: number;
+
+  @Column({ type: "int", nullable: false })
+  countryId: number;
 
   @Column({ type: "varchar", length: 20, nullable: true })
   postalCode: string;
@@ -96,17 +92,36 @@ export class Company {
   @UpdateDateColumn({ type: "timestamp" })
   modifiedDate: Date;
 
-  @OneToMany(() => Branch, (line) => line.company, {
-    cascade: true,
-    onDelete: "CASCADE",
-  })
-  branches: Branch[];
-
   @Column({ type: "int", default: 0 })
   isInactive: number;
 
   @Column({ type: "int", nullable: true })
   recordId: number;
+
+  @ManyToOne(() => Taxes, { nullable: true })
+  @JoinColumn([
+    { name: "taxRecordId", referencedColumnName: "recordId" },
+    { name: "taxId", referencedColumnName: "id" },
+  ])
+  tax: Taxes;
+
+  @OneToMany(() => Branch, (line) => line.company, {
+    cascade: ["soft-remove"],
+
+  })
+  branches?: Branch[];
+
+  @ManyToOne(() => City, { nullable: true })
+  @JoinColumn()
+  city: City;
+
+  @ManyToOne(() => States, { nullable: true })
+  @JoinColumn()
+  state: States;
+
+  @ManyToOne(() => Country, { nullable: true })
+  @JoinColumn()
+  country: Country;
 
   @ManyToOne(() => Users)
   @JoinColumn()
@@ -126,6 +141,7 @@ export class Company {
       });
       this.recordId = lastRecord ? lastRecord.recordId + 1 : 1;
     }
+    return
   }
 
   @DeleteDateColumn() // 👈 Automatically set when deleted

@@ -2,6 +2,7 @@ import { FindManyOptions, FindOneOptions } from "typeorm";
 
 import { handler } from "../../../app/config/dbconfig";
 import { Company } from "./entities/company.entity";
+import { Branch } from "../branches/entities/branches.entity";
 
 const repository = async () => {
   const dataSource = await handler();
@@ -33,7 +34,7 @@ const repository = async () => {
         },
         where: {
           recordId: Number(id),
-          isInactive:0,
+          isInactive: 0,
           ...filter?.where,
         },
         relations: {
@@ -65,7 +66,7 @@ const repository = async () => {
     try {
       const respo = await repo.findOneBy({
         recordId: id,
-        isInactive:0,
+        isInactive: 0,
       });
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
@@ -73,7 +74,7 @@ const repository = async () => {
       await repo.save({
         ...respo,
         ...data,
-        recordId:respo.recordId,
+        recordId: respo.recordId,
         code: respo.code,
       });
     } catch (error) {
@@ -84,13 +85,24 @@ const repository = async () => {
   //5. delete single record
   const deleteById = async (id: number): Promise<void> => {
     try {
-      const respo = await repo.findOneBy({
-        id: id,
+      const branchRepo = dataSource.getRepository(Branch);
+      const respo = await repo.findOne({
+        where: { id: id },
+        relations: ["branches"],
       });
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      await repo.remove(respo);
+
+      await repo.softRemove(respo);
+      await branchRepo.update(
+        {
+          companyId: id,
+        },
+        {
+          deletedAt: new Date(),
+        }
+      );
     } catch (error) {
       throw error;
     }
