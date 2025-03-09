@@ -51,9 +51,10 @@ export class Users {
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
 
-    @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
-      cascade: true,
-      onDelete: "CASCADE",
-    })
-    userMenusAndFeatures: UserMenusAndFeatures[];
+  @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
+    // cascade: true,
+    // onDelete: "CASCADE",
+   // orphanedRowAction: "preserve",
+  })
+  userMenusAndFeatures?: UserMenusAndFeatures[];
 }

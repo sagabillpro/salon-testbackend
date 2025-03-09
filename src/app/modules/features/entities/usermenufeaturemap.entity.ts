@@ -20,20 +20,32 @@ export class UserMenusAndFeatures {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
+  @Column({ type: "int", nullable: true })
+  userId: number;
+
+  @Column({ type: "int" })
+  entityId: number;
+
+  @Column({ type: "int" })
+  featureId: number;
+
+  @Column({ type: "int", nullable: true })
+  roleId: number;
+
   @ManyToOne(() => Users, { nullable: true, onDelete: "CASCADE" })
-  @JoinColumn()
+  @JoinColumn({ name: "userId" })
   user: Users;
 
   @ManyToOne(() => FeatureSettings, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn()
+  @JoinColumn({ name: "entityId" })
   entity: FeatureSettings;
 
   @ManyToOne(() => Feature, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn()
+  @JoinColumn({ name: "featureId" })
   feature: Feature;
 
   @ManyToOne(() => Role, { nullable: true, onDelete: "CASCADE" })
-  @JoinColumn()
+  @JoinColumn({ name: "roleId" })
   role: Role;
 
   @CreateDateColumn({ type: "timestamp" })
@@ -44,5 +56,7 @@ export class UserMenusAndFeatures {
 
   @Column({ type: "int", default: 0, nullable: true })
   isSystem: number;
-}
 
+  @Column({ type: "int", default: 0, nullable: false })
+  isActive: number;
+}

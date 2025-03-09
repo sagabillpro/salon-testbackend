@@ -23,23 +23,39 @@ var UserMenusAndFeatures = /** @class */ (function () {
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "id", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], UserMenusAndFeatures.prototype, "userId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int" }),
+        __metadata("design:type", Number)
+    ], UserMenusAndFeatures.prototype, "entityId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int" }),
+        __metadata("design:type", Number)
+    ], UserMenusAndFeatures.prototype, "featureId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], UserMenusAndFeatures.prototype, "roleId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }, { nullable: true, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.JoinColumn)({ name: "userId" }),
         __metadata("design:type", user_entity_1.Users)
     ], UserMenusAndFeatures.prototype, "user", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return feature_setting_entity_1.FeatureSettings; }, { nullable: false, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.JoinColumn)({ name: "entityId" }),
         __metadata("design:type", feature_setting_entity_1.FeatureSettings)
     ], UserMenusAndFeatures.prototype, "entity", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return features_entity_1.Feature; }, { nullable: false, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.JoinColumn)({ name: "featureId" }),
         __metadata("design:type", features_entity_1.Feature)
     ], UserMenusAndFeatures.prototype, "feature", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return role_entity_1.Role; }, { nullable: true, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.JoinColumn)({ name: "roleId" }),
         __metadata("design:type", role_entity_1.Role)
     ], UserMenusAndFeatures.prototype, "role", void 0);
     __decorate([
@@ -54,6 +70,10 @@ var UserMenusAndFeatures = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "int", default: 0, nullable: true }),
         __metadata("design:type", Number)
     ], UserMenusAndFeatures.prototype, "isSystem", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0, nullable: false }),
+        __metadata("design:type", Number)
+    ], UserMenusAndFeatures.prototype, "isActive", void 0);
     UserMenusAndFeatures = __decorate([
         (0, typeorm_1.Entity)("user_menus_and_features"),
         (0, typeorm_1.Unique)(["user", "entity", "feature"]) // Ensures uniqueness for a user-menu-feature combination

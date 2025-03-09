@@ -2,6 +2,7 @@ import { FindManyOptions, FindOneOptions } from "typeorm";
 
 import { handler } from "../../../app/config/dbconfig";
 import { Users } from "./entities/user.entity";
+import { UserMenusAndFeatures } from "../features/entities/usermenufeaturemap.entity";
 
 const repository = async () => {
   const dataSource = await handler();
@@ -62,16 +63,32 @@ const repository = async () => {
   //4. update single records
   const updateById = async (id: number, data: Users) => {
     try {
+      const dataSource = await handler();
       const respo = await repo.findOneBy({
         id: id,
       });
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      await repo.save({
-        ...respo,
-        ...data,
-      });
+      await dataSource.manager.transaction(
+        "SERIALIZABLE",
+        async (transactionalEntityManager) => {
+          await transactionalEntityManager.save(Users, {
+            ...respo,
+            ...data,
+          });
+          //2. update items availability
+          await transactionalEntityManager.save(
+            UserMenusAndFeatures,
+            data.userMenusAndFeatures ? data.userMenusAndFeatures : []
+          );
+        }
+      );
+      // await repo.save({
+      //   ...respo,
+      //   ...data,
+      // });
+      // await userMenusRepo.save(data.userMenusAndFeatures);
     } catch (error) {
       throw error;
     }
