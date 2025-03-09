@@ -46,6 +46,17 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -142,11 +153,12 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
 }); };
 //4. create record in bulk
 var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, repo_1, respo, respo, userTypeRepo, userType_1, error_4;
+    var response_1, dataSource, repo_1, respo, respo, userTypeRepo, userMenusAndFeaturesRepo, userType_1, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 9, , 10]);
+                response_1 = new user_entity_1.Users();
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
@@ -187,6 +199,7 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                 _a.label = 6;
             case 6:
                 userTypeRepo = dataSource.getRepository(entities_1.DUserType);
+                userMenusAndFeaturesRepo = dataSource.getRepository(usermenufeaturemap_entity_1.UserMenusAndFeatures);
                 return [4 /*yield*/, userTypeRepo.findOne({
                         where: {
                             id: data.userType.id,
@@ -203,32 +216,35 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                 }
                 // 8. Start a database transaction with SERIALIZABLE isolation level
                 return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
-                        var hashedPassword, headerEntry, currentUser, userMenusAndFeatures;
+                        var hashedPassword, userMenusAndFeatures, headerWithoutLines, currentUser, userMenusAndFeaturesNew;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
-                                case 0: return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(18, data)];
+                                case 0:
+                                    if (!!data.id) return [3 /*break*/, 2];
+                                    return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(18, data)];
                                 case 1:
-                                    // 9. Generate a unique code for the user
                                     data = _a.sent();
-                                    hashedPassword = "";
-                                    if (!(data.password != "")) return [3 /*break*/, 3];
-                                    return [4 /*yield*/, (0, services_1.hashPassword)(data.password)];
+                                    _a.label = 2;
                                 case 2:
-                                    hashedPassword = _a.sent();
-                                    _a.label = 3;
+                                    hashedPassword = "";
+                                    if (!!data.id) return [3 /*break*/, 4];
+                                    return [4 /*yield*/, (0, services_1.hashPassword)(data.password)];
                                 case 3:
-                                    headerEntry = new user_entity_1.Users();
-                                    if (!(!data.id || (data.id && data.password != ""))) return [3 /*break*/, 4];
-                                    headerEntry = transactionalEntityManager.create(user_entity_1.Users, __assign(__assign({}, data), { password: hashedPassword, userType: userType_1 }));
-                                    return [3 /*break*/, 6];
+                                    hashedPassword = _a.sent();
+                                    _a.label = 4;
                                 case 4:
+                                    userMenusAndFeatures = data.userMenusAndFeatures, headerWithoutLines = __rest(data, ["userMenusAndFeatures"]);
+                                    if (!!data.id) return [3 /*break*/, 5];
+                                    headerWithoutLines = transactionalEntityManager.create(user_entity_1.Users, __assign(__assign({}, headerWithoutLines), { password: hashedPassword, userType: userType_1 }));
+                                    return [3 /*break*/, 7];
+                                case 5:
                                     console.log("inside thsi ....");
                                     return [4 /*yield*/, repo_1.findOne({
                                             where: {
                                                 id: data.id,
                                             },
                                         })];
-                                case 5:
+                                case 6:
                                     currentUser = _a.sent();
                                     // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
                                     if (!currentUser) {
@@ -237,24 +253,27 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                                             statusCode: 404,
                                         };
                                     }
-                                    headerEntry = __assign(__assign({}, data), { password: currentUser.password });
-                                    _a.label = 6;
-                                case 6:
-                                    userMenusAndFeatures = [];
+                                    headerWithoutLines = __assign(__assign({}, headerWithoutLines), { password: currentUser.password });
+                                    _a.label = 7;
+                                case 7:
+                                    userMenusAndFeaturesNew = [];
+                                    return [4 /*yield*/, transactionalEntityManager.save(user_entity_1.Users, headerWithoutLines)];
+                                case 8:
+                                    response_1 = _a.sent();
                                     // 13. Iterate over userMenusAndFeatures data and create instances
-                                    data.userMenusAndFeatures.forEach(function (value, index) {
+                                    userMenusAndFeatures === null || userMenusAndFeatures === void 0 ? void 0 : userMenusAndFeatures.forEach(function (value, index) {
                                         var userMenusAndFeaturesInstance = new usermenufeaturemap_entity_1.UserMenusAndFeatures();
-                                        userMenusAndFeaturesInstance = __assign({}, value);
-                                        userMenusAndFeatures.push(userMenusAndFeaturesInstance);
+                                        userMenusAndFeaturesInstance = __assign(__assign({}, value), { userId: response_1.id });
+                                        userMenusAndFeaturesNew.push(userMenusAndFeaturesInstance);
                                         // return userMenusAndFeaturesInstance;
                                     });
                                     // 14. Assign the userMenusAndFeatures array to the user entry
-                                    headerEntry.userMenusAndFeatures = userMenusAndFeatures;
+                                    //  headerEntry.userMenusAndFeatures = userMenusAndFeatures;
                                     // 15. Save the new user entry into the database
-                                    console.log("headerEntry", headerEntry);
-                                    return [4 /*yield*/, transactionalEntityManager.save(user_entity_1.Users, headerEntry)];
-                                case 7:
-                                    data = _a.sent();
+                                    console.log("userMenusAndFeaturesNew", userMenusAndFeaturesNew);
+                                    return [4 /*yield*/, transactionalEntityManager.save(usermenufeaturemap_entity_1.UserMenusAndFeatures, userMenusAndFeaturesNew ? userMenusAndFeaturesNew : [])];
+                                case 9:
+                                    _a.sent();
                                     return [2 /*return*/];
                             }
                         });
@@ -278,7 +297,7 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 4, , 5]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
@@ -299,15 +318,12 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, (0, user_repo_1.default)()];
             case 3:
                 repo = _a.sent();
-                return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(14, data)];
-            case 4:
-                data = _a.sent();
                 respo = repo.updateById(id, __assign(__assign({}, data), { userType: userType }));
                 return [2 /*return*/, respo];
-            case 5:
+            case 4:
                 error_5 = _a.sent();
                 throw error_5;
-            case 6: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };
@@ -518,6 +534,6 @@ exports.default = {
     generateNewAccessToken: generateNewAccessToken,
     logout: logout,
     createBulk: createBulk,
-    decodedToken: decodedToken
+    decodedToken: decodedToken,
 };
 //# sourceMappingURL=user.service.js.map

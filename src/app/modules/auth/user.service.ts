@@ -14,7 +14,7 @@ import {
 } from "../../services";
 import { UserSessions } from "./entities/user-sessions.entity";
 import { UserMenusAndFeatures } from "../features/entities/usermenufeaturemap.entity";
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, response, Response } from "express";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Users>) => {
@@ -73,6 +73,7 @@ const create = async (data: Users) => {
 //4. create record in bulk
 const createBulk = async (data: Users) => {
   try {
+    let response = new Users();
     // 1. Get the database connection
     const dataSource = await handler();
 
@@ -113,7 +114,8 @@ const createBulk = async (data: Users) => {
 
     // 5. Get the repository for the UserType entity
     const userTypeRepo = dataSource.getRepository(DUserType);
-
+    const userMenusAndFeaturesRepo =
+      dataSource.getRepository(UserMenusAndFeatures);
     // 6. Check if the provided userType ID exists in the database
     const userType = await userTypeRepo.findOne({
       where: {
@@ -134,20 +136,24 @@ const createBulk = async (data: Users) => {
       "SERIALIZABLE",
       async (transactionalEntityManager) => {
         // 9. Generate a unique code for the user
-        data = await generateCode(18, data);
+        if (!data.id) {
+          data = await generateCode(18, data);
+        }
+        //   data = await generateCode(18, data);
 
         // 10. Hash the user's password before storing it
 
         let hashedPassword = "";
-        if (data.password != "") {
+        if (!data.id) {
           hashedPassword = await hashPassword(data.password);
         }
 
+        let { userMenusAndFeatures, ...headerWithoutLines } = data;
         // 11. Create a new user entry with the provided data
-        let headerEntry = new Users();
-        if (!data.id || (data.id && data.password != "")) {
-          headerEntry = transactionalEntityManager.create(Users, {
-            ...data,
+        //let headerEntry = new Users();
+        if (!data.id) {
+          headerWithoutLines = transactionalEntityManager.create(Users, {
+            ...headerWithoutLines,
             password: hashedPassword,
             userType,
           });
@@ -168,28 +174,38 @@ const createBulk = async (data: Users) => {
             };
           }
 
-          headerEntry = { ...data, password: currentUser.password };
+          headerWithoutLines = {
+            ...headerWithoutLines,
+            password: currentUser.password,
+          };
         }
 
         // 12. Create an array to store user's menu and feature permissions
-        const userMenusAndFeatures: UserMenusAndFeatures[] = [];
-
+        const userMenusAndFeaturesNew: UserMenusAndFeatures[] = [];
+        response = await transactionalEntityManager.save(
+          Users,
+          headerWithoutLines
+        );
         // 13. Iterate over userMenusAndFeatures data and create instances
-        data.userMenusAndFeatures.forEach((value, index) => {
+        userMenusAndFeatures?.forEach((value, index) => {
           let userMenusAndFeaturesInstance = new UserMenusAndFeatures();
           userMenusAndFeaturesInstance = {
             ...value,
+            userId: response.id,
           };
-          userMenusAndFeatures.push(userMenusAndFeaturesInstance);
+          userMenusAndFeaturesNew.push(userMenusAndFeaturesInstance);
           // return userMenusAndFeaturesInstance;
         });
 
         // 14. Assign the userMenusAndFeatures array to the user entry
-        headerEntry.userMenusAndFeatures = userMenusAndFeatures;
+        //  headerEntry.userMenusAndFeatures = userMenusAndFeatures;
 
         // 15. Save the new user entry into the database
-        console.log("headerEntry", headerEntry);
-        data = await transactionalEntityManager.save(Users, headerEntry);
+        console.log("userMenusAndFeaturesNew", userMenusAndFeaturesNew);
+        await transactionalEntityManager.save(
+          UserMenusAndFeatures,
+          userMenusAndFeaturesNew ? userMenusAndFeaturesNew : []
+        );
       }
     );
 
@@ -219,7 +235,7 @@ const updateById = async (id: number, data: Users) => {
     }
 
     const repo = await repository();
-    data = await generateCode(14, data);
+    //   data = await generateCode(14, data);
     const respo = repo.updateById(id, {
       ...data,
       userType,
@@ -431,5 +447,5 @@ export default {
   generateNewAccessToken,
   logout,
   createBulk,
-  decodedToken
+  decodedToken,
 };

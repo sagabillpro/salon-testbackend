@@ -49,7 +49,6 @@ var user_entity_1 = require("./entities/user.entity");
 var schema_1 = require("../../schema");
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var new_refresh_token_schema_1 = require("../../schema/new-refresh-token.schema");
-var user_schema_1 = require("../../schema/user-schema");
 var router = (0, express_1.Router)();
 router.get("/", (0, validate_filter_util_1.validateFilter)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
@@ -155,7 +154,7 @@ router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 
     });
 }); });
 //bulk create
-router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(user_schema_1.UserSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/bulk", (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -174,18 +173,17 @@ router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(user_schem
         }
     });
 }); });
-//login route
-router.post("/login", (0, validate_req_body_util_1.validateBodyManual)(schema_1.LoginSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_7;
+router.put("/bulk/:id", (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, result, error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_service_1.default.login(req.body)];
+                id = Number(req.params.id);
+                return [4 /*yield*/, user_service_1.default.updateById(id, req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);
-                next();
                 return [3 /*break*/, 3];
             case 2:
                 error_7 = _a.sent();
@@ -195,14 +193,14 @@ router.post("/login", (0, validate_req_body_util_1.validateBodyManual)(schema_1.
         }
     });
 }); });
-//regenerate access token
-router.post("/new-access-token", (0, validate_req_body_util_1.validateBodyManual)(new_refresh_token_schema_1.NewRefreshToken), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+//login route
+router.post("/login", (0, validate_req_body_util_1.validateBodyManual)(schema_1.LoginSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_service_1.default.generateNewAccessToken(req.body)];
+                return [4 /*yield*/, user_service_1.default.login(req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);
@@ -216,9 +214,30 @@ router.post("/new-access-token", (0, validate_req_body_util_1.validateBodyManual
         }
     });
 }); });
+//regenerate access token
+router.post("/new-access-token", (0, validate_req_body_util_1.validateBodyManual)(new_refresh_token_schema_1.NewRefreshToken), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var result, error_9;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, user_service_1.default.generateNewAccessToken(req.body)];
+            case 1:
+                result = _a.sent();
+                res.send(result);
+                next();
+                return [3 /*break*/, 3];
+            case 2:
+                error_9 = _a.sent();
+                next(error_9);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 //logout user
 router.post("/logout", (0, validate_req_body_util_1.validateBodyManual)(new_refresh_token_schema_1.NewRefreshToken), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_9;
+    var result, error_10;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -230,8 +249,8 @@ router.post("/logout", (0, validate_req_body_util_1.validateBodyManual)(new_refr
                 next();
                 return [3 /*break*/, 3];
             case 2:
-                error_9 = _a.sent();
-                next(error_9);
+                error_10 = _a.sent();
+                next(error_10);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
