@@ -67,8 +67,9 @@ var Users = /** @class */ (function () {
     ], Users.prototype, "modifiedDate", void 0);
     __decorate([
         (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {
-            cascade: true,
-            onDelete: "CASCADE",
+        // cascade: true,
+        // onDelete: "CASCADE",
+        // orphanedRowAction: "preserve",
         }),
         __metadata("design:type", Array)
     ], Users.prototype, "userMenusAndFeatures", void 0);

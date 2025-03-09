@@ -18,8 +18,10 @@ const create = async (
     //update inventory stocks
     const itemStocks = await itemAvailableRepo.find({
       where: {
+        isInactive: 0,
         service: {
           id: In(itemIds),
+          isInactive: 0,
         },
       },
       relations: {
@@ -90,11 +92,12 @@ const createBulk = async (
       }
       // if not then add new record in itemStocks and assign vlue
       else {
-        resultItemStock.push({
-          quantity: element.quantity,
-          modifiedDate: element.modifiedDate,
-          service: element.service,
-        });
+        // resultItemStock.push({
+        //   // quantity: element.quantity,
+        //   // modifiedDate: element.modifiedDate,
+        //   // serviceId: element.service.id,
+        //   // serviceRecordId: element.service.recordId,
+        // });
       }
     });
     return resultItemStock;

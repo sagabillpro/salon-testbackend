@@ -6,8 +6,10 @@ import {
   DContactType,
   DDateRangeType,
   DFeatureType,
+  DIndustryType,
   DItemType,
   DPaymentType,
+  DTransactionStatus,
   DUserType,
   Menus,
   States,
@@ -75,5 +77,7 @@ export const entities:
   Feature,
   MenusAndFeatures,
   UserMenusAndFeatures,
-  Role
+  Role,
+  DIndustryType,
+  DTransactionStatus
 ];

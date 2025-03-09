@@ -34,6 +34,7 @@ const repository = async () => {
         },
         where: {
           id: Number(id),
+          isInactive: 0,
           ...filter?.where,
         },
         relations: {
@@ -54,6 +55,7 @@ const repository = async () => {
     try {
       //
       let respo = new Services();
+
       if (!data.isService) {
         const itv = new ItemAvailable();
         itv.modifiedDate = data.modifiedDate;
@@ -99,16 +101,90 @@ const repository = async () => {
   //4. update single records
   const updateById = async (id: number, data: Services) => {
     try {
+      let finalRespo = new Services();
       const respo = await repo.findOneBy({
-        id: id,
+        recordId: id,
+        isInactive: 0,
       });
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      await repo.save({
-        ...respo,
-        ...data,
-      });
+      if (!data.isService) {
+        await dataSource.manager.transaction(
+          "SERIALIZABLE",
+          async (transactionalEntityManager) => {
+            // Mark the existing record as inactive
+            await transactionalEntityManager.save(Services, {
+              ...respo,
+              isInactive: 1,
+            });
+
+            // Create a new record with the provided data, retaining the original recordId and code
+            const item = transactionalEntityManager.create(Services, {
+              ...data,
+              recordId: respo.recordId, // Retain the original recordId
+              code: respo.code, // Retain the original code
+            });
+
+            // Save the new record to the database
+            const itemResult = await transactionalEntityManager.save(
+              Services,
+              item
+            );
+
+            // Find the existing ItemAvailable record associated with the service
+            const itemAvalableEntryOld =
+              await transactionalEntityManager.findOne(ItemAvailable, {
+                where: {
+                  serviceRecordId: respo.recordId,
+                  isInactive: 0,
+                },
+              });
+
+            // If the ItemAvailable record is not found, throw a 404 error
+            if (!itemAvalableEntryOld) {
+              throw {
+                message: "Record not found with id: " + id,
+                statusCode: 404,
+              };
+            }
+
+            // Mark the existing ItemAvailable record as inactive
+            await transactionalEntityManager.save(ItemAvailable, {
+              ...itemAvalableEntryOld,
+              isInactive: 1,
+            });
+
+            // Create a new ItemAvailable record with the updated service information
+            const itemAvalableEntry = transactionalEntityManager.create(
+              ItemAvailable,
+              {
+                ...itemAvalableEntryOld,
+                serviceId: itemResult.id,
+                serviceRecordId: itemResult.recordId,
+              }
+            );
+
+            // Save the new ItemAvailable record to the database
+            const insTocksaved = await transactionalEntityManager.save(
+              ItemAvailable,
+              itemAvalableEntry
+            );
+
+            // Update the new service record with the inStockId and inStockRecordId
+            finalRespo = await transactionalEntityManager.save(Services, {
+              ...itemResult,
+              inStockId: insTocksaved.id,
+              inStockRecordId: insTocksaved.recordId,
+            });
+          }
+        );
+      } else {
+        const itemResult = repo.create(data);
+        finalRespo = await repo.save(itemResult);
+      }
+
+      return finalRespo;
     } catch (error) {
       throw error;
     }
@@ -123,7 +199,7 @@ const repository = async () => {
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      await repo.remove(respo);
+      await repo.softRemove(respo);
     } catch (error) {
       throw error;
     }

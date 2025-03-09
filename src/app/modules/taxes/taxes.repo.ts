@@ -3,7 +3,6 @@ import { FindManyOptions, FindOneOptions } from "typeorm";
 import { handler } from "../../../app/config/dbconfig";
 import { Taxes } from "./entities/taxes.entity";
 
-
 const repository = async () => {
   const dataSource = await handler();
   const repo = dataSource.getRepository(Taxes);
@@ -33,7 +32,8 @@ const repository = async () => {
           ...filter?.select,
         },
         where: {
-          id: Number(id),
+          recordId: Number(id),
+          isInactive: 0,
           ...filter?.where,
         },
         relations: {
@@ -63,17 +63,37 @@ const repository = async () => {
   //4. update single records
   const updateById = async (id: number, data: Taxes) => {
     try {
+      // Find the existing record by ID and ensure it is not inactive
       const respo = await repo.findOneBy({
-        id: id,
+        recordId: id,
+        isInactive: 0,
       });
+
+      // If the record is not found, throw a 404 error
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
+
+      // Mark the existing record as inactive
       await repo.save({
         ...respo,
-        ...data,
+        isInactive: 1,
       });
+
+      // Create a new record with the provided data, retaining the original recordId and code
+      const newRecord = repo.create({
+        ...data,
+        recordId: respo.recordId,
+        code: respo.code,
+      });
+
+      // Save the new record to the database
+      await repo.save(newRecord);
+
+      // Return the newly created record
+      return newRecord;
     } catch (error) {
+      // If an error occurs, throw it to be handled by the caller
       throw error;
     }
   };
@@ -81,14 +101,21 @@ const repository = async () => {
   //5. delete single record
   const deleteById = async (id: number): Promise<void> => {
     try {
+      // Find the existing record by ID and ensure it is not inactive
       const respo = await repo.findOneBy({
-        id: id,
+        recordId: id,
+        isInactive: 0,
       });
+  
+      // If the record is not found, throw a 404 error
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
+      } else {
+        // Soft remove the record (mark it as deleted without physically removing it from the database)
+        await repo.softRemove(respo);
       }
-      await repo.remove(respo);
     } catch (error) {
+      // If an error occurs, throw it to be handled by the caller
       throw error;
     }
   };

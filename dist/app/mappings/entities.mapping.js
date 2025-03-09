@@ -62,6 +62,8 @@ exports.entities = [
     features_entity_1.Feature,
     menusandfeatures_entity_1.MenusAndFeatures,
     usermenufeaturemap_entity_1.UserMenusAndFeatures,
-    role_entity_1.Role
+    role_entity_1.Role,
+    entities_1.DIndustryType,
+    entities_1.DTransactionStatus
 ];
 //# sourceMappingURL=entities.mapping.js.map

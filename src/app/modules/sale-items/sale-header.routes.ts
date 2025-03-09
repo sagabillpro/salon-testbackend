@@ -93,4 +93,16 @@ router.post(
     }
   }
 );
+router.put(
+  "bulk",
+  validateBodyManual(SaleHeadersSchema),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await saleHeaderService.editBulk(req.body);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 export default new Route("/sale-headers", router);

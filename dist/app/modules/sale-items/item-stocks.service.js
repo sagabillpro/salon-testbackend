@@ -64,8 +64,10 @@ var create = function (inventory, itemIds) { return __awaiter(void 0, void 0, vo
                 resultItemStock_1 = [];
                 return [4 /*yield*/, itemAvailableRepo.find({
                         where: {
+                            isInactive: 0,
                             service: {
                                 id: (0, typeorm_1.In)(itemIds),
+                                isInactive: 0,
                             },
                         },
                         relations: {
@@ -129,11 +131,12 @@ var createBulk = function (inventory, itemIds) { return __awaiter(void 0, void 0
                     }
                     // if not then add new record in itemStocks and assign vlue
                     else {
-                        resultItemStock_2.push({
-                            quantity: element.quantity,
-                            modifiedDate: element.modifiedDate,
-                            service: element.service,
-                        });
+                        // resultItemStock.push({
+                        //   // quantity: element.quantity,
+                        //   // modifiedDate: element.modifiedDate,
+                        //   // serviceId: element.service.id,
+                        //   // serviceRecordId: element.service.recordId,
+                        // });
                     }
                 });
                 return [2 /*return*/, resultItemStock_2];

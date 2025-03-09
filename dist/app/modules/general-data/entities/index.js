@@ -24,4 +24,6 @@ __exportStar(require("./menus.entity"), exports);
 __exportStar(require("./d-item-types.entity"), exports);
 __exportStar(require("./dp-contact-types"), exports);
 __exportStar(require("./d-daterange.entity"), exports);
+__exportStar(require("./d-industry-types.entity"), exports);
+__exportStar(require("./d-transaction-status.entity"), exports);
 //# sourceMappingURL=index.js.map

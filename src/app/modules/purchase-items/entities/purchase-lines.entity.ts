@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  DeleteDateColumn,
 } from "typeorm";
 import { Services } from "../../services/entities/services.entity";
 import { Taxes } from "../../taxes/entities/taxes.entity";
@@ -16,18 +17,45 @@ export class PurchaseLines {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
+  @Column({ type: "int", nullable: true })
+  txnHeaderId: number;
+
+  @Column({ type: "int", nullable: true })
+  txnHeaderRecordId: number;
+
   @ManyToOne(() => PurchaseHeaders, {
-    onDelete: "CASCADE",
+    onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
   })
-  @JoinColumn()
+  @JoinColumn([
+    { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
+    { name: "txnHeaderId", referencedColumnName: "id" },
+  ])
   txnHeader: PurchaseHeaders;
 
+  @Column({ type: "int", nullable: true })
+  serviceId: number;
+
+  @Column({ type: "int", nullable: true })
+  serviceRecordId: number;
+
   @ManyToOne(() => Services)
-  @JoinColumn()
+  @JoinColumn([
+    { name: "serviceRecordId", referencedColumnName: "recordId" },
+    { name: "serviceId", referencedColumnName: "id" },
+  ])
   service: Services;
 
-  @ManyToOne(() => Taxes)
-  @JoinColumn()
+  @Column({ type: "int", nullable: true })
+  taxId: number;
+
+  @Column({ type: "int", nullable: true })
+  taxRecordId: number;
+
+  @ManyToOne(() => Taxes, { nullable: true })
+  @JoinColumn([
+    { name: "taxRecordId", referencedColumnName: "recordId" },
+    { name: "taxId", referencedColumnName: "id" },
+  ])
   tax: Taxes;
 
   @Column({ type: "int", nullable: true })
@@ -56,4 +84,10 @@ export class PurchaseLines {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
+
+  @Column({ type: "int", default: 0 })
+  isInactive: number;
 }

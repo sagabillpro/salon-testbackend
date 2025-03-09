@@ -14,7 +14,7 @@ import { Menus } from "../../general-data/entities";
 import { FeatureSettings } from "../../fetaure-settings/entities/feature-setting.entity";
 import { Role } from "../../roles/entities/role.entity";
 
-@Entity("user_menus_and_features")
+@Entity("")
 @Unique(["user", "entity", "feature"]) // Ensures uniqueness for a user-menu-feature combination
 export class UserMenusAndFeatures {
   @PrimaryGeneratedColumn({ type: "int" })

@@ -7,12 +7,18 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
+  DeleteDateColumn,
+  BeforeInsert,
+  Unique,
 } from "typeorm";
 import { Taxes } from "../../taxes/entities/taxes.entity";
 import { DItemType } from "../../general-data/entities";
 import { ItemAvailable } from "../../sale-items/entities/item-stocks.entity";
+import { Users } from "../../auth/entities/user.entity";
+import { handler } from "../../../config/dbconfig";
 
 @Entity("services")
+@Unique(["recordId", "id"])
 export class Services {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
@@ -23,16 +29,34 @@ export class Services {
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
 
-  @ManyToOne(() => Taxes, { nullable: false })
-  @JoinColumn()
+  @Column({ type: "int", nullable: true })
+  taxId: number;
+
+  @Column({ type: "int", nullable: true })
+  taxRecordId: number;
+
+  @ManyToOne(() => Taxes, { nullable: true })
+  @JoinColumn([
+    { name: "taxRecordId", referencedColumnName: "recordId" },
+    { name: "taxId", referencedColumnName: "id" },
+  ])
   tax: Taxes;
 
   @ManyToOne(() => DItemType, { nullable: true })
   @JoinColumn()
   itemType: DItemType;
 
-  @OneToOne(() => ItemAvailable, { nullable: true })
-  @JoinColumn()
+  @Column({ type: "int", nullable: true })
+  inStockId: number;
+
+  @Column({ type: "int", nullable: true })
+  inStockRecordId: number;
+
+  @OneToOne(() => Taxes, { nullable: true })
+  @JoinColumn([
+    { name: "inStockRecordId", referencedColumnName: "recordId" },
+    { name: "inStockId", referencedColumnName: "id" },
+  ])
   inStock: ItemAvailable;
 
   @Column({ type: "int", nullable: false })
@@ -94,4 +118,31 @@ export class Services {
     nullable: true,
   })
   rating: number;
+
+  //************newly added columns
+  @Column({ type: "int", nullable: true })
+  recordId: number;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  createdBy: Users;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  modifiedBy: Users;
+
+  @BeforeInsert()
+  async generateRecordId?() {
+    if (!this.recordId) {
+      const dataSource = await handler();
+      const lastRecord = await dataSource.getRepository(Services).findOne({
+        where: {},
+        order: { recordId: "DESC" },
+      });
+      this.recordId = lastRecord ? lastRecord.recordId + 1 : 1;
+    }
+  }
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
 }

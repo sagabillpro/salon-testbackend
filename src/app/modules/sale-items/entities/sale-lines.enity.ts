@@ -6,28 +6,58 @@ import {
   UpdateDateColumn,
   JoinColumn,
   ManyToOne,
+  DeleteDateColumn,
+  Unique,
 } from "typeorm";
 import { SaleHeaders } from "./sale-header.entity";
 import { Services } from "../../services/entities/services.entity";
 import { Taxes } from "../../taxes/entities/taxes.entity";
 
 @Entity("sale_lines")
+//@Unique(["recordId", "id"])
 export class SaleLines {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
+  @Column({ type: "int", nullable: true })
+  txnHeaderId: number;
+
+  @Column({ type: "int", nullable: true })
+  txnHeaderRecordId: number;
+
   @ManyToOne(() => SaleHeaders, {
     onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
   })
-  @JoinColumn()
+  @JoinColumn([
+    { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
+    { name: "txnHeaderId", referencedColumnName: "id" },
+  ])
   txnHeader: SaleHeaders;
 
+  @Column({ type: "int", nullable: true })
+  serviceId: number;
+
+  @Column({ type: "int", nullable: true })
+  serviceRecordId: number;
+
   @ManyToOne(() => Services)
-  @JoinColumn()
+  @JoinColumn([
+    { name: "serviceRecordId", referencedColumnName: "recordId" },
+    { name: "serviceId", referencedColumnName: "id" },
+  ])
   service: Services;
 
-  @ManyToOne(() => Taxes)
-  @JoinColumn()
+  @Column({ type: "int", nullable: true })
+  taxId: number;
+
+  @Column({ type: "int", nullable: true })
+  taxRecordId: number;
+
+  @ManyToOne(() => Taxes, { nullable: true })
+  @JoinColumn([
+    { name: "taxRecordId", referencedColumnName: "recordId" },
+    { name: "taxId", referencedColumnName: "id" },
+  ])
   tax: Taxes;
 
   @Column({ type: "int", nullable: false })
@@ -35,7 +65,7 @@ export class SaleLines {
 
   @Column({ type: "int", nullable: false })
   rate: number;
-  
+
   @Column({ type: "int", nullable: true })
   costPrice: number;
 
@@ -56,6 +86,12 @@ export class SaleLines {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+
+  @Column({ type: "int", default: 0 })
+  isInactive: number;
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
 }
 
 // const data: SaleLines = {

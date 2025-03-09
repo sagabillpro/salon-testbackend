@@ -50,8 +50,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var typeorm_1 = require("typeorm");
 var get_object_code_util_1 = require("../../utils/get-object-code.util");
 var services_repo_1 = __importDefault(require("./services.repo"));
+var taxes_service_1 = __importDefault(require("../taxes/taxes.service"));
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -93,11 +95,11 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
 }); };
 //3. create single record
 var create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var repo, duplicate, respo, error_3;
+    var repo, duplicate, latestTax, respo, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 6, , 7]);
                 return [4 /*yield*/, (0, services_repo_1.default)()];
             case 1:
                 repo = _a.sent();
@@ -119,32 +121,66 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                     };
                 }
                 _a.label = 4;
-            case 4:
-                respo = repo.create(__assign({}, data));
-                return [2 /*return*/, respo];
+            case 4: return [4 /*yield*/, taxes_service_1.default.findById(data.taxRecordId)];
             case 5:
+                latestTax = _a.sent();
+                if (!latestTax) {
+                    throw {
+                        message: "Record not found with id: " + data.taxRecordId,
+                        statusCode: 404,
+                    };
+                }
+                respo = repo.create(__assign(__assign({}, data), { taxId: latestTax.id, taxRecordId: data.taxRecordId }));
+                return [2 /*return*/, respo];
+            case 6:
                 error_3 = _a.sent();
                 throw error_3;
-            case 6: return [2 /*return*/];
+            case 7: return [2 /*return*/];
         }
     });
 }); };
 //4. update single record by id
 var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var repo, respo, error_4;
+    var duplicate, latestTax, repo, respo, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, (0, services_repo_1.default)()];
+                _a.trys.push([0, 5, , 6]);
+                if (!!data.isService) return [3 /*break*/, 3];
+                return [4 /*yield*/, find({
+                        where: {
+                            sku: data.sku,
+                            id: (0, typeorm_1.Not)(data.id),
+                        },
+                    })];
             case 1:
+                duplicate = _a.sent();
+                if (duplicate.length) {
+                    throw {
+                        message: "Duplicate SKU please check again.: ",
+                        statusCode: 409,
+                    };
+                }
+                return [4 /*yield*/, taxes_service_1.default.findById(data.taxRecordId)];
+            case 2:
+                latestTax = _a.sent();
+                if (!latestTax) {
+                    throw {
+                        message: "Record not found with id: " + data.taxRecordId,
+                        statusCode: 404,
+                    };
+                }
+                data = __assign(__assign({}, data), { taxId: latestTax.id, taxRecordId: data.taxRecordId });
+                _a.label = 3;
+            case 3: return [4 /*yield*/, (0, services_repo_1.default)()];
+            case 4:
                 repo = _a.sent();
                 respo = repo.updateById(id, __assign({}, data));
                 return [2 /*return*/, respo];
-            case 2:
+            case 5:
                 error_4 = _a.sent();
                 throw error_4;
-            case 3: return [2 /*return*/];
+            case 6: return [2 /*return*/];
         }
     });
 }); };

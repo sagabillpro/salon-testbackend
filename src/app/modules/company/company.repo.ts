@@ -32,7 +32,8 @@ const repository = async () => {
           ...filter?.select,
         },
         where: {
-          id: Number(id),
+          recordId: Number(id),
+          isInactive:0,
           ...filter?.where,
         },
         relations: {
@@ -63,7 +64,8 @@ const repository = async () => {
   const updateById = async (id: number, data: Company) => {
     try {
       const respo = await repo.findOneBy({
-        id: id,
+        recordId: id,
+        isInactive:0,
       });
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
@@ -71,6 +73,8 @@ const repository = async () => {
       await repo.save({
         ...respo,
         ...data,
+        recordId:respo.recordId,
+        code: respo.code,
       });
     } catch (error) {
       throw error;
