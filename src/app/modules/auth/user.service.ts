@@ -158,7 +158,6 @@ const createBulk = async (data: Users) => {
             userType,
           });
         } else {
-          console.log("inside thsi ....");
           // 6. Check if the provided userType ID exists in the database
           const currentUser = await repo.findOne({
             where: {
@@ -173,10 +172,14 @@ const createBulk = async (data: Users) => {
               statusCode: 404,
             };
           }
-
+          if (data.password != "") {
+            hashedPassword = await hashPassword(data.password);
+          }
           headerWithoutLines = {
             ...headerWithoutLines,
-            password: currentUser.password,
+            ...(data.password != ""
+              ? { password: hashedPassword }
+              : { password: currentUser.password }),
           };
         }
 
@@ -194,14 +197,10 @@ const createBulk = async (data: Users) => {
             userId: response.id,
           };
           userMenusAndFeaturesNew.push(userMenusAndFeaturesInstance);
-          // return userMenusAndFeaturesInstance;
         });
 
         // 14. Assign the userMenusAndFeatures array to the user entry
-        //  headerEntry.userMenusAndFeatures = userMenusAndFeatures;
-
         // 15. Save the new user entry into the database
-        console.log("userMenusAndFeaturesNew", userMenusAndFeaturesNew);
         await transactionalEntityManager.save(
           UserMenusAndFeatures,
           userMenusAndFeaturesNew ? userMenusAndFeaturesNew : []
