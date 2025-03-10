@@ -119,7 +119,7 @@ const createBulk = async (data: Users) => {
     // 6. Check if the provided userType ID exists in the database
     const userType = await userTypeRepo.findOne({
       where: {
-        id: data.userType.id,
+        id: data.userTypeId,
       },
     });
 

@@ -23,15 +23,15 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Company.prototype, "id", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, unique: true }),
         __metadata("design:type", String)
     ], Company.prototype, "code", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false, unique: true }),
         __metadata("design:type", String)
     ], Company.prototype, "name", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: false }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: false, unique: true }),
         __metadata("design:type", String)
     ], Company.prototype, "registrationNumber", void 0);
     __decorate([
@@ -39,11 +39,11 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Company.prototype, "taxId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 150, nullable: false }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 150, nullable: false, unique: true }),
         __metadata("design:type", String)
     ], Company.prototype, "email", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 20, nullable: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 20, nullable: true, unique: true }),
         __metadata("design:type", String)
     ], Company.prototype, "phoneNumber", void 0);
     __decorate([
@@ -95,20 +95,20 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Company.prototype, "annualRevenue", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "date", nullable: true }),
-        __metadata("design:type", Date)
+        (0, typeorm_1.Column)({ type: "varchar", nullable: false }),
+        __metadata("design:type", String)
     ], Company.prototype, "foundedDate", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "enum", enum: ["Active", "Inactive"], default: "Active" }),
         __metadata("design:type", String)
     ], Company.prototype, "status", void 0);
     __decorate([
-        (0, typeorm_1.CreateDateColumn)({ type: "timestamp" }),
-        __metadata("design:type", Date)
+        (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: false }),
+        __metadata("design:type", String)
     ], Company.prototype, "createdDate", void 0);
     __decorate([
-        (0, typeorm_1.UpdateDateColumn)({ type: "timestamp" }),
-        __metadata("design:type", Date)
+        (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
+        __metadata("design:type", String)
     ], Company.prototype, "modifiedDate", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
