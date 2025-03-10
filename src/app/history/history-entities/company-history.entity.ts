@@ -12,16 +12,19 @@ import {
   Unique,
   VersionColumn,
 } from "typeorm";
-import { Country, States, City } from "../../general-data/entities";
-import { Branch } from "../../branches/entities/branches.entity";
-import { Users } from "../../auth/entities/user.entity";
-import { handler } from "../../../config/dbconfig";
-import { Taxes } from "../../taxes/entities/taxes.entity";
+import { Taxes } from "../../modules/taxes/entities/taxes.entity";
+import { City, Country, States } from "../../modules/general-data/entities";
+import { Users } from "../../modules/auth/entities/user.entity";
 
-@Entity("company")
-export class Company {
+
+
+@Entity("company_history")
+export class CompanyHistory {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
+
+  @Column({ type: "int", nullable: false })
+  recordId: number;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   code: string;
@@ -96,11 +99,6 @@ export class Company {
   @JoinColumn()
   tax: Taxes;
 
-  @OneToMany(() => Branch, (line) => line.company, {
-    cascade: ["soft-remove"],
-  })
-  branches?: Branch[];
-
   @ManyToOne(() => City, { nullable: true })
   @JoinColumn()
   city: City;
@@ -124,6 +122,6 @@ export class Company {
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 
-  @VersionColumn({ nullable: true })
+  @VersionColumn()
   version: number;
 }

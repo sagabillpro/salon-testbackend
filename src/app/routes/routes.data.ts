@@ -22,6 +22,7 @@ import companyRoutes from "../modules/company/company.routes";
 import featuresRoutes from "../modules/features/features.routes";
 import roleRoutes from "../modules/roles/role.routes";
 import usermenufeaturemapRoute from "../modules/features/usermenufeaturemap.route";
+import historyRoute from "../history/history.route";
 
 export const routes: Routes = [
   itemRoute,
@@ -46,5 +47,6 @@ export const routes: Routes = [
   companyRoutes,
   featuresRoutes,
   roleRoutes,
-  usermenufeaturemapRoute
+  usermenufeaturemapRoute,
+  historyRoute
 ];

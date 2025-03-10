@@ -39,58 +39,50 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-require("reflect-metadata");
-var typeorm_1 = require("typeorm");
-var dotenv_1 = __importDefault(require("dotenv"));
-var path_1 = __importDefault(require("path"));
-var entities_mapping_1 = require("../../mappings/entities.mapping");
-var company_subscriber_1 = require("../../history/event-subscriber/company.subscriber");
-// Load environment variables from .env file
-dotenv_1.default.config({ path: path_1.default.join(__dirname, "../../.env") });
-var appDataSource;
-var initializeDataSource = function () { return __awaiter(void 0, void 0, void 0, function () {
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                if (!!appDataSource) return [3 /*break*/, 2];
-                appDataSource = new typeorm_1.DataSource({
-                    type: "postgres",
-                    host: process.env.Host,
-                    port: Number(process.env.port),
-                    username: process.env.User_Name,
-                    password: process.env.Password,
-                    database: process.env.Database,
-                    entities: entities_mapping_1.entities,
-                    subscribers: [company_subscriber_1.CompanySubscriber],
-                    //   entities: [
-                    //     "../../../src/entities/index/**/*.{ts,js}",
-                    //     "../../../build/entities/**/*.{ts,js}",
-                    //   ],
-                    synchronize: true,
-                    // logging: true,
-                    ssl: {
-                        rejectUnauthorized: false, // Disables SSL certificate verification
-                    },
-                });
-                return [4 /*yield*/, appDataSource.initialize()];
-            case 1:
-                _a.sent();
-                _a.label = 2;
-            case 2: return [2 /*return*/, appDataSource];
-        }
-    });
-}); };
-var handler = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, initializeDataSource()];
-            case 1:
-                dataSource = _a.sent();
-                return [2 /*return*/, dataSource];
-        }
-    });
-}); };
-exports.handler = handler;
-//# sourceMappingURL=index.js.map
+var express_1 = require("express");
+var entity_route_mapping_1 = require("./mappings/entity-route.mapping");
+var validate_filter_util_1 = require("../utils/validate-filter.util");
+var dbconfig_1 = require("../config/dbconfig");
+var get_query_util_1 = __importDefault(require("../utils/get-query.util"));
+var routes_types_1 = require("../routes/routes.types");
+var router = (0, express_1.Router)();
+var _loop_1 = function (key, value) {
+    // Define a GET route for each key in the map
+    router.get(key, (0, validate_filter_util_1.validateFilter)(value), // Apply the validateFilter middleware
+    function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+        var appDataSource, repository, data, _a, _b, error_1;
+        return __generator(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    _c.trys.push([0, 4, , 5]);
+                    return [4 /*yield*/, (0, dbconfig_1.handler)()];
+                case 1:
+                    appDataSource = _c.sent();
+                    repository = appDataSource.getRepository(value);
+                    _b = (_a = repository).find;
+                    return [4 /*yield*/, (0, get_query_util_1.default)(req, value)];
+                case 2: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
+                case 3:
+                    data = _c.sent();
+                    // Send the fetched data as a JSON response with status 200
+                    res.status(200).json(data);
+                    return [3 /*break*/, 5];
+                case 4:
+                    error_1 = _c.sent();
+                    // Handle errors by sending a 500 status and error message
+                    res
+                        .status(500)
+                        .json({ message: "Error fetching DescriptionType", error: error_1 });
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    }); });
+};
+// Loop through each entry in the routeToEntityMap
+for (var _i = 0, _a = Object.entries(entity_route_mapping_1.routeToEntityMap); _i < _a.length; _i++) {
+    var _b = _a[_i], key = _b[0], value = _b[1];
+    _loop_1(key, value);
+}
+exports.default = new routes_types_1.Route("/history", router);
+//# sourceMappingURL=history.route.js.map

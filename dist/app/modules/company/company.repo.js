@@ -96,7 +96,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 _a.trys.push([0, 2, , 3]);
                                 return [4 /*yield*/, repo.findOne({
                                         select: __assign({}, filter === null || filter === void 0 ? void 0 : filter.select),
-                                        where: __assign({ recordId: Number(id), isInactive: 0 }, filter === null || filter === void 0 ? void 0 : filter.where),
+                                        where: __assign({}, filter === null || filter === void 0 ? void 0 : filter.where),
                                         relations: __assign({}, filter === null || filter === void 0 ? void 0 : filter.relations),
                                     })];
                             case 1:
@@ -137,7 +137,6 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                             case 0:
                                 _a.trys.push([0, 3, , 4]);
                                 return [4 /*yield*/, repo.findOneBy({
-                                        recordId: id,
                                         isInactive: 0,
                                     })];
                             case 1:
@@ -145,7 +144,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
-                                return [4 /*yield*/, repo.save(__assign(__assign(__assign({}, respo), data), { recordId: respo.recordId, code: respo.code }))];
+                                return [4 /*yield*/, repo.save(__assign(__assign(__assign({}, respo), data), { code: respo.code }))];
                             case 2:
                                 _a.sent();
                                 return [3 /*break*/, 4];

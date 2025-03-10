@@ -33,8 +33,6 @@ const repository = async () => {
           ...filter?.select,
         },
         where: {
-          recordId: Number(id),
-          isInactive: 0,
           ...filter?.where,
         },
         relations: {
@@ -65,7 +63,6 @@ const repository = async () => {
   const updateById = async (id: number, data: Company) => {
     try {
       const respo = await repo.findOneBy({
-        recordId: id,
         isInactive: 0,
       });
       if (!respo) {
@@ -74,7 +71,6 @@ const repository = async () => {
       await repo.save({
         ...respo,
         ...data,
-        recordId: respo.recordId,
         code: respo.code,
       });
     } catch (error) {

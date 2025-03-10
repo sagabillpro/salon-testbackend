@@ -9,160 +9,157 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Company = void 0;
+exports.CompanyHistory = void 0;
 var typeorm_1 = require("typeorm");
-var entities_1 = require("../../general-data/entities");
-var branches_entity_1 = require("../../branches/entities/branches.entity");
-var user_entity_1 = require("../../auth/entities/user.entity");
-var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
-var Company = /** @class */ (function () {
-    function Company() {
+var taxes_entity_1 = require("../../modules/taxes/entities/taxes.entity");
+var entities_1 = require("../../modules/general-data/entities");
+var user_entity_1 = require("../../modules/auth/entities/user.entity");
+var CompanyHistory = /** @class */ (function () {
+    function CompanyHistory() {
     }
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)({ type: "int" }),
         __metadata("design:type", Number)
-    ], Company.prototype, "id", void 0);
+    ], CompanyHistory.prototype, "id", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], CompanyHistory.prototype, "recordId", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
-    ], Company.prototype, "code", void 0);
+    ], CompanyHistory.prototype, "code", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
         __metadata("design:type", String)
-    ], Company.prototype, "name", void 0);
+    ], CompanyHistory.prototype, "name", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: false }),
         __metadata("design:type", String)
-    ], Company.prototype, "registrationNumber", void 0);
+    ], CompanyHistory.prototype, "registrationNumber", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)
-    ], Company.prototype, "taxId", void 0);
+    ], CompanyHistory.prototype, "taxId", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 150, nullable: false }),
         __metadata("design:type", String)
-    ], Company.prototype, "email", void 0);
+    ], CompanyHistory.prototype, "email", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 20, nullable: true }),
         __metadata("design:type", String)
-    ], Company.prototype, "phoneNumber", void 0);
+    ], CompanyHistory.prototype, "phoneNumber", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
-    ], Company.prototype, "website", void 0);
+    ], CompanyHistory.prototype, "website", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
-    ], Company.prototype, "addressLine1", void 0);
+    ], CompanyHistory.prototype, "addressLine1", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
-    ], Company.prototype, "addressLine2", void 0);
+    ], CompanyHistory.prototype, "addressLine2", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
-    ], Company.prototype, "cityId", void 0);
+    ], CompanyHistory.prototype, "cityId", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)
-    ], Company.prototype, "createdById", void 0);
+    ], CompanyHistory.prototype, "createdById", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)
-    ], Company.prototype, "modifiedById", void 0);
+    ], CompanyHistory.prototype, "modifiedById", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
-    ], Company.prototype, "stateId", void 0);
+    ], CompanyHistory.prototype, "stateId", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)
-    ], Company.prototype, "countryId", void 0);
+    ], CompanyHistory.prototype, "countryId", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 20, nullable: true }),
         __metadata("design:type", String)
-    ], Company.prototype, "postalCode", void 0);
+    ], CompanyHistory.prototype, "postalCode", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: true }),
         __metadata("design:type", String)
-    ], Company.prototype, "industryType", void 0);
+    ], CompanyHistory.prototype, "industryType", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
-    ], Company.prototype, "numberOfEmployees", void 0);
+    ], CompanyHistory.prototype, "numberOfEmployees", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "decimal", precision: 15, scale: 2, nullable: true }),
         __metadata("design:type", Number)
-    ], Company.prototype, "annualRevenue", void 0);
+    ], CompanyHistory.prototype, "annualRevenue", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "date", nullable: true }),
         __metadata("design:type", Date)
-    ], Company.prototype, "foundedDate", void 0);
+    ], CompanyHistory.prototype, "foundedDate", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "enum", enum: ["Active", "Inactive"], default: "Active" }),
         __metadata("design:type", String)
-    ], Company.prototype, "status", void 0);
+    ], CompanyHistory.prototype, "status", void 0);
     __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "timestamp" }),
         __metadata("design:type", Date)
-    ], Company.prototype, "createdDate", void 0);
+    ], CompanyHistory.prototype, "createdDate", void 0);
     __decorate([
         (0, typeorm_1.UpdateDateColumn)({ type: "timestamp" }),
         __metadata("design:type", Date)
-    ], Company.prototype, "modifiedDate", void 0);
+    ], CompanyHistory.prototype, "modifiedDate", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
-    ], Company.prototype, "isInactive", void 0);
+    ], CompanyHistory.prototype, "isInactive", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", taxes_entity_1.Taxes)
-    ], Company.prototype, "tax", void 0);
-    __decorate([
-        (0, typeorm_1.OneToMany)(function () { return branches_entity_1.Branch; }, function (line) { return line.company; }, {
-            cascade: ["soft-remove"],
-        }),
-        __metadata("design:type", Array)
-    ], Company.prototype, "branches", void 0);
+    ], CompanyHistory.prototype, "tax", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.City; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.City)
-    ], Company.prototype, "city", void 0);
+    ], CompanyHistory.prototype, "city", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.States; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.States)
-    ], Company.prototype, "state", void 0);
+    ], CompanyHistory.prototype, "state", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.Country; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.Country)
-    ], Company.prototype, "country", void 0);
+    ], CompanyHistory.prototype, "country", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
-    ], Company.prototype, "createdBy", void 0);
+    ], CompanyHistory.prototype, "createdBy", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
-    ], Company.prototype, "modifiedBy", void 0);
+    ], CompanyHistory.prototype, "modifiedBy", void 0);
     __decorate([
         (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
         ,
         __metadata("design:type", Date)
-    ], Company.prototype, "deletedAt", void 0);
+    ], CompanyHistory.prototype, "deletedAt", void 0);
     __decorate([
-        (0, typeorm_1.VersionColumn)({ nullable: true }),
+        (0, typeorm_1.VersionColumn)(),
         __metadata("design:type", Number)
-    ], Company.prototype, "version", void 0);
-    Company = __decorate([
-        (0, typeorm_1.Entity)("company")
-    ], Company);
-    return Company;
+    ], CompanyHistory.prototype, "version", void 0);
+    CompanyHistory = __decorate([
+        (0, typeorm_1.Entity)("company_history")
+    ], CompanyHistory);
+    return CompanyHistory;
 }());
-exports.Company = Company;
-//# sourceMappingURL=company.entity.js.map
+exports.CompanyHistory = CompanyHistory;
+//# sourceMappingURL=company-history.entity.js.map

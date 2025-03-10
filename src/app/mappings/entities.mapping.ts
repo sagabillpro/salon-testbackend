@@ -38,7 +38,7 @@ import { Feature } from "../modules/features/entities/features.entity";
 import { MenusAndFeatures } from "../modules/features/entities/menusandfeatures.entity";
 import { UserMenusAndFeatures } from "../modules/features/entities/usermenufeaturemap.entity";
 import { Role } from "../modules/roles/entities/role.entity";
-
+import { CompanyHistory } from "../history/history-entities";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -79,5 +79,7 @@ export const entities:
   UserMenusAndFeatures,
   Role,
   DIndustryType,
-  DTransactionStatus
+  DTransactionStatus,
+  CompanyHistory,
+ // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];
