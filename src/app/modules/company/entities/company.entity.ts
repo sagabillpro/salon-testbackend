@@ -77,17 +77,17 @@ export class Company {
   @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
   annualRevenue: number;
 
-  @UpdateDateColumn({ type: "timestamp" })
-  foundedDate: Date;
+  @Column({ type: "varchar", nullable: false })
+  foundedDate: string;
 
   @Column({ type: "enum", enum: ["Active", "Inactive"], default: "Active" })
   status: string;
 
-  @CreateDateColumn({ type: "timestamp" })
-  createdDate: Date;
+  @CreateDateColumn({ type: "varchar", nullable: false })
+  createdDate: string;
 
-  @UpdateDateColumn({ type: "timestamp" })
-  modifiedDate: Date;
+  @UpdateDateColumn({ type: "varchar", nullable: false })
+  modifiedDate: string;
 
   @Column({ type: "int", default: 0 })
   isInactive: number;
