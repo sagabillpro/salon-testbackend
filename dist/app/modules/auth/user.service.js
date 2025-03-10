@@ -202,7 +202,7 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                 userMenusAndFeaturesRepo = dataSource.getRepository(usermenufeaturemap_entity_1.UserMenusAndFeatures);
                 return [4 /*yield*/, userTypeRepo.findOne({
                         where: {
-                            id: data.userType.id,
+                            id: data.userTypeId,
                         },
                     })];
             case 7:

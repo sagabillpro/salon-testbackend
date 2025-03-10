@@ -344,7 +344,11 @@ router.get(
         if (!mappingObj[element.entity.id]) {
           mappingObj[element.entity.id] = {};
         }
-        mappingObj[element.entity.id][element.feature.id] = true;
+        if(element.isActive === 1){
+          mappingObj[element.entity.id][element.feature.id] = true;
+        }else{
+          mappingObj[element.entity.id][element.feature.id] = false;
+        }
       });
       res.status(200).json(mappingObj);
     } catch (error) {
