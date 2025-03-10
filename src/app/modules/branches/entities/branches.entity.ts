@@ -27,14 +27,8 @@ export class Branch {
   @Column({ type: "int", nullable: true })
   companyId: number;
 
-  @Column({ type: "int", nullable: true })
-  companyRecordId: number;
-
   @ManyToOne(() => Company)
-  @JoinColumn([
-    { name: "companyRecordId", referencedColumnName: "recordId" },
-    { name: "companyId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   company: Company;
 
   @Column({ type: "varchar", length: 255, nullable: true })

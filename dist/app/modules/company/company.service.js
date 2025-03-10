@@ -57,15 +57,6 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
-var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
-    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
-        if (ar || !(i in from)) {
-            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
-            ar[i] = from[i];
-        }
-    }
-    return to.concat(ar || Array.prototype.slice.call(from));
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -116,91 +107,88 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
         }
     });
 }); };
-var create = function (data_1) {
-    var args_1 = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args_1[_i - 1] = arguments[_i];
-    }
-    return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isCalledForEdit, editManager) {
-        var dataSource, countryRepo, manager, country, taxRepo, tax, branches, headerWithoutLines, headerEntry, branchesNew_1, error_3;
-        if (isCalledForEdit === void 0) { isCalledForEdit = false; }
-        if (editManager === void 0) { editManager = null; }
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 8, , 9]);
-                    return [4 /*yield*/, (0, dbconfig_1.handler)()];
-                case 1:
-                    dataSource = _a.sent();
-                    countryRepo = dataSource.getRepository(entities_1.Country);
-                    manager = editManager || dataSource.manager;
-                    return [4 /*yield*/, countryRepo.findOne({
-                            where: { id: data.countryId },
-                        })];
-                case 2:
-                    country = _a.sent();
-                    if (!country) {
-                        throw {
-                            message: "Record not found with id: " + data.countryId,
-                            statusCode: 404,
-                        };
-                    }
-                    taxRepo = dataSource.getRepository(taxes_entity_1.Taxes);
-                    return [4 /*yield*/, taxRepo.findOne({
-                            where: { id: data.taxId },
-                        })];
-                case 3:
-                    tax = _a.sent();
-                    if (!tax) {
-                        throw {
-                            message: "Record not found with id: " + data.taxId,
-                            statusCode: 404,
-                        };
-                    }
-                    branches = data.branches, headerWithoutLines = __rest(data, ["branches"]);
-                    console.log(tax);
-                    if (!!isCalledForEdit) return [3 /*break*/, 5];
-                    return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(27, __assign({}, headerWithoutLines))];
-                case 4:
-                    headerWithoutLines = _a.sent();
-                    _a.label = 5;
-                case 5:
-                    headerEntry = manager.create(company_entity_1.Company, __assign(__assign({}, headerWithoutLines), { countryId: data.countryId, taxId: tax.id, taxRecordId: tax.recordId }));
-                    console.log("step22", headerEntry);
-                    return [4 /*yield*/, manager.save(company_entity_1.Company, headerEntry)];
-                case 6:
-                    data = _a.sent();
-                    console.log("step23", headerWithoutLines);
-                    branchesNew_1 = [];
-                    // 8. Iterate over the provided branches data (if any) to create new Branch instances.
-                    //    Each branch is associated with the saved company record (using companyId and companyRecordId).
-                    branches === null || branches === void 0 ? void 0 : branches.forEach(function (value) {
-                        // Create a new branch instance by merging the incoming branch data
-                        // with the company association details from the saved company.
-                        var branchInstance = __assign(__assign({}, value), { companyId: data.id, companyRecordId: data.recordId });
-                        branchesNew_1.push(branchInstance);
-                    });
-                    console.log("step2223", headerWithoutLines);
-                    // 9. Save all new Branch instances.
-                    return [4 /*yield*/, manager.save(branches_entity_1.Branch, branchesNew_1)];
-                case 7:
-                    // 9. Save all new Branch instances.
-                    _a.sent();
-                    // });
-                    // 10. Return the newly created company record.
-                    return [2 /*return*/, data];
-                case 8:
-                    error_3 = _a.sent();
-                    console.log(error_3);
-                    throw error_3;
-                case 9: return [2 /*return*/];
-            }
-        });
+var create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, countryRepo, country, taxRepo, tax_1, branches_1, headerWithoutLines_1, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 5, , 6]);
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _a.sent();
+                countryRepo = dataSource.getRepository(entities_1.Country);
+                return [4 /*yield*/, countryRepo.findOne({
+                        where: { id: data.countryId },
+                    })];
+            case 2:
+                country = _a.sent();
+                if (!country) {
+                    throw {
+                        message: "Record not found with id: " + data.countryId,
+                        statusCode: 404,
+                    };
+                }
+                taxRepo = dataSource.getRepository(taxes_entity_1.Taxes);
+                return [4 /*yield*/, taxRepo.findOne({
+                        where: { id: data.taxId },
+                    })];
+            case 3:
+                tax_1 = _a.sent();
+                if (!tax_1) {
+                    throw {
+                        message: "Record not found with id: " + data.taxId,
+                        statusCode: 404,
+                    };
+                }
+                branches_1 = data.branches, headerWithoutLines_1 = __rest(data, ["branches"]);
+                // });
+                // 10. Return the newly created company record.
+                return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (manager) { return __awaiter(void 0, void 0, void 0, function () {
+                        var headerEntry, branchesNew;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0: return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(27, __assign({}, headerWithoutLines_1))];
+                                case 1:
+                                    // 5. generate a unique code for the company header.
+                                    headerWithoutLines_1 = _a.sent();
+                                    headerEntry = manager.create(company_entity_1.Company, __assign(__assign({}, headerWithoutLines_1), { countryId: data.countryId, taxId: tax_1.id }));
+                                    return [4 /*yield*/, manager.save(company_entity_1.Company, headerEntry)];
+                                case 2:
+                                    data = _a.sent();
+                                    branchesNew = [];
+                                    // 8. Iterate over the provided branches data (if any) to create new Branch instances.
+                                    //    Each branch is associated with the saved company record (using companyId and companyRecordId).
+                                    branches_1 === null || branches_1 === void 0 ? void 0 : branches_1.forEach(function (value) {
+                                        // Create a new branch instance by merging the incoming branch data
+                                        // with the company association details from the saved company.
+                                        var branchInstance = __assign(__assign({}, value), { companyId: data.id });
+                                        branchesNew.push(branchInstance);
+                                    });
+                                    // 9. Save all new Branch instances.
+                                    return [4 /*yield*/, manager.save(branches_entity_1.Branch, branchesNew)];
+                                case 3:
+                                    // 9. Save all new Branch instances.
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            case 4:
+                // });
+                // 10. Return the newly created company record.
+                _a.sent();
+                return [2 /*return*/, data];
+            case 5:
+                error_3 = _a.sent();
+                console.log(error_3);
+                throw error_3;
+            case 6: return [2 /*return*/];
+        }
     });
-};
+}); };
 // 4. Update single Company record by id
 var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, branches_1, headerWithoutLines_1, error_4;
+    var dataSource, branches_2, headerWithoutLines_2, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -208,33 +196,40 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
-                branches_1 = data.branches, headerWithoutLines_1 = __rest(data, ["branches"]);
+                branches_2 = data.branches, headerWithoutLines_2 = __rest(data, ["branches"]);
                 // Start a transaction with SERIALIZABLE isolation level to ensure atomicity
-                return [4 /*yield*/, dataSource.manager.transaction("REPEATABLE READ", function (manager) { return __awaiter(void 0, void 0, void 0, function () {
-                        var oldHeaderRecord, oldBranches, inActiveHeaderRecord;
+                return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (manager) { return __awaiter(void 0, void 0, void 0, function () {
+                        var currentHeaderRecord, data, branchesNew;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0: return [4 /*yield*/, manager.findOne(company_entity_1.Company, {
                                         where: { id: id },
-                                        relations: { branches: true },
                                     })];
                                 case 1:
-                                    oldHeaderRecord = _a.sent();
-                                    oldBranches = (oldHeaderRecord === null || oldHeaderRecord === void 0 ? void 0 : oldHeaderRecord.branches) || [];
-                                    // Merge the old branches with any new branches provided in the update.
-                                    // This ensures that the new record will include both unchanged and updated branches.
-                                    branches_1 = __spreadArray(__spreadArray([], oldBranches, true), (branches_1 ? branches_1 : []), true);
-                                    // 2. Mark the existing company record as inactive (soft delete it)
-                                    // by saving a copy with isInactive set to 1.
-                                    console.log("step1", oldHeaderRecord);
-                                    return [4 /*yield*/, manager.save(company_entity_1.Company, __assign(__assign({}, oldHeaderRecord), { isInactive: 1 }))];
+                                    currentHeaderRecord = _a.sent();
+                                    if (!currentHeaderRecord) {
+                                        throw {
+                                            message: "Record not found with id: " + id,
+                                            statusCode: 404,
+                                        };
+                                    }
+                                    return [4 /*yield*/, manager.save(company_entity_1.Company, __assign(__assign({}, currentHeaderRecord), headerWithoutLines_2))];
                                 case 2:
-                                    inActiveHeaderRecord = _a.sent();
-                                    return [4 /*yield*/, create(__assign(__assign({}, headerWithoutLines_1), { branches: branches_1, code: inActiveHeaderRecord.code, recordId: inActiveHeaderRecord.recordId }), true, manager)];
-                                case 3:
-                                    // 3. Re-use the create logic to generate a new Company record (i.e., a new version)
-                                    // using the merged branches and retaining the same code and recordId from the inactive record.
                                     data = _a.sent();
+                                    branchesNew = [];
+                                    // 8. Iterate over the provided branches data (if any) to create new Branch instances.
+                                    //    Each branch is associated with the saved company record (using companyId and companyRecordId).
+                                    branches_2 === null || branches_2 === void 0 ? void 0 : branches_2.forEach(function (value) {
+                                        // Create a new branch instance by merging the incoming branch data
+                                        // with the company association details from the saved company.
+                                        var branchInstance = __assign(__assign({}, value), { companyId: data.id });
+                                        branchesNew.push(branchInstance);
+                                    });
+                                    // 9. Save all new Branch instances.
+                                    return [4 /*yield*/, manager.save(branches_entity_1.Branch, branchesNew)];
+                                case 3:
+                                    // 9. Save all new Branch instances.
+                                    _a.sent();
                                     return [2 /*return*/];
                             }
                         });
