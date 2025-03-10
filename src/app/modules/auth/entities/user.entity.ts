@@ -8,6 +8,8 @@ import {
   JoinColumn,
   OneToOne,
   ManyToOne,
+  DeleteDateColumn,
+  VersionColumn,
 } from "typeorm";
 import { City, Country, DUserType, States } from "../../general-data/entities";
 import { UserMenusAndFeatures } from "../../features/entities/usermenufeaturemap.entity";
@@ -29,7 +31,10 @@ export class Users {
   @Column({ type: "varchar", length: 255, nullable: true })
   password: string;
 
-  @ManyToOne(() => DUserType)
+  @Column({ type: "int", nullable: false })
+  userTypeId: number;
+
+  @ManyToOne(() => DUserType, { nullable: true })
   @JoinColumn()
   userType: DUserType;
 
@@ -51,10 +56,12 @@ export class Users {
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
 
-  @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
-    // cascade: true,
-    // onDelete: "CASCADE",
-   // orphanedRowAction: "preserve",
-  })
+  @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {})
   userMenusAndFeatures?: UserMenusAndFeatures[];
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
+
+  @VersionColumn({ nullable: true })
+  version: number;
 }
