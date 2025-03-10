@@ -23,22 +23,22 @@ export class Company {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
-  @Column({ type: "varchar", length: 255, nullable: true })
+  @Column({ type: "varchar", length: 255, nullable: true, unique: true })
   code: string;
 
-  @Column({ type: "varchar", length: 255, nullable: false })
+  @Column({ type: "varchar", length: 255, nullable: false, unique: true })
   name: string;
 
-  @Column({ type: "varchar", length: 100, nullable: false })
+  @Column({ type: "varchar", length: 100, nullable: false, unique: true })
   registrationNumber: string;
 
   @Column({ type: "int", nullable: false })
   taxId: number;
 
-  @Column({ type: "varchar", length: 150, nullable: false })
+  @Column({ type: "varchar", length: 150, nullable: false, unique: true })
   email: string;
 
-  @Column({ type: "varchar", length: 20, nullable: true })
+  @Column({ type: "varchar", length: 20, nullable: true, unique: true })
   phoneNumber: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
@@ -77,7 +77,7 @@ export class Company {
   @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
   annualRevenue: number;
 
-  @Column({ type: "date", nullable: true })
+  @UpdateDateColumn({ type: "timestamp" })
   foundedDate: Date;
 
   @Column({ type: "enum", enum: ["Active", "Inactive"], default: "Active" })
