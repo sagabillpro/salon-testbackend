@@ -236,14 +236,12 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                                     userMenusAndFeatures = data.userMenusAndFeatures, headerWithoutLines = __rest(data, ["userMenusAndFeatures"]);
                                     if (!!data.id) return [3 /*break*/, 5];
                                     headerWithoutLines = transactionalEntityManager.create(user_entity_1.Users, __assign(__assign({}, headerWithoutLines), { password: hashedPassword, userType: userType_1 }));
-                                    return [3 /*break*/, 7];
-                                case 5:
-                                    console.log("inside thsi ....");
-                                    return [4 /*yield*/, repo_1.findOne({
-                                            where: {
-                                                id: data.id,
-                                            },
-                                        })];
+                                    return [3 /*break*/, 9];
+                                case 5: return [4 /*yield*/, repo_1.findOne({
+                                        where: {
+                                            id: data.id,
+                                        },
+                                    })];
                                 case 6:
                                     currentUser = _a.sent();
                                     // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
@@ -253,26 +251,33 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                                             statusCode: 404,
                                         };
                                     }
-                                    headerWithoutLines = __assign(__assign({}, headerWithoutLines), { password: currentUser.password });
-                                    _a.label = 7;
+                                    if (!(data.password != "")) return [3 /*break*/, 8];
+                                    return [4 /*yield*/, (0, services_1.hashPassword)(data.password)];
                                 case 7:
+                                    hashedPassword = _a.sent();
+                                    _a.label = 8;
+                                case 8:
+                                    headerWithoutLines = __assign(__assign({}, headerWithoutLines), (data.password != ""
+                                        ? { password: hashedPassword }
+                                        : { password: currentUser.password }));
+                                    _a.label = 9;
+                                case 9:
                                     userMenusAndFeaturesNew = [];
                                     return [4 /*yield*/, transactionalEntityManager.save(user_entity_1.Users, headerWithoutLines)];
-                                case 8:
+                                case 10:
                                     response_1 = _a.sent();
                                     // 13. Iterate over userMenusAndFeatures data and create instances
                                     userMenusAndFeatures === null || userMenusAndFeatures === void 0 ? void 0 : userMenusAndFeatures.forEach(function (value, index) {
                                         var userMenusAndFeaturesInstance = new usermenufeaturemap_entity_1.UserMenusAndFeatures();
                                         userMenusAndFeaturesInstance = __assign(__assign({}, value), { userId: response_1.id });
                                         userMenusAndFeaturesNew.push(userMenusAndFeaturesInstance);
-                                        // return userMenusAndFeaturesInstance;
                                     });
                                     // 14. Assign the userMenusAndFeatures array to the user entry
-                                    //  headerEntry.userMenusAndFeatures = userMenusAndFeatures;
                                     // 15. Save the new user entry into the database
-                                    console.log("userMenusAndFeaturesNew", userMenusAndFeaturesNew);
                                     return [4 /*yield*/, transactionalEntityManager.save(usermenufeaturemap_entity_1.UserMenusAndFeatures, userMenusAndFeaturesNew ? userMenusAndFeaturesNew : [])];
-                                case 9:
+                                case 11:
+                                    // 14. Assign the userMenusAndFeatures array to the user entry
+                                    // 15. Save the new user entry into the database
                                     _a.sent();
                                     return [2 /*return*/];
                             }

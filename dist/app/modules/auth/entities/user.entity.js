@@ -37,7 +37,11 @@ var Users = /** @class */ (function () {
         __metadata("design:type", String)
     ], Users.prototype, "password", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.DUserType; }),
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "userTypeId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.DUserType; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DUserType)
     ], Users.prototype, "userType", void 0);
@@ -66,13 +70,18 @@ var Users = /** @class */ (function () {
         __metadata("design:type", String)
     ], Users.prototype, "modifiedDate", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {
-        // cascade: true,
-        // onDelete: "CASCADE",
-        // orphanedRowAction: "preserve",
-        }),
+        (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {}),
         __metadata("design:type", Array)
     ], Users.prototype, "userMenusAndFeatures", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], Users.prototype, "deletedAt", void 0);
+    __decorate([
+        (0, typeorm_1.VersionColumn)({ nullable: true }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "version", void 0);
     Users = __decorate([
         (0, typeorm_1.Entity)("users")
     ], Users);
