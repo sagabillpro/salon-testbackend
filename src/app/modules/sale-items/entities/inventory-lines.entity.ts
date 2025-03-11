@@ -22,47 +22,33 @@ export class InventoryLines {
   @Column({ type: "int", nullable: true })
   purchaseId: number;
 
-  @Column({ type: "int", nullable: true })
-  purchaseRecordId: number;
-
   @ManyToOne(() => PurchaseHeaders, {
     onDelete: "CASCADE",
   })
-  @JoinColumn([
-    { name: "purchaseRecordId", referencedColumnName: "recordId" },
-    { name: "purchaseId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   purchase: PurchaseHeaders;
+
+  @Column({ type: "int", nullable: true })
+  stockId: number;
 
   @ManyToOne(() => ItemsStockTrack)
   @JoinColumn()
   stock: ItemsStockTrack;
+
   @Column({ type: "int", nullable: true })
   serviceId: number;
 
-  @Column({ type: "int", nullable: true })
-  serviceRecordId: number;
-
   @ManyToOne(() => Services, { nullable: true })
-  @JoinColumn([
-    { name: "serviceRecordId", referencedColumnName: "recordId" },
-    { name: "serviceId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   service: Services;
 
   @Column({ type: "int", nullable: true })
   saleId: number;
 
-  @Column({ type: "int", nullable: true })
-  saleRecordId: number;
-
   @ManyToOne(() => SaleHeaders, {
     onDelete: "CASCADE",
   })
-  @JoinColumn([
-    { name: "saleRecordId", referencedColumnName: "recordId" },
-    { name: "saleId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   sale: SaleHeaders;
 
   @Column({ type: "int", nullable: false })
@@ -76,7 +62,7 @@ export class InventoryLines {
 
   @Column({ type: "int", default: 0 })
   isInactive: number;
-  
+
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 }

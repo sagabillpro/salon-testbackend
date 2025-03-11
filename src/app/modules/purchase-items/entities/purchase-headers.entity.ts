@@ -11,6 +11,7 @@ import {
   DeleteDateColumn,
   BeforeInsert,
   Unique,
+  VersionColumn,
 } from "typeorm";
 import { Users } from "../../auth/entities/user.entity";
 import { Customer } from "../../customer/entities/customer.entity";
@@ -29,7 +30,6 @@ import { Contact } from "../../contacts/entities/contact.entity";
 import { handler } from "../../../config/dbconfig";
 
 @Entity("purchase_headers")
-@Unique(["recordId", "id"])
 export class PurchaseHeaders {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
@@ -49,14 +49,8 @@ export class PurchaseHeaders {
   @Column({ type: "int", nullable: true })
   supplierId: number;
 
-  @Column({ type: "int", nullable: true })
-  supplierRecordId: number;
-
   @ManyToOne(() => Contact, { nullable: true })
-  @JoinColumn([
-    { name: "supplierRecordId", referencedColumnName: "recordId" },
-    { name: "supplierId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   supplier: Contact;
 
   @ManyToOne(() => Users)
@@ -101,9 +95,6 @@ export class PurchaseHeaders {
   })
   inventoryLines: InventoryLines[];
   //************newly added columns
-  @Column({ type: "int", nullable: true })
-  recordId: number;
-
   @ManyToOne(() => Users)
   @JoinColumn()
   createdBy: Users;
@@ -115,21 +106,9 @@ export class PurchaseHeaders {
   @Column({ type: "int", default: 0 })
   isInactive: number;
 
-  @BeforeInsert()
-  async generateRecordId?() {
-    if (!this.recordId) {
-      const dataSource = await handler();
-      const lastRecord = await dataSource
-        .getRepository(PurchaseHeaders)
-        .findOne({
-          where: {},
-          order: { recordId: "DESC" },
-        });
-      console.log(lastRecord);
-      this.recordId = lastRecord ? lastRecord.recordId + 1 : 1;
-    }
-  }
-
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
+
+  @VersionColumn({ nullable: true })
+  version: number;
 }

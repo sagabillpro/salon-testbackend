@@ -25,15 +25,8 @@ var ItemsStockTrack = /** @class */ (function () {
         __metadata("design:type", Number)
     ], ItemsStockTrack.prototype, "serviceId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], ItemsStockTrack.prototype, "serviceRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return services_entity_1.Services; }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "serviceRecordId", referencedColumnName: "recordId" },
-            { name: "serviceId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", services_entity_1.Services)
     ], ItemsStockTrack.prototype, "service", void 0);
     __decorate([
@@ -41,17 +34,10 @@ var ItemsStockTrack = /** @class */ (function () {
         __metadata("design:type", Number)
     ], ItemsStockTrack.prototype, "txnHeaderId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], ItemsStockTrack.prototype, "txnHeaderRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return purchase_headers_entity_1.PurchaseHeaders; }, {
             onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
         }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
-            { name: "txnHeaderId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", purchase_headers_entity_1.PurchaseHeaders)
     ], ItemsStockTrack.prototype, "txnHeader", void 0);
     __decorate([

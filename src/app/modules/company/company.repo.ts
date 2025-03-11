@@ -33,6 +33,8 @@ const repository = async () => {
           ...filter?.select,
         },
         where: {
+          id: Number(id),
+          isInactive: 0,
           ...filter?.where,
         },
         relations: {

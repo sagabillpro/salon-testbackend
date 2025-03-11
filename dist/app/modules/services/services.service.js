@@ -95,11 +95,11 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
 }); };
 //3. create single record
 var create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var repo, duplicate, latestTax, respo, error_3;
+    var repo, duplicate, respo, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 6, , 7]);
+                _a.trys.push([0, 5, , 6]);
                 return [4 /*yield*/, (0, services_repo_1.default)()];
             case 1:
                 repo = _a.sent();
@@ -121,21 +121,13 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                     };
                 }
                 _a.label = 4;
-            case 4: return [4 /*yield*/, taxes_service_1.default.findById(data.taxRecordId)];
-            case 5:
-                latestTax = _a.sent();
-                if (!latestTax) {
-                    throw {
-                        message: "Record not found with id: " + data.taxRecordId,
-                        statusCode: 404,
-                    };
-                }
-                respo = repo.create(__assign(__assign({}, data), { taxId: latestTax.id, taxRecordId: data.taxRecordId }));
+            case 4:
+                respo = repo.create(__assign({}, data));
                 return [2 /*return*/, respo];
-            case 6:
+            case 5:
                 error_3 = _a.sent();
                 throw error_3;
-            case 7: return [2 /*return*/];
+            case 6: return [2 /*return*/];
         }
     });
 }); };
@@ -161,16 +153,16 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                         statusCode: 409,
                     };
                 }
-                return [4 /*yield*/, taxes_service_1.default.findById(data.taxRecordId)];
+                return [4 /*yield*/, taxes_service_1.default.findById(data.taxId)];
             case 2:
                 latestTax = _a.sent();
                 if (!latestTax) {
                     throw {
-                        message: "Record not found with id: " + data.taxRecordId,
+                        message: "Record not found with id: " + data.taxId,
                         statusCode: 404,
                     };
                 }
-                data = __assign(__assign({}, data), { taxId: latestTax.id, taxRecordId: data.taxRecordId });
+                data = __assign(__assign({}, data), { taxId: latestTax.id });
                 _a.label = 3;
             case 3: return [4 /*yield*/, (0, services_repo_1.default)()];
             case 4:

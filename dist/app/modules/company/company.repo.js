@@ -96,7 +96,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 _a.trys.push([0, 2, , 3]);
                                 return [4 /*yield*/, repo.findOne({
                                         select: __assign({}, filter === null || filter === void 0 ? void 0 : filter.select),
-                                        where: __assign({}, filter === null || filter === void 0 ? void 0 : filter.where),
+                                        where: __assign({ id: Number(id), isInactive: 0 }, filter === null || filter === void 0 ? void 0 : filter.where),
                                         relations: __assign({}, filter === null || filter === void 0 ? void 0 : filter.relations),
                                     })];
                             case 1:

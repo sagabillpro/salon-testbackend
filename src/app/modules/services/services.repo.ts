@@ -103,8 +103,7 @@ const repository = async () => {
     try {
       let finalRespo = new Services();
       const respo = await repo.findOneBy({
-        recordId: id,
-        isInactive: 0,
+        id: id,
       });
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
@@ -116,66 +115,7 @@ const repository = async () => {
             // Mark the existing record as inactive
             await transactionalEntityManager.save(Services, {
               ...respo,
-              isInactive: 1,
-            });
-
-            // Create a new record with the provided data, retaining the original recordId and code
-            const item = transactionalEntityManager.create(Services, {
               ...data,
-              recordId: respo.recordId, // Retain the original recordId
-              code: respo.code, // Retain the original code
-            });
-
-            // Save the new record to the database
-            const itemResult = await transactionalEntityManager.save(
-              Services,
-              item
-            );
-
-            // Find the existing ItemAvailable record associated with the service
-            const itemAvalableEntryOld =
-              await transactionalEntityManager.findOne(ItemAvailable, {
-                where: {
-                  serviceRecordId: respo.recordId,
-                  isInactive: 0,
-                },
-              });
-
-            // If the ItemAvailable record is not found, throw a 404 error
-            if (!itemAvalableEntryOld) {
-              throw {
-                message: "Record not found with id: " + id,
-                statusCode: 404,
-              };
-            }
-
-            // Mark the existing ItemAvailable record as inactive
-            await transactionalEntityManager.save(ItemAvailable, {
-              ...itemAvalableEntryOld,
-              isInactive: 1,
-            });
-
-            // Create a new ItemAvailable record with the updated service information
-            const itemAvalableEntry = transactionalEntityManager.create(
-              ItemAvailable,
-              {
-                ...itemAvalableEntryOld,
-                serviceId: itemResult.id,
-                serviceRecordId: itemResult.recordId,
-              }
-            );
-
-            // Save the new ItemAvailable record to the database
-            const insTocksaved = await transactionalEntityManager.save(
-              ItemAvailable,
-              itemAvalableEntry
-            );
-
-            // Update the new service record with the inStockId and inStockRecordId
-            finalRespo = await transactionalEntityManager.save(Services, {
-              ...itemResult,
-              inStockId: insTocksaved.id,
-              inStockRecordId: insTocksaved.recordId,
             });
           }
         );

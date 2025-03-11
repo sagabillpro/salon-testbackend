@@ -172,24 +172,17 @@ router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(schema_1.P
         }
     });
 }); });
-router.put("bulk", (0, validate_req_body_util_1.validateBodyManual)(schema_1.PurchaseHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_7;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, purchase_service_1.default.editBulk(req.body)];
-            case 1:
-                result = _a.sent();
-                res.send(result);
-                return [3 /*break*/, 3];
-            case 2:
-                error_7 = _a.sent();
-                next(error_7);
-                return [3 /*break*/, 3];
-            case 3: return [2 /*return*/];
-        }
-    });
-}); });
+// router.put(
+//   "bulk",
+//   validateBodyManual(PurchaseHeadersSchema),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const result = await purchaseService.editBulk(req.body);
+//       res.send(result);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
 exports.default = new routes_types_1.Route("/purchase-headers", router);
 //# sourceMappingURL=purchase.routes.js.map

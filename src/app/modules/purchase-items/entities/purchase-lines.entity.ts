@@ -20,42 +20,24 @@ export class PurchaseLines {
   @Column({ type: "int", nullable: true })
   txnHeaderId: number;
 
-  @Column({ type: "int", nullable: true })
-  txnHeaderRecordId: number;
-
   @ManyToOne(() => PurchaseHeaders, {
     onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
   })
-  @JoinColumn([
-    { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
-    { name: "txnHeaderId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   txnHeader: PurchaseHeaders;
 
   @Column({ type: "int", nullable: true })
   serviceId: number;
 
-  @Column({ type: "int", nullable: true })
-  serviceRecordId: number;
-
   @ManyToOne(() => Services)
-  @JoinColumn([
-    { name: "serviceRecordId", referencedColumnName: "recordId" },
-    { name: "serviceId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   service: Services;
 
   @Column({ type: "int", nullable: true })
   taxId: number;
 
-  @Column({ type: "int", nullable: true })
-  taxRecordId: number;
-
   @ManyToOne(() => Taxes, { nullable: true })
-  @JoinColumn([
-    { name: "taxRecordId", referencedColumnName: "recordId" },
-    { name: "taxId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   tax: Taxes;
 
   @Column({ type: "int", nullable: true })

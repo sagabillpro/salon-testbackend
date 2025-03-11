@@ -22,42 +22,24 @@ export class SaleLines {
   @Column({ type: "int", nullable: true })
   txnHeaderId: number;
 
-  @Column({ type: "int", nullable: true })
-  txnHeaderRecordId: number;
-
   @ManyToOne(() => SaleHeaders, {
     onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
   })
-  @JoinColumn([
-    { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
-    { name: "txnHeaderId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   txnHeader: SaleHeaders;
 
   @Column({ type: "int", nullable: true })
   serviceId: number;
 
-  @Column({ type: "int", nullable: true })
-  serviceRecordId: number;
-
   @ManyToOne(() => Services)
-  @JoinColumn([
-    { name: "serviceRecordId", referencedColumnName: "recordId" },
-    { name: "serviceId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   service: Services;
 
   @Column({ type: "int", nullable: true })
   taxId: number;
 
-  @Column({ type: "int", nullable: true })
-  taxRecordId: number;
-
   @ManyToOne(() => Taxes, { nullable: true })
-  @JoinColumn([
-    { name: "taxRecordId", referencedColumnName: "recordId" },
-    { name: "taxId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   tax: Taxes;
 
   @Column({ type: "int", nullable: false })
@@ -93,17 +75,3 @@ export class SaleLines {
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 }
-
-// const data: SaleLines = {
-//   amount: 11,
-//   createdDate: "",
-//   discountAmount: 3,
-//   id: "new1732509039842ci28gux",
-//   modifiedDate: "",
-//   quantity: 1,
-//   rate: 12,
-//   service: { id: 5, name: "Trimming" },
-//   tax: { id: 1, percentage: 18 },
-//   taxAmount: 2,
-//   txnHeader: { id: 0 },
-// };

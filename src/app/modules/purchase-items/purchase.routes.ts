@@ -94,16 +94,16 @@ router.post(
     }
   }
 );
-router.put(
-  "bulk",
-  validateBodyManual(PurchaseHeadersSchema),
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const result = await purchaseService.editBulk(req.body);
-      res.send(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+// router.put(
+//   "bulk",
+//   validateBodyManual(PurchaseHeadersSchema),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const result = await purchaseService.editBulk(req.body);
+//       res.send(result);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
 export default new Route("/purchase-headers", router);

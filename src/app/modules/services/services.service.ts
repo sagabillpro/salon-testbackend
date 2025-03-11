@@ -47,18 +47,8 @@ const create = async (data: Services) => {
       }
     }
 
-    //get latest tax id
-    const latestTax = await taxesService.findById(data.taxRecordId);
-    if (!latestTax) {
-      throw {
-        message: "Record not found with id: " + data.taxRecordId,
-        statusCode: 404,
-      };
-    }
     const respo = repo.create({
       ...data,
-      taxId: latestTax.id,
-      taxRecordId: data.taxRecordId,
     });
     return respo;
   } catch (error) {
@@ -83,14 +73,14 @@ const updateById = async (id: number, data: Services) => {
         };
       }
       //get latest tax id
-      const latestTax = await taxesService.findById(data.taxRecordId);
+      const latestTax = await taxesService.findById(data.taxId);
       if (!latestTax) {
         throw {
-          message: "Record not found with id: " + data.taxRecordId,
+          message: "Record not found with id: " + data.taxId,
           statusCode: 404,
         };
       }
-      data = { ...data, taxId: latestTax.id, taxRecordId: data.taxRecordId };
+      data = { ...data, taxId: latestTax.id };
     }
 
     const repo = await repository();

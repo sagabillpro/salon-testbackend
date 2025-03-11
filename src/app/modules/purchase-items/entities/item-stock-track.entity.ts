@@ -18,28 +18,17 @@ export class ItemsStockTrack {
   @Column({ type: "int", nullable: true })
   serviceId: number;
 
-  @Column({ type: "int", nullable: true })
-  serviceRecordId: number;
-
   @ManyToOne(() => Services)
-  @JoinColumn([
-    { name: "serviceRecordId", referencedColumnName: "recordId" },
-    { name: "serviceId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   service: Services;
+  
   @Column({ type: "int", nullable: true })
   txnHeaderId: number;
-
-  @Column({ type: "int", nullable: true })
-  txnHeaderRecordId: number;
 
   @ManyToOne(() => PurchaseHeaders, {
     onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
   })
-  @JoinColumn([
-    { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
-    { name: "txnHeaderId", referencedColumnName: "id" },
-  ])
+  @JoinColumn()
   txnHeader: PurchaseHeaders;
 
   @Column({ type: "decimal", nullable: true })
@@ -59,7 +48,7 @@ export class ItemsStockTrack {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
-  
+
   @Column({ type: "int", default: 0 })
   isInactive: number;
 }

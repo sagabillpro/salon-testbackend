@@ -27,17 +27,10 @@ var SaleLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleLines.prototype, "txnHeaderId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], SaleLines.prototype, "txnHeaderRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return sale_header_entity_1.SaleHeaders; }, {
             onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
         }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "txnHeaderRecordId", referencedColumnName: "recordId" },
-            { name: "txnHeaderId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", sale_header_entity_1.SaleHeaders)
     ], SaleLines.prototype, "txnHeader", void 0);
     __decorate([
@@ -45,15 +38,8 @@ var SaleLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleLines.prototype, "serviceId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], SaleLines.prototype, "serviceRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return services_entity_1.Services; }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "serviceRecordId", referencedColumnName: "recordId" },
-            { name: "serviceId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", services_entity_1.Services)
     ], SaleLines.prototype, "service", void 0);
     __decorate([
@@ -61,15 +47,8 @@ var SaleLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleLines.prototype, "taxId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], SaleLines.prototype, "taxRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "taxRecordId", referencedColumnName: "recordId" },
-            { name: "taxId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", taxes_entity_1.Taxes)
     ], SaleLines.prototype, "tax", void 0);
     __decorate([
@@ -124,17 +103,4 @@ var SaleLines = /** @class */ (function () {
     return SaleLines;
 }());
 exports.SaleLines = SaleLines;
-// const data: SaleLines = {
-//   amount: 11,
-//   createdDate: "",
-//   discountAmount: 3,
-//   id: "new1732509039842ci28gux",
-//   modifiedDate: "",
-//   quantity: 1,
-//   rate: 12,
-//   service: { id: 5, name: "Trimming" },
-//   tax: { id: 1, percentage: 18 },
-//   taxAmount: 2,
-//   txnHeader: { id: 0 },
-// };
 //# sourceMappingURL=sale-lines.enity.js.map

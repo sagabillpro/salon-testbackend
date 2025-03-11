@@ -27,19 +27,16 @@ var InventoryLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], InventoryLines.prototype, "purchaseId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], InventoryLines.prototype, "purchaseRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return purchase_headers_entity_1.PurchaseHeaders; }, {
             onDelete: "CASCADE",
         }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "purchaseRecordId", referencedColumnName: "recordId" },
-            { name: "purchaseId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", purchase_headers_entity_1.PurchaseHeaders)
     ], InventoryLines.prototype, "purchase", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], InventoryLines.prototype, "stockId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return item_stock_track_entity_1.ItemsStockTrack; }),
         (0, typeorm_1.JoinColumn)(),
@@ -50,15 +47,8 @@ var InventoryLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], InventoryLines.prototype, "serviceId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], InventoryLines.prototype, "serviceRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return services_entity_1.Services; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "serviceRecordId", referencedColumnName: "recordId" },
-            { name: "serviceId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", services_entity_1.Services)
     ], InventoryLines.prototype, "service", void 0);
     __decorate([
@@ -66,17 +56,10 @@ var InventoryLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], InventoryLines.prototype, "saleId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
-        __metadata("design:type", Number)
-    ], InventoryLines.prototype, "saleRecordId", void 0);
-    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return sale_header_entity_1.SaleHeaders; }, {
             onDelete: "CASCADE",
         }),
-        (0, typeorm_1.JoinColumn)([
-            { name: "saleRecordId", referencedColumnName: "recordId" },
-            { name: "saleId", referencedColumnName: "id" },
-        ]),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", sale_header_entity_1.SaleHeaders)
     ], InventoryLines.prototype, "sale", void 0);
     __decorate([

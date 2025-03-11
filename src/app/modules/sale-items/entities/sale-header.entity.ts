@@ -11,6 +11,7 @@ import {
   DeleteDateColumn,
   BeforeInsert,
   Unique,
+  VersionColumn,
 } from "typeorm";
 import { Users } from "../../auth/entities/user.entity";
 import { Customer } from "../../customer/entities/customer.entity";
@@ -27,7 +28,6 @@ import { Contact } from "../../contacts/entities/contact.entity";
 import { handler } from "../../../config/dbconfig";
 
 @Entity("sale_headers")
-@Unique(["recordId", "id"])
 export class SaleHeaders {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
@@ -102,8 +102,6 @@ export class SaleHeaders {
   })
   inventoryLines: InventoryLines[];
   //************newly added columns
-  @Column({ type: "int", nullable: true })
-  recordId: number;
 
   @ManyToOne(() => Users)
   @JoinColumn()
@@ -113,18 +111,9 @@ export class SaleHeaders {
   @JoinColumn()
   modifiedBy: Users;
 
-  @BeforeInsert()
-  async generateRecordId?() {
-    if (!this.recordId) {
-      const dataSource = await handler();
-      const lastRecord = await dataSource.getRepository(SaleHeaders).findOne({
-        where: {},
-        order: { recordId: "DESC" },
-      });
-      this.recordId = lastRecord ? lastRecord.recordId + 1 : 1;
-    }
-  }
-
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
+
+  @VersionColumn({ nullable: true })
+  version: number;
 }

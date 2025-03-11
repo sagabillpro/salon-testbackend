@@ -162,15 +162,14 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                     });
                 }); };
                 updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-                    var finalRespo_1, respo_2, itemResult, error_5;
+                    var finalRespo, respo_2, itemResult, error_5;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 _a.trys.push([0, 6, , 7]);
-                                finalRespo_1 = new services_entity_1.Services();
+                                finalRespo = new services_entity_1.Services();
                                 return [4 /*yield*/, repo.findOneBy({
-                                        recordId: id,
-                                        isInactive: 0,
+                                        id: id,
                                     })];
                             case 1:
                                 respo_2 = _a.sent();
@@ -179,47 +178,14 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 }
                                 if (!!data.isService) return [3 /*break*/, 3];
                                 return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
-                                        var item, itemResult, itemAvalableEntryOld, itemAvalableEntry, insTocksaved;
                                         return __generator(this, function (_a) {
                                             switch (_a.label) {
                                                 case 0: 
                                                 // Mark the existing record as inactive
-                                                return [4 /*yield*/, transactionalEntityManager.save(services_entity_1.Services, __assign(__assign({}, respo_2), { isInactive: 1 }))];
+                                                return [4 /*yield*/, transactionalEntityManager.save(services_entity_1.Services, __assign(__assign({}, respo_2), data))];
                                                 case 1:
                                                     // Mark the existing record as inactive
                                                     _a.sent();
-                                                    item = transactionalEntityManager.create(services_entity_1.Services, __assign(__assign({}, data), { recordId: respo_2.recordId, code: respo_2.code }));
-                                                    return [4 /*yield*/, transactionalEntityManager.save(services_entity_1.Services, item)];
-                                                case 2:
-                                                    itemResult = _a.sent();
-                                                    return [4 /*yield*/, transactionalEntityManager.findOne(item_stocks_entity_1.ItemAvailable, {
-                                                            where: {
-                                                                serviceRecordId: respo_2.recordId,
-                                                                isInactive: 0,
-                                                            },
-                                                        })];
-                                                case 3:
-                                                    itemAvalableEntryOld = _a.sent();
-                                                    // If the ItemAvailable record is not found, throw a 404 error
-                                                    if (!itemAvalableEntryOld) {
-                                                        throw {
-                                                            message: "Record not found with id: " + id,
-                                                            statusCode: 404,
-                                                        };
-                                                    }
-                                                    // Mark the existing ItemAvailable record as inactive
-                                                    return [4 /*yield*/, transactionalEntityManager.save(item_stocks_entity_1.ItemAvailable, __assign(__assign({}, itemAvalableEntryOld), { isInactive: 1 }))];
-                                                case 4:
-                                                    // Mark the existing ItemAvailable record as inactive
-                                                    _a.sent();
-                                                    itemAvalableEntry = transactionalEntityManager.create(item_stocks_entity_1.ItemAvailable, __assign(__assign({}, itemAvalableEntryOld), { serviceId: itemResult.id, serviceRecordId: itemResult.recordId }));
-                                                    return [4 /*yield*/, transactionalEntityManager.save(item_stocks_entity_1.ItemAvailable, itemAvalableEntry)];
-                                                case 5:
-                                                    insTocksaved = _a.sent();
-                                                    return [4 /*yield*/, transactionalEntityManager.save(services_entity_1.Services, __assign(__assign({}, itemResult), { inStockId: insTocksaved.id, inStockRecordId: insTocksaved.recordId }))];
-                                                case 6:
-                                                    // Update the new service record with the inStockId and inStockRecordId
-                                                    finalRespo_1 = _a.sent();
                                                     return [2 /*return*/];
                                             }
                                         });
@@ -231,9 +197,9 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 itemResult = repo.create(data);
                                 return [4 /*yield*/, repo.save(itemResult)];
                             case 4:
-                                finalRespo_1 = _a.sent();
+                                finalRespo = _a.sent();
                                 _a.label = 5;
-                            case 5: return [2 /*return*/, finalRespo_1];
+                            case 5: return [2 /*return*/, finalRespo];
                             case 6:
                                 error_5 = _a.sent();
                                 throw error_5;
