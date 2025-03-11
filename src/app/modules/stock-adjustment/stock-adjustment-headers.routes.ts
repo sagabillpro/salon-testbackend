@@ -47,4 +47,4 @@ router.post(
   }
 );
 
-export default new Route("/stockAdjustment-headers", router);
+export default new Route("/stock-adjustment-headers", router);

@@ -108,5 +108,5 @@ router.post("/", (0, get_model_schema_util_1.validateRequestBody)(stock_adjustme
         }
     });
 }); });
-exports.default = new routes_types_1.Route("/stockAdjustment-headers", router);
+exports.default = new routes_types_1.Route("/stock-adjustment-headers", router);
 //# sourceMappingURL=stock-adjustment-headers.routes.js.map

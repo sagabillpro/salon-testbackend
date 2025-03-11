@@ -109,7 +109,7 @@ var findStocks = function (filter) { return __awaiter(void 0, void 0, void 0, fu
                 data = [
                     {
                         id: 30,
-                        unitPrice: null,
+                        unitPrice: 178,
                         stockNumber: "GRNP-20241226132106535168",
                         quantityAdded: 7,
                         quantityUvailable: 2,
