@@ -35,62 +35,57 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.handler = void 0;
-require("reflect-metadata");
-var typeorm_1 = require("typeorm");
-var dotenv_1 = __importDefault(require("dotenv"));
-var path_1 = __importDefault(require("path"));
-var entities_mapping_1 = require("../../mappings/entities.mapping");
-var company_subscriber_1 = require("../../history/event-subscriber/company.subscriber");
-// Load environment variables from .env file
-dotenv_1.default.config({ path: path_1.default.join(__dirname, "../../.env") });
-var appDataSource;
-var initializeDataSource = function () { return __awaiter(void 0, void 0, void 0, function () {
+var dbconfig_1 = require("../../../app/config/dbconfig");
+var stock_adjustment_headers_entity_1 = require("./entities/stock-adjustment-headers.entity");
+var repository = function () { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, repo, find, create;
     return __generator(this, function (_a) {
         switch (_a.label) {
-            case 0:
-                if (!!appDataSource) return [3 /*break*/, 2];
-                appDataSource = new typeorm_1.DataSource({
-                    type: "postgres",
-                    host: process.env.Host,
-                    port: Number(process.env.port),
-                    username: process.env.User_Name,
-                    password: process.env.Password,
-                    database: process.env.Database,
-                    entities: entities_mapping_1.entities,
-                    subscribers: [company_subscriber_1.CompanySubscriber],
-                    //   entities: [
-                    //     "../../../src/entities/index/**/*.{ts,js}",
-                    //     "../../../build/entities/**/*.{ts,js}",
-                    //   ],
-                    //synchronize: true,
-                    // logging: true,
-                    ssl: {
-                        rejectUnauthorized: false, // Disables SSL certificate verification
-                    },
-                });
-                return [4 /*yield*/, appDataSource.initialize()];
-            case 1:
-                _a.sent();
-                _a.label = 2;
-            case 2: return [2 /*return*/, appDataSource];
-        }
-    });
-}); };
-var handler = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0: return [4 /*yield*/, initializeDataSource()];
+            case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
-                return [2 /*return*/, dataSource];
+                repo = dataSource.getRepository(stock_adjustment_headers_entity_1.StockAdjustmentHeaders);
+                find = function (option) { return __awaiter(void 0, void 0, void 0, function () {
+                    var error_1;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                return [4 /*yield*/, repo.find(option)];
+                            case 1: return [2 /*return*/, _a.sent()];
+                            case 2:
+                                error_1 = _a.sent();
+                                throw error_1;
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); };
+                create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
+                    var respo, error_2;
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                _a.trys.push([0, 2, , 3]);
+                                respo = repo.create(data);
+                                return [4 /*yield*/, repo.save(respo)];
+                            case 1:
+                                _a.sent();
+                                return [2 /*return*/, respo];
+                            case 2:
+                                error_2 = _a.sent();
+                                throw error_2;
+                            case 3: return [2 /*return*/];
+                        }
+                    });
+                }); };
+                return [2 /*return*/, {
+                        find: find,
+                        create: create,
+                    }];
         }
     });
 }); };
-exports.handler = handler;
-//# sourceMappingURL=index.js.map
+// Exporting an async function that resolves to an object containing find and findOne
+exports.default = repository;
+//# sourceMappingURL=stock-adjustment-headers.repo.js.map

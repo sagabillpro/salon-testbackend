@@ -23,6 +23,7 @@ import featuresRoutes from "../modules/features/features.routes";
 import roleRoutes from "../modules/roles/role.routes";
 import usermenufeaturemapRoute from "../modules/features/usermenufeaturemap.route";
 import historyRoute from "../history/history.route";
+import stockAdjustmentHeadersRoutes from "../modules/stock-adjustment/stock-adjustment-headers.routes";
 
 export const routes: Routes = [
   itemRoute,
@@ -48,5 +49,6 @@ export const routes: Routes = [
   featuresRoutes,
   roleRoutes,
   usermenufeaturemapRoute,
-  historyRoute
+  historyRoute,
+  stockAdjustmentHeadersRoutes
 ];

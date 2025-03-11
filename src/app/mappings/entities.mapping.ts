@@ -39,6 +39,8 @@ import { MenusAndFeatures } from "../modules/features/entities/menusandfeatures.
 import { UserMenusAndFeatures } from "../modules/features/entities/usermenufeaturemap.entity";
 import { Role } from "../modules/roles/entities/role.entity";
 import { CompanyHistory } from "../history/history-entities";
+import { StockAdjustmentHeaders } from "../modules/stock-adjustment/entities/stock-adjustment-headers.entity";
+import { StockAdjustmentLines } from "../modules/stock-adjustment/entities/stock-adjustment.entity";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -81,5 +83,7 @@ export const entities:
   DIndustryType,
   DTransactionStatus,
   CompanyHistory,
+  StockAdjustmentHeaders,
+  StockAdjustmentLines
  // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];
