@@ -17,8 +17,9 @@ var errorHandler = function (err, req, res, next) {
     var statusCode = err.statusCode || err.status || 500;
     var message = err.message || "Something went wrong!";
     // Build a response object with error details
-    var errorResponse = __assign(__assign({ success: false, message: message }, (err.errors && { errors: err.errors })), (process.env.NODE_ENV === "development" && {
-        stack: err.stack
+    var errorResponse = __assign(__assign(__assign({ success: false, message: message }, (err.data ? { data: err.data } : {})), (err.errors && { errors: err.errors })), (process.env.NODE_ENV === "development" && {
+        // Stack trace for debugging in development
+        stack: err.stack,
     }));
     res.status(statusCode).json(errorResponse);
 };

@@ -7,6 +7,7 @@ import { handler } from "../../config/dbconfig";
 import { City, Country, States } from "../general-data/entities";
 import { Branch } from "../branches/entities/branches.entity";
 import { Taxes } from "../taxes/entities/taxes.entity";
+import { checkUniqueConstraints } from "../../utils/check-duplicate.util";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Company>) => {
@@ -36,23 +37,9 @@ const create = async (data: Company) => {
     // 1. Get the data source/connection and initialize the repository for Country.
     const dataSource = await handler();
     const countryRepo = dataSource.getRepository(Country);
-    const companyRepo = dataSource.getRepository(Company);
 
-    const duplicate = await companyRepo.findOne({
-      where: [
-        { name: data.name },
-        { registrationNumber: data.registrationNumber },
-        { email: data.email },
-        { phoneNumber: data.phoneNumber },
-      ],
-    });
-    if (duplicate) {
-      throw {
-        message:
-          "Duplicate Record, please try again!. name ,registrationNumber ,phoneNumber,email,phoneNumber should be unique.",
-        statusCode: 404,
-      };
-    }
+    await checkUniqueConstraints(data, Company);
+
     // 2. Validate that the specified country exists.
     const country = await countryRepo.findOne({
       where: { id: data.countryId },
@@ -98,21 +85,25 @@ const create = async (data: Company) => {
 
       // 8. Iterate over the provided branches data (if any) to create new Branch instances.
       //    Each branch is associated with the saved company record (using companyId and companyRecordId).
-      branches?.forEach((value) => {
-        // Create a new branch instance by merging the incoming branch data
-        // with the company association details from the saved company.
-        const branchInstance: Branch = {
-          ...value,
-          companyId: data.id,
-        };
-        branchesNew.push(branchInstance);
-      });
+      for (const value of branches || []) {
+        try {
+          await checkUniqueConstraints(value, Branch);
+          const branchInstance: Branch = {
+            ...value,
+            companyId: data.id,
+          };
+          branchesNew.push(branchInstance);
+        } catch (error) {
+          // Handle or log the error as needed.
+          throw error;
+        }
+      }
+      
       // 9. Save all new Branch instances.
       await manager.save(Branch, branchesNew);
     });
     return data;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -169,7 +160,6 @@ const updateById = async (id: number, data: Company) => {
     // Return the newly created (updated) Company record
     return data;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

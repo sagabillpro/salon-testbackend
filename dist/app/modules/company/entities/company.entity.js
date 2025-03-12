@@ -91,18 +91,6 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Company.prototype, "numberOfEmployees", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "decimal", precision: 15, scale: 2, nullable: true }),
-        __metadata("design:type", Number)
-    ], Company.prototype, "annualRevenue", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", nullable: false }),
-        __metadata("design:type", String)
-    ], Company.prototype, "foundedDate", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({ type: "enum", enum: ["Active", "Inactive"], default: "Active" }),
-        __metadata("design:type", String)
-    ], Company.prototype, "status", void 0);
-    __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], Company.prototype, "createdDate", void 0);

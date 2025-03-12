@@ -48,7 +48,7 @@ const create = async (data: Branch) => {
     }
 
     const repo = await repository();
-    data = await generateCode(26, data);
+    // data = await generateCode(26, data);
     const respo = repo.create({
       ...data,
       country: country,
@@ -77,7 +77,7 @@ const updateById = async (id: number, data: Branch) => {
     }
 
     const repo = await repository();
-    data = await generateCode(14, data);
+    //  data = await generateCode(14, data);
     const respo = repo.updateById(id, {
       ...data,
       country: country,

@@ -68,6 +68,7 @@ var dbconfig_1 = require("../../config/dbconfig");
 var entities_1 = require("../general-data/entities");
 var branches_entity_1 = require("../branches/entities/branches.entity");
 var taxes_entity_1 = require("../taxes/entities/taxes.entity");
+var check_duplicate_util_1 = require("../../utils/check-duplicate.util");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -108,7 +109,7 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 var create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, countryRepo, companyRepo, duplicate, country, taxRepo, tax_1, branches_1, headerWithoutLines_1, error_3;
+    var dataSource, countryRepo, country, taxRepo, tax_1, branches_1, headerWithoutLines_1, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -117,23 +118,9 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
             case 1:
                 dataSource = _a.sent();
                 countryRepo = dataSource.getRepository(entities_1.Country);
-                companyRepo = dataSource.getRepository(company_entity_1.Company);
-                return [4 /*yield*/, companyRepo.findOne({
-                        where: [
-                            { name: data.name },
-                            { registrationNumber: data.registrationNumber },
-                            { email: data.email },
-                            { phoneNumber: data.phoneNumber },
-                        ],
-                    })];
+                return [4 /*yield*/, (0, check_duplicate_util_1.checkUniqueConstraints)(data, company_entity_1.Company)];
             case 2:
-                duplicate = _a.sent();
-                if (duplicate) {
-                    throw {
-                        message: "Duplicate Record, please try again!. name ,registrationNumber ,phoneNumber,email,phoneNumber should be unique.",
-                        statusCode: 404,
-                    };
-                }
+                _a.sent();
                 return [4 /*yield*/, countryRepo.findOne({
                         where: { id: data.countryId },
                     })];
@@ -161,31 +148,45 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                 // });
                 // 10. Return the newly created company record.
                 return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (manager) { return __awaiter(void 0, void 0, void 0, function () {
-                        var headerEntry, branchesNew;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
+                        var headerEntry, branchesNew, _i, _a, value, branchInstance, error_4;
+                        return __generator(this, function (_b) {
+                            switch (_b.label) {
                                 case 0: return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(27, __assign({}, headerWithoutLines_1))];
                                 case 1:
                                     // 5. generate a unique code for the company header.
-                                    headerWithoutLines_1 = _a.sent();
+                                    headerWithoutLines_1 = _b.sent();
                                     headerEntry = manager.create(company_entity_1.Company, __assign(__assign({}, headerWithoutLines_1), { countryId: data.countryId, taxId: tax_1.id }));
                                     return [4 /*yield*/, manager.save(company_entity_1.Company, headerEntry)];
                                 case 2:
-                                    data = _a.sent();
+                                    data = _b.sent();
                                     branchesNew = [];
-                                    // 8. Iterate over the provided branches data (if any) to create new Branch instances.
-                                    //    Each branch is associated with the saved company record (using companyId and companyRecordId).
-                                    branches_1 === null || branches_1 === void 0 ? void 0 : branches_1.forEach(function (value) {
-                                        // Create a new branch instance by merging the incoming branch data
-                                        // with the company association details from the saved company.
-                                        var branchInstance = __assign(__assign({}, value), { companyId: data.id });
-                                        branchesNew.push(branchInstance);
-                                    });
-                                    // 9. Save all new Branch instances.
-                                    return [4 /*yield*/, manager.save(branches_entity_1.Branch, branchesNew)];
+                                    _i = 0, _a = branches_1 || [];
+                                    _b.label = 3;
                                 case 3:
+                                    if (!(_i < _a.length)) return [3 /*break*/, 8];
+                                    value = _a[_i];
+                                    _b.label = 4;
+                                case 4:
+                                    _b.trys.push([4, 6, , 7]);
+                                    return [4 /*yield*/, (0, check_duplicate_util_1.checkUniqueConstraints)(value, branches_entity_1.Branch)];
+                                case 5:
+                                    _b.sent();
+                                    branchInstance = __assign(__assign({}, value), { companyId: data.id });
+                                    branchesNew.push(branchInstance);
+                                    return [3 /*break*/, 7];
+                                case 6:
+                                    error_4 = _b.sent();
+                                    // Handle or log the error as needed.
+                                    throw error_4;
+                                case 7:
+                                    _i++;
+                                    return [3 /*break*/, 3];
+                                case 8: 
+                                // 9. Save all new Branch instances.
+                                return [4 /*yield*/, manager.save(branches_entity_1.Branch, branchesNew)];
+                                case 9:
                                     // 9. Save all new Branch instances.
-                                    _a.sent();
+                                    _b.sent();
                                     return [2 /*return*/];
                             }
                         });
@@ -205,7 +206,7 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
 }); };
 // 4. Update single Company record by id
 var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, branches_2, headerWithoutLines_2, error_4;
+    var dataSource, branches_2, headerWithoutLines_2, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -257,16 +258,16 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 // Return the newly created (updated) Company record
                 return [2 /*return*/, data];
             case 3:
-                error_4 = _a.sent();
-                console.log(error_4);
-                throw error_4;
+                error_5 = _a.sent();
+                console.log(error_5);
+                throw error_5;
             case 4: return [2 /*return*/];
         }
     });
 }); };
 //5. delete single record by id
 var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var repo, error_5;
+    var repo, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -279,8 +280,8 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
                 _a.sent();
                 return [3 /*break*/, 4];
             case 3:
-                error_5 = _a.sent();
-                throw error_5;
+                error_6 = _a.sent();
+                throw error_6;
             case 4: return [2 /*return*/];
         }
     });

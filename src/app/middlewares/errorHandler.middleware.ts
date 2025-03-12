@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction } from "express";
 
 export const errorHandler = (
   err: any,
@@ -14,10 +14,12 @@ export const errorHandler = (
   const errorResponse = {
     success: false,
     message,
-    ...(err.errors && { errors: err.errors }),       // Additional errors for validation cases
-    ...(process.env.NODE_ENV === "development" && {   // Stack trace for debugging in development
-      stack: err.stack
-    })
+    ...(err.data ? { data: err.data } : {}),
+    ...(err.errors && { errors: err.errors }), // Additional errors for validation cases
+    ...(process.env.NODE_ENV === "development" && {
+      // Stack trace for debugging in development
+      stack: err.stack,
+    }),
   };
 
   res.status(statusCode).json(errorResponse);

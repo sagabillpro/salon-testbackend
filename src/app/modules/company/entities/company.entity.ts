@@ -74,14 +74,6 @@ export class Company {
   @Column({ type: "int", nullable: true })
   numberOfEmployees: number;
 
-  @Column({ type: "decimal", precision: 15, scale: 2, nullable: true })
-  annualRevenue: number;
-
-  @Column({ type: "varchar", nullable: false })
-  foundedDate: string;
-
-  @Column({ type: "enum", enum: ["Active", "Inactive"], default: "Active" })
-  status: string;
 
   @CreateDateColumn({ type: "varchar", nullable: false })
   createdDate: string;

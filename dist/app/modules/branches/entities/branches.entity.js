@@ -21,10 +21,6 @@ var Branch = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Branch.prototype, "id", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, unique: true }),
-        __metadata("design:type", String)
-    ], Branch.prototype, "code", void 0);
-    __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
         __metadata("design:type", String)
     ], Branch.prototype, "name", void 0);

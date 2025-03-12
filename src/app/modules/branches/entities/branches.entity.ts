@@ -15,8 +15,6 @@ import { Company } from "../../company/entities/company.entity";
 export class Branch {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
-  @Column({ type: "varchar", length: 255, nullable: true, unique: true })
-  code: string;
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
