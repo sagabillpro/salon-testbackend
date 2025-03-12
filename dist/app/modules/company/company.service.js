@@ -108,19 +108,36 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 var create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, countryRepo, country, taxRepo, tax_1, branches_1, headerWithoutLines_1, error_3;
+    var dataSource, countryRepo, companyRepo, duplicate, country, taxRepo, tax_1, branches_1, headerWithoutLines_1, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 6, , 7]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
                 countryRepo = dataSource.getRepository(entities_1.Country);
+                companyRepo = dataSource.getRepository(company_entity_1.Company);
+                return [4 /*yield*/, companyRepo.findOne({
+                        where: [
+                            { name: data.name },
+                            { registrationNumber: data.registrationNumber },
+                            { email: data.email },
+                            { phoneNumber: data.phoneNumber },
+                        ],
+                    })];
+            case 2:
+                duplicate = _a.sent();
+                if (duplicate) {
+                    throw {
+                        message: "Duplicate Record, please try again!. name ,registrationNumber ,phoneNumber,email,phoneNumber should be unique.",
+                        statusCode: 404,
+                    };
+                }
                 return [4 /*yield*/, countryRepo.findOne({
                         where: { id: data.countryId },
                     })];
-            case 2:
+            case 3:
                 country = _a.sent();
                 if (!country) {
                     throw {
@@ -132,7 +149,7 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                 return [4 /*yield*/, taxRepo.findOne({
                         where: { id: data.taxId },
                     })];
-            case 3:
+            case 4:
                 tax_1 = _a.sent();
                 if (!tax_1) {
                     throw {
@@ -173,16 +190,16 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                             }
                         });
                     }); })];
-            case 4:
+            case 5:
                 // });
                 // 10. Return the newly created company record.
                 _a.sent();
                 return [2 /*return*/, data];
-            case 5:
+            case 6:
                 error_3 = _a.sent();
                 console.log(error_3);
                 throw error_3;
-            case 6: return [2 /*return*/];
+            case 7: return [2 /*return*/];
         }
     });
 }); };

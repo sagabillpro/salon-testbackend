@@ -34,7 +34,6 @@ const repository = async () => {
         },
         where: {
           id: Number(id),
-          isInactive: 0,
           ...filter?.where,
         },
         relations: {
@@ -108,22 +107,7 @@ const repository = async () => {
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      if (!data.isService) {
-        await dataSource.manager.transaction(
-          "SERIALIZABLE",
-          async (transactionalEntityManager) => {
-            // Mark the existing record as inactive
-            await transactionalEntityManager.save(Services, {
-              ...respo,
-              ...data,
-            });
-          }
-        );
-      } else {
-        const itemResult = repo.create(data);
-        finalRespo = await repo.save(itemResult);
-      }
-
+      finalRespo = await repo.save({ ...respo, ...data });
       return finalRespo;
     } catch (error) {
       throw error;
@@ -156,20 +140,6 @@ const repository = async () => {
     }
   };
   //6. create multiple records
-  const createBulk = async (data: Services[]) => {
-    try {
-      const respo = repo.create(data);
-      await repo.save(respo);
-      await dataSource.transaction(async (transactionalEntityManager) => {
-        // execute queries using transactionalEntityManager
-        // 1. generate header entry code
-        //2. update or add main header based on id
-      });
-      return respo;
-    } catch (error) {
-      throw error;
-    }
-  };
   return {
     find,
     findOne,

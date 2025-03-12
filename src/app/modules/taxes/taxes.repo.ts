@@ -32,8 +32,7 @@ const repository = async () => {
           ...filter?.select,
         },
         where: {
-          recordId: Number(id),
-          isInactive: 0,
+          id: Number(id),
           ...filter?.where,
         },
         relations: {
@@ -76,21 +75,8 @@ const repository = async () => {
       // Mark the existing record as inactive
       await repo.save({
         ...respo,
-        isInactive: 1,
-      });
-
-      // Create a new record with the provided data, retaining the original recordId and code
-      const newRecord = repo.create({
         ...data,
-        recordId: respo.recordId,
-        code: respo.code,
       });
-
-      // Save the new record to the database
-      await repo.save(newRecord);
-
-      // Return the newly created record
-      return newRecord;
     } catch (error) {
       // If an error occurs, throw it to be handled by the caller
       throw error;
@@ -104,7 +90,7 @@ const repository = async () => {
       const respo = await repo.findOneBy({
         id: id,
       });
-  
+
       // If the record is not found, throw a 404 error
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
@@ -128,21 +114,7 @@ const repository = async () => {
       throw error;
     }
   };
-  //6. create multiple records
-  const createBulk = async (data: Taxes[]) => {
-    try {
-      const respo = repo.create(data);
-      await repo.save(respo);
-      await dataSource.transaction(async (transactionalEntityManager) => {
-        // execute queries using transactionalEntityManager
-        // 1. generate header entry code
-        //2. update or add main header based on id
-      });
-      return respo;
-    } catch (error) {
-      throw error;
-    }
-  };
+
   return {
     find,
     findOne,

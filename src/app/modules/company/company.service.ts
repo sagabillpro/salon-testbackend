@@ -36,8 +36,23 @@ const create = async (data: Company) => {
     // 1. Get the data source/connection and initialize the repository for Country.
     const dataSource = await handler();
     const countryRepo = dataSource.getRepository(Country);
-    //  const manager = dataSource.manager;
+    const companyRepo = dataSource.getRepository(Company);
 
+    const duplicate = await companyRepo.findOne({
+      where: [
+        { name: data.name },
+        { registrationNumber: data.registrationNumber },
+        { email: data.email },
+        { phoneNumber: data.phoneNumber },
+      ],
+    });
+    if (duplicate) {
+      throw {
+        message:
+          "Duplicate Record, please try again!. name ,registrationNumber ,phoneNumber,email,phoneNumber should be unique.",
+        statusCode: 404,
+      };
+    }
     // 2. Validate that the specified country exists.
     const country = await countryRepo.findOne({
       where: { id: data.countryId },
@@ -119,7 +134,7 @@ const updateById = async (id: number, data: Company) => {
       const currentHeaderRecord = await manager.findOne(Company, {
         where: { id: id },
       });
-      
+
       if (!currentHeaderRecord) {
         throw {
           message: "Record not found with id: " + id,
