@@ -90,10 +90,8 @@ router.get("/download", (0, validate_filter_util_1.validateFilter)(item_stock_tr
             case 3:
                 result = _c.sent();
                 workbook = new exceljs_1.default.Workbook();
-                console.log("result", result);
                 worksheet = workbook.addWorksheet("Report");
                 worksheet = (0, get_report_headers_util_1.getWorksheetColumnsFromSchema)(10, worksheet, result);
-                console.log("worksheet", worksheet);
                 // 5. Stream the Excel file as a response
                 res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
                 res.setHeader("Content-Disposition", "attachment; filename=item-stock-report".concat(Date.now(), ".xlsx"));
