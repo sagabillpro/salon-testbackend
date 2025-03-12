@@ -45,6 +45,9 @@ var validate_filter_util_1 = require("../../utils/validate-filter.util");
 var get_query_util_1 = __importDefault(require("../../utils/get-query.util"));
 var item_stock_track_entity_1 = require("../purchase-items/entities/item-stock-track.entity");
 var dbconfig_1 = require("../../config/dbconfig");
+var stream_1 = require("stream");
+var get_report_headers_util_1 = require("../../utils/get-report-headers.util");
+var exceljs_1 = __importDefault(require("exceljs"));
 var router = (0, express_1.Router)();
 router.get("/", (0, validate_filter_util_1.validateFilter)(item_stock_track_entity_1.ItemsStockTrack), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, repo, result, _a, _b, error_1;
@@ -68,6 +71,44 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(item_stock_track_enti
                 next(error_1);
                 return [3 /*break*/, 5];
             case 5: return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/download", (0, validate_filter_util_1.validateFilter)(item_stock_track_entity_1.ItemsStockTrack), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, repo, result, _a, _b, workbook, worksheet, stream, error_2;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _c.trys.push([0, 5, , 6]);
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _c.sent();
+                repo = dataSource.getRepository(item_stock_track_entity_1.ItemsStockTrack);
+                _b = (_a = repo).find;
+                return [4 /*yield*/, (0, get_query_util_1.default)(req, item_stock_track_entity_1.ItemsStockTrack)];
+            case 2: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
+            case 3:
+                result = _c.sent();
+                workbook = new exceljs_1.default.Workbook();
+                console.log("result", result);
+                worksheet = workbook.addWorksheet("Report");
+                worksheet = (0, get_report_headers_util_1.getWorksheetColumnsFromSchema)(10, worksheet, result);
+                console.log("worksheet", worksheet);
+                // 5. Stream the Excel file as a response
+                res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                res.setHeader("Content-Disposition", "attachment; filename=item-stock-report".concat(Date.now(), ".xlsx"));
+                stream = new stream_1.PassThrough();
+                return [4 /*yield*/, workbook.xlsx.write(stream)];
+            case 4:
+                _c.sent();
+                // 7. Pipe the stream directly to the response
+                stream.pipe(res);
+                return [3 /*break*/, 6];
+            case 5:
+                error_2 = _c.sent();
+                next(error_2);
+                return [3 /*break*/, 6];
+            case 6: return [2 /*return*/];
         }
     });
 }); });

@@ -89,8 +89,26 @@ router.get("/stocks", function (req, res, next) { return __awaiter(void 0, void 
         }
     });
 }); });
+router.get("/stocks-download", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, stock_adjustment_headers_service_1.default.exportUsersToExcel(req, res)];
+            case 1:
+                _a.sent();
+                return [3 /*break*/, 3];
+            case 2:
+                error_3 = _a.sent();
+                next(error_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 router.post("/", (0, get_model_schema_util_1.validateRequestBody)(stock_adjustment_headers_entity_1.StockAdjustmentHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_3;
+    var result, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -101,8 +119,8 @@ router.post("/", (0, get_model_schema_util_1.validateRequestBody)(stock_adjustme
                 res.send(result);
                 return [3 /*break*/, 3];
             case 2:
-                error_3 = _a.sent();
-                next(error_3);
+                error_4 = _a.sent();
+                next(error_4);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

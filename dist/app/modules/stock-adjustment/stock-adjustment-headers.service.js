@@ -54,6 +54,9 @@ var get_object_code_util_1 = require("../../utils/get-object-code.util");
 var stock_adjustment_headers_repo_1 = __importDefault(require("./stock-adjustment-headers.repo"));
 var dbconfig_1 = require("../../config/dbconfig");
 var item_stock_track_entity_1 = require("../purchase-items/entities/item-stock-track.entity");
+var exceljs_1 = __importDefault(require("exceljs"));
+var stream_1 = require("stream");
+var get_report_headers_util_1 = require("../../utils/get-report-headers.util");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -117,8 +120,8 @@ var findStocks = function (filter) { return __awaiter(void 0, void 0, void 0, fu
                         modifiedDate: "2024-12-27 05:17:39.484661+00",
                         service: {
                             id: 31,
-                            name: "Garnier Men, Face Wash, Brightening"
-                        }
+                            name: "Garnier Men, Face Wash, Brightening",
+                        },
                     },
                     {
                         id: 31,
@@ -130,8 +133,8 @@ var findStocks = function (filter) { return __awaiter(void 0, void 0, void 0, fu
                         modifiedDate: "2024-12-27 05:17:40.484661+00",
                         service: {
                             id: 31,
-                            name: "Garnier Men, Face Wash, Brightening"
-                        }
+                            name: "Garnier Men, Face Wash, Brightening",
+                        },
                     },
                     {
                         id: 32,
@@ -143,9 +146,9 @@ var findStocks = function (filter) { return __awaiter(void 0, void 0, void 0, fu
                         modifiedDate: "2024-12-27 05:17:41.484661+00",
                         service: {
                             id: 32,
-                            name: "Nivea Men, Face Wash"
-                        }
-                    }
+                            name: "Nivea Men, Face Wash",
+                        },
+                    },
                 ];
                 groupedData = data.reduce(function (acc, item) {
                     var serviceName = item.service.name;
@@ -192,5 +195,61 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
         }
     });
 }); };
-exports.default = { find: find, create: create, findStocks: findStocks };
+var exportUsersToExcel = function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, stockRepo, stockResponse, workbook, worksheet, stream, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 4, , 5]);
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _a.sent();
+                stockRepo = dataSource.getRepository(item_stock_track_entity_1.ItemsStockTrack);
+                return [4 /*yield*/, stockRepo.find({
+                        where: {
+                            isInactive: 0,
+                        },
+                        select: {
+                            id: true,
+                            createdDate: true,
+                            modifiedDate: true,
+                            quantityAdded: true,
+                            quantityUvailable: true,
+                            unitPrice: true,
+                            stockNumber: true,
+                            service: {
+                                name: true,
+                                id: true,
+                            },
+                        },
+                        relations: {
+                            service: true,
+                        },
+                    })];
+            case 2:
+                stockResponse = _a.sent();
+                workbook = new exceljs_1.default.Workbook();
+                worksheet = workbook.addWorksheet("Report");
+                worksheet = (0, get_report_headers_util_1.getWorksheetColumnsFromSchema)(10, worksheet, stockResponse);
+                console.log("worksheet", worksheet);
+                // 5. Stream the Excel file as a response
+                res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                res.setHeader("Content-Disposition", "attachment; filename=Report_".concat(Date.now(), ".xlsx"));
+                stream = new stream_1.PassThrough();
+                return [4 /*yield*/, workbook.xlsx.write(stream)];
+            case 3:
+                _a.sent();
+                // 7. Pipe the stream directly to the response
+                stream.pipe(res);
+                return [3 /*break*/, 5];
+            case 4:
+                error_4 = _a.sent();
+                console.error("Error exporting data to Excel:", error_4);
+                res.status(500).json({ message: "Error generating Excel file" });
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.default = { find: find, create: create, findStocks: findStocks, exportUsersToExcel: exportUsersToExcel };
 //# sourceMappingURL=stock-adjustment-headers.service.js.map

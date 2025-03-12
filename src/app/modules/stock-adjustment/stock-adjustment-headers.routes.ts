@@ -13,7 +13,9 @@ router.get(
   validateFilter(StockAdjustmentHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await service.find(await getQuery(req, StockAdjustmentHeaders));
+      const result = await service.find(
+        await getQuery(req, StockAdjustmentHeaders)
+      );
       res.send(result);
     } catch (error) {
       next(error);
@@ -21,13 +23,25 @@ router.get(
   }
 );
 
-
 router.get(
   "/stocks",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await service.findStocks(await getQuery(req, StockAdjustmentHeaders));
+      const result = await service.findStocks(
+        await getQuery(req, StockAdjustmentHeaders)
+      );
       res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
+router.get(
+  "/stocks-download",
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      await service.exportUsersToExcel(req, res);
     } catch (error) {
       next(error);
     }
