@@ -257,18 +257,24 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                                     if (typeof url === "string") {
                                         data.logo = url;
                                     }
-                                    return [3 /*break*/, 3];
+                                    return [3 /*break*/, 4];
                                 case 3:
-                                    if (!(data.signature && data.signature.startsWith("data:"))) return [3 /*break*/, 5];
-                                    return [4 /*yield*/, (0, upload_image_cloudinary_util_1.uploadImageToCloudinary)(data.signature, "CompanySignatures")];
+                                    data.logo = currentHeaderRecord.logo;
+                                    _a.label = 4;
                                 case 4:
+                                    if (!(data.signature && data.signature.startsWith("data:"))) return [3 /*break*/, 6];
+                                    return [4 /*yield*/, (0, upload_image_cloudinary_util_1.uploadImageToCloudinary)(data.signature, "CompanySignatures")];
+                                case 5:
                                     url = _a.sent();
                                     if (typeof url === "string") {
                                         data.signature = url;
                                     }
-                                    _a.label = 5;
-                                case 5: return [4 /*yield*/, manager.save(company_entity_1.Company, __assign(__assign({}, currentHeaderRecord), headerWithoutLines_2))];
+                                    return [3 /*break*/, 7];
                                 case 6:
+                                    data.signature = currentHeaderRecord.signature;
+                                    _a.label = 7;
+                                case 7: return [4 /*yield*/, manager.save(company_entity_1.Company, __assign(__assign({}, currentHeaderRecord), headerWithoutLines_2))];
+                                case 8:
                                     // by saving a copy with isInactive set to 1.
                                     data = _a.sent();
                                     branchesNew = [];
@@ -282,7 +288,7 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                                     });
                                     // 9. Save all new Branch instances.
                                     return [4 /*yield*/, manager.save(branches_entity_1.Branch, branchesNew)];
-                                case 7:
+                                case 9:
                                     // 9. Save all new Branch instances.
                                     _a.sent();
                                     return [2 /*return*/];

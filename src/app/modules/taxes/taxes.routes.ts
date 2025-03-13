@@ -6,8 +6,12 @@ import getQuery from "../../utils/get-query.util";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import taxesService from "./taxes.service";
 import { Taxes } from "./entities/taxes.entity";
-import { uploadImageToCloudinary } from "../../utils/upload-image-cloudinary.util";
+import pdf from "html-pdf"; // Or choose puppeteer
+// import wkhtmltopdf from "wkhtmltopdf";
+import path from "path";
 const router = Router();
+import ejs from "ejs";
+import { PassThrough, pipeline } from "stream";
 
 router.get(
   "/",
@@ -94,4 +98,5 @@ router.delete(
 //     return res.status(500).send(error.message);
 //   }
 // });
+
 export default new Route("/taxes", router);

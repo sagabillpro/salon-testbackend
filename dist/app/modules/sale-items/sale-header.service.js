@@ -1073,5 +1073,70 @@ var createBulk = function (data_1) {
         });
     });
 };
-exports.default = { find: find, findById: findById, create: create, deleteById: deleteById, updateById: updateById, createBulk: createBulk };
+//create service which will get saleHeader information based on id also its lines
+var saleInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var reportData;
+    return __generator(this, function (_a) {
+        try {
+            reportData = {
+                data: {
+                    logoUrl: "https://res.cloudinary.com/dtljovzou/image/upload/v1741864798/CompanyLogos/phcltvwqsytmjxr4ehx9.jpg",
+                    companyName: "Acme Corporation",
+                    companyAddress: "123 Business Road, Business City, BC 98765",
+                    companyEmail: "billing@acme.com",
+                    companyPhone: "+1 800-123-4567",
+                    invoiceNumber: "1001",
+                    invoiceDate: "2023-05-20",
+                    dueDate: "2023-06-20",
+                    clientName: "John Doe Enterprises",
+                    clientAddress: "456 Client Street, Suite 100",
+                    clientCity: "Client City",
+                    clientState: "ST",
+                    clientZip: "12345",
+                    clientEmail: "info@johndoe.com",
+                    items: [
+                        {
+                            description: "Consultation Services",
+                            quantity: 10,
+                            unitCost: "100.00",
+                            taxPercentage: 10,
+                            taxAmount: "100.00",
+                            lineTotal: "1100.00",
+                        },
+                        {
+                            description: "Software License",
+                            quantity: 2,
+                            unitCost: "500.00",
+                            taxPercentage: 8,
+                            taxAmount: "80.00",
+                            lineTotal: "1080.00",
+                        },
+                    ],
+                    subtotal: "2000.00",
+                    tax: "180.00",
+                    discount: "50.00",
+                    totalPayable: "2130.00",
+                    signatureUrl: "https://res.cloudinary.com/dtljovzou/image/upload/v1741869805/UKHJSE-3-19-g013_osfpx0.jpg",
+                },
+            };
+            // if (!data) {
+            //   throw new Error("SaleHeader not found");
+            // }
+            return [2 /*return*/, reportData];
+        }
+        catch (error) {
+            throw error;
+        }
+        return [2 /*return*/];
+    });
+}); };
+exports.default = {
+    find: find,
+    findById: findById,
+    create: create,
+    deleteById: deleteById,
+    updateById: updateById,
+    createBulk: createBulk,
+    saleInvoiceData: saleInvoiceData,
+};
 //# sourceMappingURL=sale-header.service.js.map

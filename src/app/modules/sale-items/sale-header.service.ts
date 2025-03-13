@@ -692,6 +692,7 @@ import { ItemsStockTrack } from "../purchase-items/entities/item-stock-track.ent
 import { Customer } from "../customer/entities/customer.entity";
 import { Contact } from "../contacts/entities/contact.entity";
 import contactService from "../contacts/contact.service";
+import companyService from "../company/company.service";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -1023,4 +1024,127 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
     throw error;
   }
 };
-export default { find, findById, create, deleteById, updateById, createBulk };
+//create service which will get saleHeader information based on id also its lines
+
+const saleInvoiceData = async (id: number) => {
+  try {
+    // // const user=
+    // const data = await findById(id, {
+    //   relations: {
+    //     saleLines: {
+    //       service: true,
+    //     },
+    //     customer: {
+    //       state: true,
+    //       country: true,
+    //       city: true,
+    //     },
+    //   },
+    // });
+    // //use company id from user req object later on
+    // const company = await companyService.findById(1);
+    // const invoiceItems = data.saleLines.map((line) => ({
+    //   description: line.service.name,
+    //   quantity: line.quantity,
+    //   unitCost: line.rate,
+    //   taxPercentage: line.tax.name,
+    //   taxAmount: line.taxAmount,
+    //   lineTotal: Number(line.amount),
+    // }));
+
+    // const companyDetails = {
+    //   companyName: company.name,
+    //   companyAddress: company.addressLine1,
+    //   companyEmail: company.email,
+    //   companyPhone: company.phoneNumber,
+    //   signatureUrl: company.signature,
+    //   logoUrl: company.logo,
+    // };
+    // const invoiceDetails = {
+    //   invoiceNumber: data.code,
+    //   invoiceDate: data.txnDate,
+    //   dueDate: data.txnDate,
+    //   subtotal: data.subTotal,
+    //   tax: data.totalTax,
+    //   discount: data.totalDiscount,
+    //   totalPayable: data.grandTotal,
+    // };
+    // const customerDetails = {
+    //   clientName: data.customer.name,
+    //   //add address onlater on
+    //   clientAddress: data.customer.name,
+    //   clientCity: data?.customer?.city?.name,
+    //   clientState: data?.customer?.state?.name,
+    //   //add zop code in customer
+    //   clientZip: data?.customer.name,
+    //   clientEmail: data.customer.email,
+    // };
+    // const finalData = {
+    //   data: {
+    //     ...companyDetails,
+    //     ...invoiceDetails,
+    //     ...customerDetails,
+    //     items: invoiceItems,
+    //   },
+    // };
+    const reportData = {
+      data: {
+        logoUrl:
+          "https://res.cloudinary.com/dtljovzou/image/upload/v1741864798/CompanyLogos/phcltvwqsytmjxr4ehx9.jpg",
+        companyName: "Acme Corporation",
+        companyAddress: "123 Business Road, Business City, BC 98765",
+        companyEmail: "billing@acme.com",
+        companyPhone: "+1 800-123-4567",
+        invoiceNumber: "1001",
+        invoiceDate: "2023-05-20",
+        dueDate: "2023-06-20",
+        clientName: "John Doe Enterprises",
+        clientAddress: "456 Client Street, Suite 100",
+        clientCity: "Client City",
+        clientState: "ST",
+        clientZip: "12345",
+        clientEmail: "info@johndoe.com",
+        items: [
+          {
+            description: "Consultation Services",
+            quantity: 10,
+            unitCost: "100.00",
+            taxPercentage: 10,
+            taxAmount: "100.00",
+            lineTotal: "1100.00",
+          },
+          {
+            description: "Software License",
+            quantity: 2,
+            unitCost: "500.00",
+            taxPercentage: 8,
+            taxAmount: "80.00",
+            lineTotal: "1080.00",
+          },
+        ],
+        subtotal: "2000.00",
+        tax: "180.00",
+        discount: "50.00",
+        totalPayable: "2130.00",
+        signatureUrl:
+          "https://res.cloudinary.com/dtljovzou/image/upload/v1741869805/UKHJSE-3-19-g013_osfpx0.jpg",
+      },
+    };
+    // if (!data) {
+    //   throw new Error("SaleHeader not found");
+    // }
+
+    return reportData;
+  } catch (error) {
+    throw error;
+  }
+};
+export default {
+  find,
+  findById,
+  create,
+  deleteById,
+  updateById,
+  createBulk,
+  saleInvoiceData,
+};
