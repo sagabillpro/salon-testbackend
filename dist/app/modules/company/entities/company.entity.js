@@ -31,6 +31,14 @@ var Company = /** @class */ (function () {
         __metadata("design:type", String)
     ], Company.prototype, "name", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+        __metadata("design:type", String)
+    ], Company.prototype, "logo", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+        __metadata("design:type", String)
+    ], Company.prototype, "signature", void 0);
+    __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: false, unique: true }),
         __metadata("design:type", String)
     ], Company.prototype, "registrationNumber", void 0);

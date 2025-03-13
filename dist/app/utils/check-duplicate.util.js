@@ -60,14 +60,12 @@ var checkUniqueConstraints = function (data, model) { return __awaiter(void 0, v
                     return uniqueMeta.columns.map(function (col) { return col.propertyName; });
                 })));
                 uniqueColumnNames = uniqueColumnNames.filter(function (prop) { return prop !== "code"; });
-                console.log("uniqueColumnNames", uniqueColumnNames);
                 // If no unique columns are defined, there is nothing to check.
                 if (!uniqueColumns.length)
                     return [2 /*return*/];
                 conditions = uniqueColumns.reduce(function (acc, column) {
                     var _a;
                     var prop = column.propertyName;
-                    console.log("data[prop]", data[prop]);
                     //   if (data[prop] !== undefined) {
                     if (uniqueColumnNames.includes(prop) && data[prop] && prop !== "code") {
                         var condition = (_a = {},
@@ -81,7 +79,6 @@ var checkUniqueConstraints = function (data, model) { return __awaiter(void 0, v
                     }
                     return acc;
                 }, []);
-                console.log("object", conditions);
                 if (conditions.length === 0)
                     return [2 /*return*/];
                 return [4 /*yield*/, repo.findOne({ where: conditions })];

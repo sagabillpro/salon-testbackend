@@ -69,6 +69,7 @@ var entities_1 = require("../general-data/entities");
 var branches_entity_1 = require("../branches/entities/branches.entity");
 var taxes_entity_1 = require("../taxes/entities/taxes.entity");
 var check_duplicate_util_1 = require("../../utils/check-duplicate.util");
+var upload_image_cloudinary_util_1 = require("../../utils/upload-image-cloudinary.util");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -109,22 +110,41 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
     });
 }); };
 var create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, countryRepo, country, taxRepo, tax_1, branches_1, headerWithoutLines_1, error_3;
+    var dataSource, countryRepo, url, url, country, taxRepo, tax_1, branches_1, headerWithoutLines_1, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 6, , 7]);
+                _a.trys.push([0, 10, , 11]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
                 countryRepo = dataSource.getRepository(entities_1.Country);
+                //check duplicates here
                 return [4 /*yield*/, (0, check_duplicate_util_1.checkUniqueConstraints)(data, company_entity_1.Company)];
             case 2:
+                //check duplicates here
                 _a.sent();
-                return [4 /*yield*/, countryRepo.findOne({
-                        where: { id: data.countryId },
-                    })];
+                if (!(data.logo && data.logo.startsWith("data:"))) return [3 /*break*/, 4];
+                return [4 /*yield*/, (0, upload_image_cloudinary_util_1.uploadImageToCloudinary)(data.logo, "CompanyLogos")];
             case 3:
+                url = _a.sent();
+                if (typeof url === "string") {
+                    data.logo = url;
+                }
+                _a.label = 4;
+            case 4:
+                if (!(data.signature && data.signature.startsWith("data:"))) return [3 /*break*/, 6];
+                return [4 /*yield*/, (0, upload_image_cloudinary_util_1.uploadImageToCloudinary)(data.signature, "CompanySignatures")];
+            case 5:
+                url = _a.sent();
+                if (typeof url === "string") {
+                    data.signature = url;
+                }
+                _a.label = 6;
+            case 6: return [4 /*yield*/, countryRepo.findOne({
+                    where: { id: data.countryId },
+                })];
+            case 7:
                 country = _a.sent();
                 if (!country) {
                     throw {
@@ -136,7 +156,7 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                 return [4 /*yield*/, taxRepo.findOne({
                         where: { id: data.taxId },
                     })];
-            case 4:
+            case 8:
                 tax_1 = _a.sent();
                 if (!tax_1) {
                     throw {
@@ -191,16 +211,15 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                             }
                         });
                     }); })];
-            case 5:
+            case 9:
                 // });
                 // 10. Return the newly created company record.
                 _a.sent();
                 return [2 /*return*/, data];
-            case 6:
+            case 10:
                 error_3 = _a.sent();
-                console.log(error_3);
                 throw error_3;
-            case 7: return [2 /*return*/];
+            case 11: return [2 /*return*/];
         }
     });
 }); };
@@ -217,7 +236,7 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 branches_2 = data.branches, headerWithoutLines_2 = __rest(data, ["branches"]);
                 // Start a transaction with SERIALIZABLE isolation level to ensure atomicity
                 return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (manager) { return __awaiter(void 0, void 0, void 0, function () {
-                        var currentHeaderRecord, data, branchesNew;
+                        var currentHeaderRecord, url, url, branchesNew;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0: return [4 /*yield*/, manager.findOne(company_entity_1.Company, {
@@ -231,8 +250,26 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                                             statusCode: 404,
                                         };
                                     }
-                                    return [4 /*yield*/, manager.save(company_entity_1.Company, __assign(__assign({}, currentHeaderRecord), headerWithoutLines_2))];
+                                    if (!(data.logo && data.logo.startsWith("data:"))) return [3 /*break*/, 3];
+                                    return [4 /*yield*/, (0, upload_image_cloudinary_util_1.uploadImageToCloudinary)(data.logo, "CompanyLogos")];
                                 case 2:
+                                    url = _a.sent();
+                                    if (typeof url === "string") {
+                                        data.logo = url;
+                                    }
+                                    return [3 /*break*/, 3];
+                                case 3:
+                                    if (!(data.signature && data.signature.startsWith("data:"))) return [3 /*break*/, 5];
+                                    return [4 /*yield*/, (0, upload_image_cloudinary_util_1.uploadImageToCloudinary)(data.signature, "CompanySignatures")];
+                                case 4:
+                                    url = _a.sent();
+                                    if (typeof url === "string") {
+                                        data.signature = url;
+                                    }
+                                    _a.label = 5;
+                                case 5: return [4 /*yield*/, manager.save(company_entity_1.Company, __assign(__assign({}, currentHeaderRecord), headerWithoutLines_2))];
+                                case 6:
+                                    // by saving a copy with isInactive set to 1.
                                     data = _a.sent();
                                     branchesNew = [];
                                     // 8. Iterate over the provided branches data (if any) to create new Branch instances.
@@ -245,7 +282,7 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                                     });
                                     // 9. Save all new Branch instances.
                                     return [4 /*yield*/, manager.save(branches_entity_1.Branch, branchesNew)];
-                                case 3:
+                                case 7:
                                     // 9. Save all new Branch instances.
                                     _a.sent();
                                     return [2 /*return*/];
@@ -259,7 +296,6 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 return [2 /*return*/, data];
             case 3:
                 error_5 = _a.sent();
-                console.log(error_5);
                 throw error_5;
             case 4: return [2 /*return*/];
         }

@@ -8,6 +8,7 @@ import { City, Country, States } from "../general-data/entities";
 import { Branch } from "../branches/entities/branches.entity";
 import { Taxes } from "../taxes/entities/taxes.entity";
 import { checkUniqueConstraints } from "../../utils/check-duplicate.util";
+import { uploadImageToCloudinary } from "../../utils/upload-image-cloudinary.util";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Company>) => {
@@ -37,9 +38,26 @@ const create = async (data: Company) => {
     // 1. Get the data source/connection and initialize the repository for Country.
     const dataSource = await handler();
     const countryRepo = dataSource.getRepository(Country);
-
+    //check duplicates here
     await checkUniqueConstraints(data, Company);
 
+    //upload logo
+    if (data.logo && data.logo.startsWith("data:")) {
+      const url = await uploadImageToCloudinary(data.logo, "CompanyLogos");
+      if (typeof url === "string") {
+        data.logo = url;
+      }
+    }
+    //upload signature
+    if (data.signature && data.signature.startsWith("data:")) {
+      const url = await uploadImageToCloudinary(
+        data.signature,
+        "CompanySignatures"
+      );
+      if (typeof url === "string") {
+        data.signature = url;
+      }
+    }
     // 2. Validate that the specified country exists.
     const country = await countryRepo.findOne({
       where: { id: data.countryId },
@@ -98,7 +116,7 @@ const create = async (data: Company) => {
           throw error;
         }
       }
-      
+
       // 9. Save all new Branch instances.
       await manager.save(Branch, branchesNew);
     });
@@ -132,9 +150,29 @@ const updateById = async (id: number, data: Company) => {
           statusCode: 404,
         };
       }
-      // 2. Mark the existing company record as inactive (soft delete it)
+      //upload logo
+      if (data.logo && data.logo.startsWith("data:")) {
+        const url = await uploadImageToCloudinary(data.logo, "CompanyLogos");
+        if (typeof url === "string") {
+          data.logo = url;
+        }
+      } else {
+        data.logo = currentHeaderRecord.logo;
+      }
+      //upload signature
+      if (data.signature && data.signature.startsWith("data:")) {
+        const url = await uploadImageToCloudinary(
+          data.signature,
+          "CompanySignatures"
+        );
+        if (typeof url === "string") {
+          data.signature = url;
+        }
+      } else {
+        data.signature = currentHeaderRecord.signature;
+      }
       // by saving a copy with isInactive set to 1.
-      const data = await manager.save(Company, {
+      data = await manager.save(Company, {
         ...currentHeaderRecord,
         ...headerWithoutLines,
       });

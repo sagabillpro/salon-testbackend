@@ -150,5 +150,20 @@ router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 
         }
     });
 }); });
+//crate route which will upload image to
+// router.post("/uploadImage", async (req: Request, res: Response) => {
+//   try {
+//     if (!req.body) {
+//       return res.status(400).send("No files were uploaded.");
+//     }
+//     const { image } = req.body;
+//     const url = await uploadImageToCloudinary(image, "CompanyLogos");
+//     return res.status(200).send({
+//       data: url,
+//     });
+//   } catch (error) {
+//     return res.status(500).send(error.message);
+//   }
+// });
 exports.default = new routes_types_1.Route("/taxes", router);
 //# sourceMappingURL=taxes.routes.js.map

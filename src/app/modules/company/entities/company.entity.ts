@@ -29,6 +29,12 @@ export class Company {
   @Column({ type: "varchar", length: 255, nullable: false, unique: true })
   name: string;
 
+  @Column({ type: "varchar", nullable: true })
+  logo: string;
+
+  @Column({ type: "varchar", nullable: true })
+  signature: string;
+
   @Column({ type: "varchar", length: 100, nullable: false, unique: true })
   registrationNumber: string;
 
@@ -73,7 +79,6 @@ export class Company {
 
   @Column({ type: "int", nullable: true })
   numberOfEmployees: number;
-
 
   @CreateDateColumn({ type: "varchar", nullable: false })
   createdDate: string;
