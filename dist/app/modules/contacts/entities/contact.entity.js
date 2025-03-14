@@ -123,6 +123,14 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", String)
     ], Contact.prototype, "email", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+        __metadata("design:type", String)
+    ], Contact.prototype, "address", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+        __metadata("design:type", String)
+    ], Contact.prototype, "zipCode", void 0);
+    __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
     ], Contact.prototype, "isInactive", void 0);

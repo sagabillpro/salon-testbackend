@@ -59,6 +59,12 @@ export class Contact {
   @CreateDateColumn({ type: "varchar", nullable: true })
   email: string;
 
+  @Column({ type: "varchar", nullable: true })
+  address: string;
+
+  @Column({ type: "varchar", nullable: true })
+  zipCode: string;
+
   @Column({ type: "int", default: 0 })
   isInactive: number;
 
