@@ -6,7 +6,6 @@ import getQuery from "../../utils/get-query.util";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import taxesService from "./taxes.service";
 import { Taxes } from "./entities/taxes.entity";
-import pdf from "html-pdf"; // Or choose puppeteer
 // import wkhtmltopdf from "wkhtmltopdf";
 import path from "path";
 const router = Router();

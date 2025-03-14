@@ -3,12 +3,10 @@ import { Route } from "../../routes/routes.types";
 import { validateFilter } from "../../utils/validate-filter.util";
 import getQuery from "../../utils/get-query.util";
 
-import { validateRequestBody } from "../../utils/get-model-schema.util";
 import saleHeaderService from "./sale-header.service";
 import { SaleHeaders } from "./entities/sale-header.entity";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { SaleHeadersSchema } from "../../schema/sale-header.schema";
-import pdf from "html-pdf"; // Or choose puppeteer
 // import wkhtmltopdf from "wkhtmltopdf";
 import path from "path";
 import ejs from "ejs";
@@ -110,41 +108,63 @@ router.post(
 //   }
 // );
 
+// router.get(
+//   "/download/:id",
+//   // validateFilter(SaleHeaders),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const id = Number(req.params.id);
+//       const reportData = await saleHeaderService.saleInvoiceData(id);
+//       // Path to your EJS template file
+//       const renderedPath = path.join(
+//         process.cwd(),
+//         "/dist/app/templates",
+//         "sale-invoice.template.ejs"
+//       );
+//       console.log("renderedPath", renderedPath);
+
+//       // Render the EJS template to HTML
+//       const renderedHtml = await ejs.renderFile(renderedPath, reportData);
+
+//       // Create a PDF stream from the HTML using html-pdf
+//       const options = { format: "A4" };
+//       pdf.create(renderedHtml, options).toStream((err, pdfStream) => {
+//         if (err) {
+//           console.error("PDF generation error:", err);
+//           return res.status(500).send("Error generating PDF");
+//         }
+
+//         // Set HTTP headers for PDF download
+//         res.setHeader("Content-Type", "application/pdf");
+//         res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+
+//         // Pipe the PDF stream to the response
+//         pdfStream.pipe(res);
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+
 router.get(
-  "/download/:id",
-  // validateFilter(SaleHeaders),
+  "/download/generate-invoice/:id",
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
-      const reportData = await saleHeaderService.saleInvoiceData(id);
+      const invoiceData = await saleHeaderService.saleInvoiceData(id);
       // Path to your EJS template file
       const renderedPath = path.join(
         process.cwd(),
         "/dist/app/templates",
         "sale-invoice.template.ejs"
       );
-      console.log("renderedPath", renderedPath);
-
       // Render the EJS template to HTML
-      const renderedHtml = await ejs.renderFile(renderedPath, reportData);
-
-      // Create a PDF stream from the HTML using html-pdf
-      const options = { format: "A4" };
-      pdf.create(renderedHtml, options).toStream((err, pdfStream) => {
-        if (err) {
-          console.error("PDF generation error:", err);
-          return res.status(500).send("Error generating PDF");
-        }
-
-        // Set HTTP headers for PDF download
-        res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
-
-        // Pipe the PDF stream to the response
-        pdfStream.pipe(res);
-      });
+      const renderedHtml = await ejs.renderFile(renderedPath, invoiceData);
+      res.send(renderedHtml);
     } catch (error) {
-      next(error);
+      console.log(error);
+      res.status(500).send("Error generating invoice");
     }
   }
 );

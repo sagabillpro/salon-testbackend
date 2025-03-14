@@ -15,6 +15,11 @@
         color: #333;
         line-height: 1.6;
       }
+      /* Prevent page-break inside for total amount */
+      .custom-no-break {
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
       .invoice-container {
         max-width: 850px;
         margin: 60px auto;
@@ -25,7 +30,6 @@
       }
       .header {
         background: linear-gradient(135deg, #9c77dd, #8141d9);
-
         padding: 20px 40px;
         color: #fff;
         display: flex;
@@ -111,9 +115,12 @@
         font-weight: bold;
         color: #333;
       }
-      /* Signature Section */
+      /* Signature Section using Flexbox, aligned to the right */
       .signature {
-        text-align: right;
+        display: flex;
+        justify-content: flex-end;
+        flex-direction: column;
+        align-items: flex-end;
         padding: 20px 40px;
         border-top: 1px solid #eee;
       }
@@ -122,7 +129,7 @@
         width: auto;
       }
       .signature p {
-        margin-top: 8px;
+        margin-left: 10px;
         font-size: 0.9em;
         color: #555;
       }
@@ -142,7 +149,8 @@
     </style>
   </head>
   <body>
-    <div class="invoice-container">
+    <!-- Invoice container with id for html2pdf to target -->
+    <div class="invoice-container" id="invoice-container">
       <!-- Header with Logo (left) and Company Details (right) -->
       <div class="header">
         <div class="logo">
@@ -198,14 +206,14 @@
         </tbody>
       </table>
 
-      <div class="total-amount">
+      <div class="total-amount custom-no-break">
         <p>Subtotal: $<%= data.subtotal %></p>
         <p>Tax: $<%= data.tax %></p>
         <p>Discount: $<%= data.discount %></p>
         <p>Total Payable: <strong>$<%= data.totalPayable %></strong></p>
       </div>
 
-      <!-- Signature Section -->
+      <!-- Signature Section aligned to the right -->
       <div class="signature">
         <img src="<%= data.signatureUrl %>" alt="Signature" />
         <p>Authorized Signature</p>
@@ -213,8 +221,7 @@
 
       <div class="notes">
         <p>
-          Please make the payment by the due date. Late payments may incur
-          additional fees.
+          Please make the payment by the due date. Late payments may incur additional fees.
         </p>
       </div>
 
@@ -222,5 +229,23 @@
         <p>Thank you for your business!</p>
       </div>
     </div>
+
+    <!-- PDF Generation Script (using html2pdf) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+      const generatePDF = () => {
+        const options = {
+          margin: [10, 10, 10, 10],
+          filename: "invoice.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        };
+
+        html2pdf().set(options).from(document.getElementById("invoice-container")).save();
+      };
+
+      // Optionally, you could call generatePDF() automatically or on a button click.
+    </script>
   </body>
 </html>

@@ -1075,12 +1075,12 @@ var createBulk = function (data_1) {
 };
 //create service which will get saleHeader information based on id also its lines
 var saleInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var reportData;
+    var invoiceData;
     return __generator(this, function (_a) {
         try {
-            reportData = {
+            invoiceData = {
                 data: {
-                    logoUrl: "https://res.cloudinary.com/dtljovzou/image/upload/v1741864798/CompanyLogos/phcltvwqsytmjxr4ehx9.jpg",
+                    logoUrl: "https://res.cloudinary.com/dtljovzou/image/upload/v1741930555/bird-colorful-logo-gradient-vector_343694-1365_dkkqr6.avif",
                     companyName: "Acme Corporation",
                     companyAddress: "123 Business Road, Business City, BC 98765",
                     companyEmail: "billing@acme.com",
@@ -1111,6 +1111,70 @@ var saleInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, f
                             taxAmount: "80.00",
                             lineTotal: "1080.00",
                         },
+                        {
+                            description: "Consultation Services",
+                            quantity: 10,
+                            unitCost: "100.00",
+                            taxPercentage: 10,
+                            taxAmount: "100.00",
+                            lineTotal: "1100.00",
+                        },
+                        {
+                            description: "Software License",
+                            quantity: 2,
+                            unitCost: "500.00",
+                            taxPercentage: 8,
+                            taxAmount: "80.00",
+                            lineTotal: "1080.00",
+                        },
+                        {
+                            description: "Consultation Services",
+                            quantity: 10,
+                            unitCost: "100.00",
+                            taxPercentage: 10,
+                            taxAmount: "100.00",
+                            lineTotal: "1100.00",
+                        },
+                        {
+                            description: "Software License",
+                            quantity: 2,
+                            unitCost: "500.00",
+                            taxPercentage: 8,
+                            taxAmount: "80.00",
+                            lineTotal: "1080.00",
+                        },
+                        {
+                            description: "Consultation Services",
+                            quantity: 10,
+                            unitCost: "100.00",
+                            taxPercentage: 10,
+                            taxAmount: "100.00",
+                            lineTotal: "1100.00",
+                        },
+                        {
+                            description: "Software License",
+                            quantity: 2,
+                            unitCost: "500.00",
+                            taxPercentage: 8,
+                            taxAmount: "80.00",
+                            lineTotal: "1080.00",
+                        },
+                        {
+                            description: "Consultation Services",
+                            quantity: 10,
+                            unitCost: "100.00",
+                            taxPercentage: 10,
+                            taxAmount: "100.00",
+                            lineTotal: "1100.00",
+                        },
+                        {
+                            description: "Software License",
+                            quantity: 2,
+                            unitCost: "500.00",
+                            taxPercentage: 8,
+                            taxAmount: "80.00",
+                            lineTotal: "1080.00",
+                        },
                     ],
                     subtotal: "2000.00",
                     tax: "180.00",
@@ -1119,10 +1183,7 @@ var saleInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, f
                     signatureUrl: "https://res.cloudinary.com/dtljovzou/image/upload/v1741869805/UKHJSE-3-19-g013_osfpx0.jpg",
                 },
             };
-            // if (!data) {
-            //   throw new Error("SaleHeader not found");
-            // }
-            return [2 /*return*/, reportData];
+            return [2 /*return*/, invoiceData];
         }
         catch (error) {
             throw error;

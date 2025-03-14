@@ -47,7 +47,6 @@ var sale_header_service_1 = __importDefault(require("./sale-header.service"));
 var sale_header_entity_1 = require("./entities/sale-header.entity");
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var sale_header_schema_1 = require("../../schema/sale-header.schema");
-var html_pdf_1 = __importDefault(require("html-pdf")); // Or choose puppeteer
 // import wkhtmltopdf from "wkhtmltopdf";
 var path_1 = __importDefault(require("path"));
 var ejs_1 = __importDefault(require("ejs"));
@@ -188,10 +187,42 @@ router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(sale_heade
 //     }
 //   }
 // );
-router.get("/download/:id", 
-// validateFilter(SaleHeaders),
-function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var id, reportData, renderedPath, renderedHtml, options, error_7;
+// router.get(
+//   "/download/:id",
+//   // validateFilter(SaleHeaders),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const id = Number(req.params.id);
+//       const reportData = await saleHeaderService.saleInvoiceData(id);
+//       // Path to your EJS template file
+//       const renderedPath = path.join(
+//         process.cwd(),
+//         "/dist/app/templates",
+//         "sale-invoice.template.ejs"
+//       );
+//       console.log("renderedPath", renderedPath);
+//       // Render the EJS template to HTML
+//       const renderedHtml = await ejs.renderFile(renderedPath, reportData);
+//       // Create a PDF stream from the HTML using html-pdf
+//       const options = { format: "A4" };
+//       pdf.create(renderedHtml, options).toStream((err, pdfStream) => {
+//         if (err) {
+//           console.error("PDF generation error:", err);
+//           return res.status(500).send("Error generating PDF");
+//         }
+//         // Set HTTP headers for PDF download
+//         res.setHeader("Content-Type", "application/pdf");
+//         res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+//         // Pipe the PDF stream to the response
+//         pdfStream.pipe(res);
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+router.get("/download/generate-invoice/:id", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, invoiceData, renderedPath, renderedHtml, error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -199,28 +230,17 @@ function (req, res, next) { return __awaiter(void 0, void 0, void 0, function ()
                 id = Number(req.params.id);
                 return [4 /*yield*/, sale_header_service_1.default.saleInvoiceData(id)];
             case 1:
-                reportData = _a.sent();
+                invoiceData = _a.sent();
                 renderedPath = path_1.default.join(process.cwd(), "/dist/app/templates", "sale-invoice.template.ejs");
-                console.log("renderedPath", renderedPath);
-                return [4 /*yield*/, ejs_1.default.renderFile(renderedPath, reportData)];
+                return [4 /*yield*/, ejs_1.default.renderFile(renderedPath, invoiceData)];
             case 2:
                 renderedHtml = _a.sent();
-                options = { format: "A4" };
-                html_pdf_1.default.create(renderedHtml, options).toStream(function (err, pdfStream) {
-                    if (err) {
-                        console.error("PDF generation error:", err);
-                        return res.status(500).send("Error generating PDF");
-                    }
-                    // Set HTTP headers for PDF download
-                    res.setHeader("Content-Type", "application/pdf");
-                    res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
-                    // Pipe the PDF stream to the response
-                    pdfStream.pipe(res);
-                });
+                res.send(renderedHtml);
                 return [3 /*break*/, 4];
             case 3:
                 error_7 = _a.sent();
-                next(error_7);
+                console.log(error_7);
+                res.status(500).send("Error generating invoice");
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
         }
