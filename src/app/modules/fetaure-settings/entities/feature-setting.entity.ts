@@ -49,6 +49,9 @@ export class FeatureSettings {
   @Column({ type: "int", default: 0, nullable: true })
   isInactive: number;
 
+  @Column({ type: "int", default: 0, nullable: true })
+  isAddOnlyAdmin: number;
+
   @CreateDateColumn({ type: "varchar", nullable: false })
   createdDate: string;
 
