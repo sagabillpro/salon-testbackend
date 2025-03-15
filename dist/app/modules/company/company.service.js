@@ -95,6 +95,7 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
+                console.log("inside thsi .....");
                 return [4 /*yield*/, (0, company_repo_1.default)()];
             case 1:
                 repo = _a.sent();

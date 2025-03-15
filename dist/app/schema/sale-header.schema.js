@@ -4,74 +4,21 @@ exports.SaleHeadersSchema = void 0;
 exports.SaleHeadersSchema = {
     type: "object",
     properties: {
-        id: {
-            type: "integer",
-        },
-        code: {
-            type: "string",
-        },
-        description: {
-            type: "string",
-        },
-        txnDate: {
-            type: "string",
-        },
-        subTotal: {
-            type: "integer",
-        },
-        grandTotal: {
-            type: "integer",
-        },
-        totalDiscount: {
-            type: "integer",
-        },
-        totalTax: {
-            type: "integer",
-        },
-        isInactive: {
-            type: "integer",
-        },
-        createdDate: {
-            type: "string",
-            format: "date-time",
-        },
-        modifiedDate: {
-            type: "string",
-            format: "date-time",
-        },
-        customer: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "integer",
-                },
-            },
-            required: ["id"],
-            additionalProperties: false,
-        },
-        user: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "integer",
-                },
-            },
-            required: ["id"],
-            additionalProperties: false,
-        },
-        isService: {
-            type: "integer",
-        },
-        paymentType: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "integer",
-                },
-            },
-            required: ["id"],
-            additionalProperties: false,
-        },
+        id: { type: "integer" },
+        code: { type: "string" },
+        description: { type: "string" },
+        txnDate: { type: "string" },
+        subTotal: { type: "number" }, // changed from integer
+        grandTotal: { type: "number" }, // changed from integer
+        totalDiscount: { type: "number" }, // changed from integer
+        totalTax: { type: "number" }, // changed from integer
+        isInactive: { type: "integer" },
+        createdDate: { type: "string", format: "date-time" },
+        modifiedDate: { type: "string", format: "date-time" },
+        customerId: { type: "integer" },
+        userId: { type: "integer" },
+        isService: { type: "integer" },
+        paymentTypeId: { type: "integer" },
         saleLines: {
             type: "array",
             items: {
@@ -80,9 +27,7 @@ exports.SaleHeadersSchema = {
                     txnHeader: {
                         type: "object",
                         properties: {
-                            id: {
-                                type: "integer",
-                            },
+                            id: { type: "integer" },
                         },
                         required: ["id"],
                         additionalProperties: false,
@@ -90,12 +35,8 @@ exports.SaleHeadersSchema = {
                     service: {
                         type: "object",
                         properties: {
-                            id: {
-                                type: "integer",
-                            },
-                            name: {
-                                type: "string",
-                            },
+                            id: { type: "integer" },
+                            name: { type: "string" },
                         },
                         required: ["id", "name"],
                         additionalProperties: false,
@@ -103,51 +44,23 @@ exports.SaleHeadersSchema = {
                     tax: {
                         type: "object",
                         properties: {
-                            id: {
-                                type: "integer",
-                            },
-                            name: {
-                                type: "string",
-                            },
-                            percentage: {
-                                type: "integer",
-                            },
+                            id: { type: "integer" },
+                            name: { type: "string" },
+                            percentage: { type: "number" }, // changed from integer if decimals are possible
                         },
                         required: ["id", "name"],
                         additionalProperties: false,
                     },
-                    id: {
-                        type: "integer",
-                    },
-                    amount: {
-                        type: "integer",
-                    },
-                    unitPrice: {
-                        type: "number",
-                    },
-                    quantity: {
-                        type: "integer",
-                    },
-                    costPrice: {
-                        type: "integer",
-                    },
-                    discountAmount: {
-                        type: "integer",
-                    },
-                    taxAmount: {
-                        type: "integer",
-                    },
-                    rate: {
-                        type: "integer",
-                    },
-                    createdDate: {
-                        type: "string",
-                        format: "date-time",
-                    },
-                    modifiedDate: {
-                        type: "string",
-                        format: "date-time",
-                    },
+                    id: { type: "integer" },
+                    amount: { type: "number" }, // changed from integer
+                    unitPrice: { type: "number" },
+                    quantity: { type: "integer" },
+                    costPrice: { type: "integer" },
+                    discountAmount: { type: "number" }, // changed from integer
+                    taxAmount: { type: "number" }, // changed from integer
+                    rate: { type: "number" }, // changed from integer
+                    createdDate: { type: "string", format: "date-time" },
+                    modifiedDate: { type: "string", format: "date-time" },
                 },
                 required: [
                     "service",
@@ -167,9 +80,9 @@ exports.SaleHeadersSchema = {
         "grandTotal",
         "createdDate",
         "modifiedDate",
-        "customer",
-        "user",
-        "paymentType",
+        "customerId",
+        "userId",
+        "paymentTypeId",
         "saleLines",
         "isService"
     ],

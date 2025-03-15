@@ -13,6 +13,7 @@ exports.Users = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
 var usermenufeaturemap_entity_1 = require("../../features/entities/usermenufeaturemap.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var Users = /** @class */ (function () {
     function Users() {
     }
@@ -45,6 +46,15 @@ var Users = /** @class */ (function () {
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DUserType)
     ], Users.prototype, "userType", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], Users.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: true }),
         __metadata("design:type", String)

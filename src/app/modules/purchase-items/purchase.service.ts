@@ -832,6 +832,7 @@ const createBulk = async (data: PurchaseHeaders) => {
       skuMap[val.id] = val.sku + "-" + generateUniqueNumber();
     });
     //3. start transaction
+    console.log("pass1 ");
     await dataSource.manager.transaction(
       "SERIALIZABLE",
       async (transactionalEntityManager) => {
@@ -839,9 +840,13 @@ const createBulk = async (data: PurchaseHeaders) => {
           PurchaseHeaders,
           data
         );
+        console.log("pass2");
+
         // ************** A) stock logic start ************************************************************
         const stockEntries: ItemsStockTrack[] = [];
         //1. create Stock and save stock
+        console.log("pass3 ");
+
         data.purchaseLines.forEach((value) => {
           const stockInstance = new ItemsStockTrack();
           stockInstance.createdDate = value.createdDate;
@@ -857,15 +862,21 @@ const createBulk = async (data: PurchaseHeaders) => {
         const itemIdStockMap: {
           [key: number]: number;
         } = {};
+        console.log("pass4");
+
         const stockTrackEntry = transactionalEntityManager.create(
           ItemsStockTrack,
           stockEntries
         );
+        console.log("pass5");
+
         //2. update items availability
         const stockTrackResult = await transactionalEntityManager.save(
           ItemsStockTrack,
           stockTrackEntry
         );
+        console.log("pass6");
+
         // add entries into mapping object
         stockTrackResult.forEach((val) => {
           itemIdStockMap[val.serviceId] = val.id;
@@ -874,6 +885,7 @@ const createBulk = async (data: PurchaseHeaders) => {
 
         //**************** B) inventory lodic start **********************************************************
         //2. create inventory
+        console.log("pass7");
         data.purchaseLines.forEach((value) => {
           const il = new InventoryLines();
           il.serviceId = value.service.id;
@@ -884,16 +896,19 @@ const createBulk = async (data: PurchaseHeaders) => {
           il.stockId = itemIdStockMap[value.service.id];
           inventory.push(il);
         });
+        console.log("pass8");
         //attch the object to inventory
         headerEntry.inventoryLines = inventory;
         // *************** inventory lodic end  *********************************************************
 
         // *************** C) item available start ********************************************************
         //1. create stock elements
+        console.log("pass9");
         const resultItemAvailable = await itemStocksService.create(
           inventory,
           itemIds
         );
+        console.log("pass10");
         const itemAvailableEntry = transactionalEntityManager.create(
           ItemAvailable,
           resultItemAvailable
@@ -916,6 +931,7 @@ const createBulk = async (data: PurchaseHeaders) => {
     );
     return data;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

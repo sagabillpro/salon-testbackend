@@ -56,27 +56,27 @@ var SaleLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleLines.prototype, "quantity", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "rate", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "costPrice", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "decimal", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "unitPrice", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "amount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "discountAmount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "taxAmount", void 0);
     __decorate([
@@ -91,6 +91,10 @@ var SaleLines = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "isInactive", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0, nullable: false }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "isService", void 0);
     __decorate([
         (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
         ,

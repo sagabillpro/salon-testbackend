@@ -45,22 +45,22 @@ export class SaleLines {
   @Column({ type: "int", nullable: false })
   quantity: number;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   rate: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   costPrice: number;
 
-  @Column({ type: "decimal", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   unitPrice: number;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   amount: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   discountAmount: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   taxAmount: number;
 
   @CreateDateColumn({ type: "varchar", nullable: false })
@@ -72,6 +72,9 @@ export class SaleLines {
   @Column({ type: "int", default: 0 })
   isInactive: number;
 
+  @Column({ type: "int", default: 0, nullable: false })
+  isService: number;
+  
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 }

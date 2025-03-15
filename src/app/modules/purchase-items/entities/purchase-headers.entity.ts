@@ -53,9 +53,15 @@ export class PurchaseHeaders {
   @JoinColumn()
   supplier: Contact;
 
+  @Column({ type: "int", nullable: true })
+  userId: number;
+
   @ManyToOne(() => Users)
   @JoinColumn()
   user: Users;
+
+  @Column({ type: "int", nullable: true })
+  paymentTypeId: number;
 
   @ManyToOne(() => DPaymentType)
   @JoinColumn()

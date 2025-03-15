@@ -34,7 +34,6 @@ const repository = async () => {
         },
         where: {
           id: Number(id),
-          isInactive: 0,
           ...filter?.where,
         },
         relations: {

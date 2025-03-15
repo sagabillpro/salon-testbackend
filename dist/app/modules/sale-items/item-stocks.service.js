@@ -77,8 +77,10 @@ var create = function (inventory, itemIds) { return __awaiter(void 0, void 0, vo
             case 2:
                 itemStocks_1 = _a.sent();
                 inventory.forEach(function (element) {
+                    console.log("itemStocks", itemStocks_1);
+                    console.log("element", element);
                     //check if element item present in stock
-                    var foundStockRecord = itemStocks_1.find(function (data) { return data.service.id === element.service.id; });
+                    var foundStockRecord = itemStocks_1.find(function (data) { return data.service.id === element.serviceId; });
                     //if present then update the stock to new stock increament
                     if (foundStockRecord) {
                         resultItemStock_1.push(__assign(__assign({}, foundStockRecord), { quantity: Number(foundStockRecord.quantity + element.quantity) }));

@@ -35,6 +35,9 @@ export class Services {
   @ManyToOne(() => Taxes, { nullable: true })
   @JoinColumn()
   tax: Taxes;
+  
+  @Column({ type: "int", nullable: true })
+  itemTypeId: number;
 
   @ManyToOne(() => DItemType, { nullable: true })
   @JoinColumn()

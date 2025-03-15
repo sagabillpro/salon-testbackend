@@ -693,6 +693,8 @@ import { Customer } from "../customer/entities/customer.entity";
 import { Contact } from "../contacts/entities/contact.entity";
 import contactService from "../contacts/contact.service";
 import companyService from "../company/company.service";
+import { dataSource } from "../../app";
+import { Company } from "../company/entities/company.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -755,18 +757,18 @@ const create = async (data: SaleHeaders, isService: boolean = false) => {
       lastVisitedDate: new Date().toISOString(),
     });
     if (customer.email) {
-      await invoiceMailer({
-        customer: customer.name,
-        txnDate: new Date(data.txnDate).toLocaleDateString(),
-        txnId: data.code,
-        mobile: customer.mobile,
-        subTotal: data.subTotal,
-        grandTotal: data.grandTotal,
-        tax: data.totalTax,
-        discount: data.totalDiscount,
-        email: customer.email,
-        itemData: invoiceItems,
-      });
+      // await invoiceMailer({
+      //   customer: customer.name,
+      //   txnDate: new Date(data.txnDate).toLocaleDateString(),
+      //   txnId: data.code,
+      //   mobile: customer.mobile,
+      //   subTotal: data.subTotal,
+      //   grandTotal: data.grandTotal,
+      //   tax: data.totalTax,
+      //   discount: data.totalDiscount,
+      //   email: customer.email,
+      //   itemData: invoiceItems,
+      // });
     }
 
     return respo;
@@ -816,21 +818,68 @@ const deleteById = async (id: number) => {
 };
 //3. create single record
 const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
+  console.log("insde thsi .....");
   try {
     const dataSource = await handler();
+    const companyRepo = dataSource.getRepository(Company);
+
+    const company = await companyRepo.findOne({
+      where: {
+        id: 40,
+      },
+      select: {
+        id: true,
+        name: true,
+        addressLine1: true,
+        email: true,
+        phoneNumber: true,
+        signature: true,
+        logo: true,
+      },
+    });
+    if (!company) {
+      throw { message: "Record not found with id: ", statusCode: 404 };
+    }
+    const companyDetails = {
+      companyName: company.name,
+      companyAddress: company.addressLine1,
+      companyEmail: company.email,
+      companyPhone: company.phoneNumber,
+      signatureUrl: company.signature,
+      logoUrl: company.logo,
+    };
+
     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
     const itemStockTrack = dataSource.getRepository(ItemsStockTrack);
     data = await generateCode(19, data);
     let result: SaleHeaders = new SaleHeaders();
-    const invoiceItems: {
-      name: string;
-      quantity: number;
-      unitPrice: number;
-      total: number;
-      tax: number;
-      taxName: string;
-    }[] = [];
+    // const invoiceItems: {
+    //   name: string;
+    //   quantity: number;
+    //   unitPrice: number;
+    //   total: number;
+    //   tax: number;
+    //   taxName: string;
+    // }[] = [];
 
+    const invoiceDetails = {
+      invoiceNumber: data.code,
+      invoiceDate: data.txnDate,
+      dueDate: data.txnDate,
+      subtotal: data.subTotal,
+      tax: data.totalTax,
+      discount: data.totalDiscount,
+      totalPayable: data.grandTotal,
+    };
+
+    const newInvoiceItems: {
+      description: string;
+      quantity: number;
+      unitCost: number;
+      taxPercentage: string;
+      taxAmount: number;
+      lineTotal: number;
+    }[] = [];
     const inventory: InventoryLines[] = [];
     const itemIds: number[] = [];
     const errors: string[] = [];
@@ -842,19 +891,40 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       };
     } = {};
     //get customer data custo
-    let customer = await contactService.findById(data.customer.id);
+    let customer = await contactService.findById(data.customerId);
 
+    const customerDetails = {
+      clientName: customer.name,
+      //add address onlater on
+      clientAddress: customer.address,
+      clientCity: customer?.city?.name,
+      clientState: customer?.state?.name,
+      //add zop code in customer
+      clientZip: customer.zipCode,
+      clientEmail: customer.email,
+    };
+
+    console.log("check 1");
     data.saleLines.forEach((value) => {
-      invoiceItems.push({
-        name: value.service.name,
-        quantity: value.quantity,
-        unitPrice: value.rate,
-        total: Number(value.amount),
-        tax: value.taxAmount,
-        taxName: value.tax.name,
+      // invoiceItems.push({
+      //   name: value.service.name,
+      //   quantity: value.quantity,
+      //   unitPrice: value.rate,
+      //   total: Number(value.amount),
+      //   tax: value.taxAmount,
+      //   taxName: value.tax.name,
+      // });
+      newInvoiceItems.push({
+        description: value?.service?.name,
+        quantity: value?.quantity,
+        unitCost: value.rate,
+        taxPercentage: value?.tax?.name,
+        taxAmount: value.taxAmount,
+        lineTotal: Number(value.amount),
       });
       itemIds.push(value.service.id);
     });
+    console.log("check 2");
     // get items available as per item demand
     let itemsAvailable = await itemAvailableRepo.find({
       where: {
@@ -875,6 +945,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       },
     });
     //add data to map
+    console.log("check 3");
     itemsAvailable.forEach((val, index) => {
       itemToQauntityMap[val.service.id] = {
         name: val.service.name,
@@ -883,6 +954,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       };
     });
     //check availabilty
+    console.log("check 4");
     data.saleLines.forEach((value) => {
       if (itemToQauntityMap[value.service.id]) {
         if (itemToQauntityMap[value.service.id]?.quantity < value.quantity) {
@@ -914,6 +986,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         aQuanity: number;
       };
     } = {};
+    console.log("check 5");
     let stockTrack = await itemStockTrack.find({
       where: {
         service: {
@@ -927,6 +1000,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         service: true,
       },
     });
+    console.log("check 6");
     stockTrack.forEach((val, index) => {
       stockMap[val.id] = {
         id: val.id,
@@ -934,7 +1008,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         aQuanity: val?.quantityUvailable,
       };
     });
-
+    console.log("check 7");
     data.saleLines.forEach((value) => {
       //1. filter out stock entries for each item
       let idx = 0;
@@ -985,6 +1059,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
           _itemsAvailable;
       }
     });
+    console.log("check 8");
     data.inventoryLines = inventory;
     //3. start transaction
     await dataSource.manager.transaction(
@@ -992,6 +1067,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       async (transactionalEntityManager) => {
         //2. update items availability
         //2. update items availability
+        console.log("check 9");
         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
         const headerEntry = transactionalEntityManager.create(
@@ -1005,22 +1081,30 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         result = headerEntryResult;
       }
     );
+    console.log("check 10");
     if (customer.email) {
+      // await invoiceMailer({
+      //   customer: customer.name,
+      //   txnDate: new Date(data.txnDate).toLocaleDateString(),
+      //   txnId: data.code,
+      //   mobile: customer.mobile,
+      //   subTotal: data.subTotal,
+      //   grandTotal: data.grandTotal,
+      //   tax: data.totalTax,
+      //   discount: data.totalDiscount,
+      //   email: customer.email,
+      //   itemData: invoiceItems,
+      // });
       await invoiceMailer({
-        customer: customer.name,
-        txnDate: new Date(data.txnDate).toLocaleDateString(),
-        txnId: data.code,
-        mobile: customer.mobile,
-        subTotal: data.subTotal,
-        grandTotal: data.grandTotal,
-        tax: data.totalTax,
-        discount: data.totalDiscount,
-        email: customer.email,
-        itemData: invoiceItems,
+        ...companyDetails,
+        ...invoiceDetails,
+        ...customerDetails,
+        items: newInvoiceItems,
       });
     }
     return result;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
@@ -1028,175 +1112,86 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
 
 const saleInvoiceData = async (id: number) => {
   try {
-    // // const user=
-    // const data = await findById(id, {
-    //   relations: {
-    //     saleLines: {
-    //       service: true,
-    //     },
-    //     customer: {
-    //       state: true,
-    //       country: true,
-    //       city: true,
-    //     },
-    //   },
-    // });
-    // //use company id from user req object later on
-    // const company = await companyService.findById(1);
-    // const invoiceItems = data.saleLines.map((line) => ({
-    //   description: line.service.name,
-    //   quantity: line.quantity,
-    //   unitCost: line.rate,
-    //   taxPercentage: line.tax.name,
-    //   taxAmount: line.taxAmount,
-    //   lineTotal: Number(line.amount),
-    // }));
+    const data = await findById(id, {
+      relations: {
+        saleLines: {
+          service: true,
+          tax: true,
+        },
+        customer: {
+          state: true,
+          country: true,
+          city: true,
+        },
+      },
+    });
+    // //use company id from    const dataSource = await handler(); user req object later on
+    const dataSource = await handler();
+    const companyRepo = dataSource.getRepository(Company);
+    const company = await companyRepo.findOne({
+      where: {
+        id: 40,
+      },
+      select: {
+        id: true,
+        name: true,
+        addressLine1: true,
+        email: true,
+        phoneNumber: true,
+        signature: true,
+        logo: true,
+      },
+    });
 
-    // const companyDetails = {
-    //   companyName: company.name,
-    //   companyAddress: company.addressLine1,
-    //   companyEmail: company.email,
-    //   companyPhone: company.phoneNumber,
-    //   signatureUrl: company.signature,
-    //   logoUrl: company.logo,
-    // };
-    // const invoiceDetails = {
-    //   invoiceNumber: data.code,
-    //   invoiceDate: data.txnDate,
-    //   dueDate: data.txnDate,
-    //   subtotal: data.subTotal,
-    //   tax: data.totalTax,
-    //   discount: data.totalDiscount,
-    //   totalPayable: data.grandTotal,
-    // };
-    // const customerDetails = {
-    //   clientName: data.customer.name,
-    //   //add address onlater on
-    //   clientAddress: data.customer.name,
-    //   clientCity: data?.customer?.city?.name,
-    //   clientState: data?.customer?.state?.name,
-    //   //add zop code in customer
-    //   clientZip: data?.customer.name,
-    //   clientEmail: data.customer.email,
-    // };
-    // const finalData = {
-    //   data: {
-    //     ...companyDetails,
-    //     ...invoiceDetails,
-    //     ...customerDetails,
-    //     items: invoiceItems,
-    //   },
-    // };
-    const invoiceData = {
+    if (!company) {
+      throw { message: "Record not found with id: " + id, statusCode: 404 };
+    }
+    const invoiceItems = data.saleLines.map((line) => ({
+      description: line?.service?.name,
+      quantity: line?.quantity,
+      unitCost: line.rate,
+      taxPercentage: line?.tax?.name,
+      taxAmount: line.taxAmount,
+      lineTotal: Number(line.amount),
+    }));
+
+    const companyDetails = {
+      companyName: company.name,
+      companyAddress: company.addressLine1,
+      companyEmail: company.email,
+      companyPhone: company.phoneNumber,
+      signatureUrl: company.signature,
+      logoUrl: company.logo,
+    };
+    const invoiceDetails = {
+      invoiceNumber: data.code,
+      invoiceDate: data.txnDate,
+      dueDate: data.txnDate,
+      subtotal: data.subTotal,
+      tax: data.totalTax,
+      discount: data.totalDiscount,
+      totalPayable: data.grandTotal,
+    };
+    const customerDetails = {
+      clientName: data.customer.name,
+      //add address onlater on
+      clientAddress: data.customer.address,
+      clientCity: data?.customer?.city?.name,
+      clientState: data?.customer?.state?.name,
+      //add zop code in customer
+      clientZip: data?.customer.zipCode,
+      clientEmail: data.customer.email,
+    };
+    const finalData = {
       data: {
-        logoUrl:
-          "https://res.cloudinary.com/dtljovzou/image/upload/v1741930555/bird-colorful-logo-gradient-vector_343694-1365_dkkqr6.avif",
-        companyName: "Acme Corporation",
-        companyAddress: "123 Business Road, Business City, BC 98765",
-        companyEmail: "billing@acme.com",
-        companyPhone: "+1 800-123-4567",
-        invoiceNumber: "1001",
-        invoiceDate: "2023-05-20",
-        dueDate: "2023-06-20",
-        clientName: "John Doe Enterprises",
-        clientAddress: "456 Client Street, Suite 100",
-        clientCity: "Client City",
-        clientState: "ST",
-        clientZip: "12345",
-        clientEmail: "info@johndoe.com",
-        items: [
-          {
-            description: "Consultation Services",
-            quantity: 10,
-            unitCost: "100.00",
-            taxPercentage: 10,
-            taxAmount: "100.00",
-            lineTotal: "1100.00",
-          },
-          {
-            description: "Software License",
-            quantity: 2,
-            unitCost: "500.00",
-            taxPercentage: 8,
-            taxAmount: "80.00",
-            lineTotal: "1080.00",
-          },
-          {
-            description: "Consultation Services",
-            quantity: 10,
-            unitCost: "100.00",
-            taxPercentage: 10,
-            taxAmount: "100.00",
-            lineTotal: "1100.00",
-          },
-          {
-            description: "Software License",
-            quantity: 2,
-            unitCost: "500.00",
-            taxPercentage: 8,
-            taxAmount: "80.00",
-            lineTotal: "1080.00",
-          },
-          {
-            description: "Consultation Services",
-            quantity: 10,
-            unitCost: "100.00",
-            taxPercentage: 10,
-            taxAmount: "100.00",
-            lineTotal: "1100.00",
-          },
-          {
-            description: "Software License",
-            quantity: 2,
-            unitCost: "500.00",
-            taxPercentage: 8,
-            taxAmount: "80.00",
-            lineTotal: "1080.00",
-          },
-          {
-            description: "Consultation Services",
-            quantity: 10,
-            unitCost: "100.00",
-            taxPercentage: 10,
-            taxAmount: "100.00",
-            lineTotal: "1100.00",
-          },
-          {
-            description: "Software License",
-            quantity: 2,
-            unitCost: "500.00",
-            taxPercentage: 8,
-            taxAmount: "80.00",
-            lineTotal: "1080.00",
-          },
-          {
-            description: "Consultation Services",
-            quantity: 10,
-            unitCost: "100.00",
-            taxPercentage: 10,
-            taxAmount: "100.00",
-            lineTotal: "1100.00",
-          },
-          {
-            description: "Software License",
-            quantity: 2,
-            unitCost: "500.00",
-            taxPercentage: 8,
-            taxAmount: "80.00",
-            lineTotal: "1080.00",
-          },
-        ],
-        subtotal: "2000.00",
-        tax: "180.00",
-        discount: "50.00",
-        totalPayable: "2130.00",
-        signatureUrl:
-          "https://res.cloudinary.com/dtljovzou/image/upload/v1741869805/UKHJSE-3-19-g013_osfpx0.jpg",
+        ...companyDetails,
+        ...invoiceDetails,
+        ...customerDetails,
+        items: invoiceItems,
       },
     };
 
-
-    return invoiceData;
+    return finalData;
   } catch (error) {
     throw error;
   }

@@ -26,8 +26,8 @@ const initializeDataSource = async (): Promise<DataSource> => {
       //     "../../../src/entities/index/**/*.{ts,js}",
       //     "../../../build/entities/**/*.{ts,js}",
       //   ],
-  // synchronize: true,
-      // logging: true,
+  synchronize: true,
+     /// logging: true,
       ssl: {
         rejectUnauthorized: false, // Disables SSL certificate verification
       },

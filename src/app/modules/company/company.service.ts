@@ -25,6 +25,7 @@ const findById = async (
   filter?: FindOneOptions<Company> | FindManyOptions<Company>
 ) => {
   try {
+    console.log("inside thsi .....");
     const repo = await repository();
     const respo = await repo.findOneById(id, filter);
     return respo;

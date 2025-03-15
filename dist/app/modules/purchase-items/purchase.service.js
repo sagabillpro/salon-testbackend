@@ -897,14 +897,17 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                     skuMap_1[val.id] = val.sku + "-" + (0, getuniquenumber_util_1.default)();
                 });
                 //3. start transaction
+                console.log("pass1 ");
                 return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
                         var headerEntry, stockEntries, itemIdStockMap, stockTrackEntry, stockTrackResult, resultItemAvailable, itemAvailableEntry, headerEntryResult;
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
                                     headerEntry = transactionalEntityManager.create(purchase_headers_entity_1.PurchaseHeaders, data);
+                                    console.log("pass2");
                                     stockEntries = [];
                                     //1. create Stock and save stock
+                                    console.log("pass3 ");
                                     data.purchaseLines.forEach(function (value) {
                                         var stockInstance = new item_stock_track_entity_1.ItemsStockTrack();
                                         stockInstance.createdDate = value.createdDate;
@@ -918,10 +921,13 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                                         stockEntries.push(stockInstance);
                                     });
                                     itemIdStockMap = {};
+                                    console.log("pass4");
                                     stockTrackEntry = transactionalEntityManager.create(item_stock_track_entity_1.ItemsStockTrack, stockEntries);
+                                    console.log("pass5");
                                     return [4 /*yield*/, transactionalEntityManager.save(item_stock_track_entity_1.ItemsStockTrack, stockTrackEntry)];
                                 case 1:
                                     stockTrackResult = _a.sent();
+                                    console.log("pass6");
                                     // add entries into mapping object
                                     stockTrackResult.forEach(function (val) {
                                         itemIdStockMap[val.serviceId] = val.id;
@@ -929,6 +935,7 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                                     //************** stock logic end ***********************************************************************/
                                     //**************** B) inventory lodic start **********************************************************
                                     //2. create inventory
+                                    console.log("pass7");
                                     data.purchaseLines.forEach(function (value) {
                                         var il = new inventory_lines_entity_1.InventoryLines();
                                         il.serviceId = value.service.id;
@@ -939,11 +946,17 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                                         il.stockId = itemIdStockMap[value.service.id];
                                         inventory_3.push(il);
                                     });
+                                    console.log("pass8");
                                     //attch the object to inventory
                                     headerEntry.inventoryLines = inventory_3;
+                                    // *************** inventory lodic end  *********************************************************
+                                    // *************** C) item available start ********************************************************
+                                    //1. create stock elements
+                                    console.log("pass9");
                                     return [4 /*yield*/, item_stocks_service_1.default.create(inventory_3, itemIds_2)];
                                 case 2:
                                     resultItemAvailable = _a.sent();
+                                    console.log("pass10");
                                     itemAvailableEntry = transactionalEntityManager.create(item_stocks_entity_1.ItemAvailable, resultItemAvailable);
                                     //2. update items availability
                                     return [4 /*yield*/, transactionalEntityManager.save(item_stocks_entity_1.ItemAvailable, itemAvailableEntry)];
@@ -960,11 +973,11 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                         });
                     }); })];
             case 4:
-                //3. start transaction
                 _a.sent();
                 return [2 /*return*/, data];
             case 5:
                 error_6 = _a.sent();
+                console.log(error_6);
                 throw error_6;
             case 6: return [2 /*return*/];
         }

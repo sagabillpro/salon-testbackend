@@ -49,10 +49,18 @@ var PurchaseHeaders = /** @class */ (function () {
         __metadata("design:type", contact_entity_1.Contact)
     ], PurchaseHeaders.prototype, "supplier", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "userId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
     ], PurchaseHeaders.prototype, "user", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "paymentTypeId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DPaymentType; }),
         (0, typeorm_1.JoinColumn)(),

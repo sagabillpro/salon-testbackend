@@ -40,6 +40,10 @@ var Services = /** @class */ (function () {
         __metadata("design:type", taxes_entity_1.Taxes)
     ], Services.prototype, "tax", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "itemTypeId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DItemType; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DItemType)

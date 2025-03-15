@@ -17,16 +17,16 @@ exports.PurchaseHeadersSchema = {
             type: "string",
         },
         subTotal: {
-            type: "integer",
+            type: "number", // Changed to number for decimals
         },
         grandTotal: {
-            type: "integer",
+            type: "number", // Changed to number for decimals
         },
         totalDiscount: {
-            type: "integer",
+            type: "number", // Changed to number for decimals
         },
         totalTax: {
-            type: "integer",
+            type: "number", // Changed to number for decimals
         },
         createdDate: {
             type: "string",
@@ -39,35 +39,14 @@ exports.PurchaseHeadersSchema = {
         saleInvoiceNumber: {
             type: "string",
         },
-        supplier: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "integer",
-                },
-            },
-            required: ["id"],
-            additionalProperties: false,
+        supplierId: {
+            type: "integer",
         },
-        user: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "integer",
-                },
-            },
-            required: ["id"],
-            additionalProperties: false,
+        userId: {
+            type: "integer",
         },
-        paymentType: {
-            type: "object",
-            properties: {
-                id: {
-                    type: "integer",
-                },
-            },
-            required: ["id"],
-            additionalProperties: false,
+        paymentTypeId: {
+            type: "integer",
         },
         purchaseLines: {
             type: "array",
@@ -107,7 +86,7 @@ exports.PurchaseHeadersSchema = {
                                 type: "string",
                             },
                             percentage: {
-                                type: "integer",
+                                type: "number", // Changed to number for decimals (if needed)
                             },
                         },
                         required: ["id", "name"],
@@ -117,7 +96,7 @@ exports.PurchaseHeadersSchema = {
                         type: "integer",
                     },
                     amount: {
-                        type: "integer",
+                        type: "number", // Changed to number for decimals
                     },
                     quantity: {
                         type: "integer",
@@ -126,16 +105,16 @@ exports.PurchaseHeadersSchema = {
                         type: "number",
                     },
                     costPrice: {
-                        type: "integer",
+                        type: "number", // Changed to number for decimals
                     },
                     discountAmount: {
-                        type: "integer",
+                        type: "number", // Changed to number for decimals
                     },
                     taxAmount: {
-                        type: "integer",
+                        type: "number", // Changed to number for decimals
                     },
                     rate: {
-                        type: "integer",
+                        type: "number", // Changed to number for decimals
                     },
                     createdDate: {
                         type: "string",
@@ -164,9 +143,9 @@ exports.PurchaseHeadersSchema = {
         "grandTotal",
         "createdDate",
         "modifiedDate",
-        "supplier",
-        "user",
-        "paymentType",
+        "supplierId",
+        "userId",
+        "paymentTypeId",
         "purchaseLines",
         "subTotal",
         "grandTotal",

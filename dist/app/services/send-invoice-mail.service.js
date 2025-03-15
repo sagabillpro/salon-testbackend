@@ -77,11 +77,25 @@ exports.default = invoiceMailer;
 var path_1 = __importDefault(require("path"));
 var smtpconfig_1 = require("../config/smtpconfig");
 var ejs = __importStar(require("ejs"));
-var invoiceDetails = /** @class */ (function () {
-    function invoiceDetails() {
-    }
-    return invoiceDetails;
-}());
+// class invoiceDetails {
+//   customer: string;
+//   txnDate: string;
+//   txnId: string;
+//   mobile: string;
+//   subTotal: number;
+//   tax: number;
+//   discount: number;
+//   total?: number;
+//   email: string;
+//   itemData?: {
+//     name: string;
+//     quantity: number;
+//     unitPrice: number;
+//     total: number;
+//     tax: number;
+//     taxName: string;
+//   }[];
+// }
 function invoiceMailer(data) {
     return __awaiter(this, void 0, void 0, function () {
         var templatePath, info, _a, _b, e_1;
@@ -90,17 +104,19 @@ function invoiceMailer(data) {
             switch (_d.label) {
                 case 0:
                     _d.trys.push([0, 3, , 4]);
-                    templatePath = path_1.default.join(__dirname, "../templates", "customerinvoice.template.ejs");
+                    templatePath = path_1.default.join(__dirname, "../templates", "sale-invoice.template.ejs");
                     _b = (_a = smtpconfig_1.transporter).sendMail;
                     _c = {
-                        from: '"JH hair & Beauty Studio" <jawedhabibgad@gmail.com>', // sender address
-                        to: "".concat(data.email), // list of receivers
-                        subject: "🙏😇 Thanks for visiting JH hair & beauty studio."
+                        from: "".concat(data.companyName, " <").concat(data.companyEmail, ">"),
+                        // '"JH hair & Beauty Studio" <jawedhabibgad@gmail.com>', // sender address
+                        to: "".concat(data.clientEmail), // list of receivers
+                        subject: "\uD83D\uDE4F\uD83D\uDE07 Thanks for visiting ".concat(data.companyName)
                     };
                     return [4 /*yield*/, ejs.renderFile(templatePath, {
-                            data: __assign({}, data)
+                            data: __assign({}, data),
                         })];
                 case 1: return [4 /*yield*/, _b.apply(_a, [(
+                        //"🙏😇 Thanks for visiting JH hair & beauty studio.", // Subject line
                         // text: "Hello world?", // plain text body
                         _c.html = _d.sent(),
                             _c)])];

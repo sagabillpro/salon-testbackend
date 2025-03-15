@@ -13,6 +13,7 @@ import {
 } from "typeorm";
 import { City, Country, DUserType, States } from "../../general-data/entities";
 import { UserMenusAndFeatures } from "../../features/entities/usermenufeaturemap.entity";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("users")
 export class Users {
@@ -37,6 +38,13 @@ export class Users {
   @ManyToOne(() => DUserType, { nullable: true })
   @JoinColumn()
   userType: DUserType;
+
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
 
   @CreateDateColumn({ type: "varchar", nullable: true })
   birthDate: string;

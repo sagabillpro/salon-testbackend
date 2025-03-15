@@ -44,14 +44,8 @@ export class SaleHeaders {
   @Column({ type: "int", nullable: true })
   customerId: number;
 
-  @Column({ type: "int", nullable: true })
-  customerRecordId: number;
-
-  @ManyToOne(() => Contact, { nullable: true })
-  @JoinColumn([
-    { name: "customerRecordId", referencedColumnName: "recordId" },
-    { name: "customerId", referencedColumnName: "id" },
-  ])
+ @ManyToOne(() => Contact, { nullable: true })
+  @JoinColumn()
   customer: Contact;
 
   @ManyToOne(() => Users)
@@ -66,16 +60,17 @@ export class SaleHeaders {
   @JoinColumn()
   transactionStatus: DTransactionStatus;
 
-  @Column({ type: "int", nullable: true })
+  // Changed from integer to decimal (precision 10, scale 2)
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   subTotal: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   grandTotal: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   totalDiscount: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   totalTax: number;
 
   @CreateDateColumn({ type: "varchar", nullable: false })

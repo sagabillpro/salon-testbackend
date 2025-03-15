@@ -30,9 +30,11 @@ const create = async (
     });
 
     inventory.forEach((element) => {
+      console.log("itemStocks",itemStocks);
+      console.log("element",element);
       //check if element item present in stock
       const foundStockRecord = itemStocks.find(
-        (data) => data.service.id === element.service.id
+        (data) => data.service.id === element.serviceId
       );
       //if present then update the stock to new stock increament
       if (foundStockRecord) {
