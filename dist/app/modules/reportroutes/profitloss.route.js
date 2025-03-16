@@ -35,6 +35,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = require("express");
 var routes_types_1 = require("../../routes/routes.types");
@@ -42,8 +45,9 @@ var dbconfig_1 = require("../../config/dbconfig");
 var inventory_lines_entity_1 = require("../sale-items/entities/inventory-lines.entity");
 var report_schema_1 = require("../../schema/report.schema");
 var validateFilterManual_util_1 = require("../../utils/validateFilterManual.util");
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validateFilterManual_util_1.validateFilterManual)(report_schema_1.ReportSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validateFilterManual_util_1.validateFilterManual)(report_schema_1.ReportSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var query, dataSource, result, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {

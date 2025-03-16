@@ -65,7 +65,7 @@ var menusandfeatures_entity_1 = require("../features/entities/menusandfeatures.e
 var router = (0, express_1.Router)();
 var _loop_1 = function (key, value) {
     // Define a GET route for each key in the map
-    router.get(key, (0, validate_filter_util_1.validateFilter)(value), // Apply the validateFilter middleware
+    router.get(key, authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(value), // Apply the validateFilter middleware
     function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var appDataSource, repository, data, _a, _b, error_1;
         return __generator(this, function (_c) {
@@ -97,7 +97,7 @@ var _loop_1 = function (key, value) {
         });
     }); });
     // Define a POST route for each key in the map
-    router.post(key, (0, get_model_schema_util_1.validateRequestBody)(value), // Apply the validateRequestBody middleware
+    router.post(key, authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(value), // Apply the validateRequestBody middleware
     function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var appDataSource, repository, data, respo, error_2;
         return __generator(this, function (_a) {

@@ -46,8 +46,9 @@ var get_query_util_1 = __importDefault(require("../../utils/get-query.util"));
 var usermenufeaturemap_entity_1 = require("./entities/usermenufeaturemap.entity");
 var usermenufeaturemap_service_1 = __importDefault(require("./usermenufeaturemap.service"));
 var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validate_filter_util_1.validateFilter)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -68,7 +69,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(usermenufeaturemap_en
         }
     });
 }); });
-router.post("/", (0, get_model_schema_util_1.validateRequestBody)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -87,7 +88,7 @@ router.post("/", (0, get_model_schema_util_1.validateRequestBody)(usermenufeatur
         }
     });
 }); });
-router.get("/:id", (0, validate_filter_util_1.validateFilter)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/:id", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, result, _a, _b, _c, error_3;
     return __generator(this, function (_d) {
         switch (_d.label) {
@@ -110,7 +111,7 @@ router.get("/:id", (0, validate_filter_util_1.validateFilter)(usermenufeaturemap
         }
     });
 }); });
-router.put("/:id", (0, get_model_schema_util_1.validateRequestBody)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/:id", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(usermenufeaturemap_entity_1.UserMenusAndFeatures), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -130,7 +131,7 @@ router.put("/:id", (0, get_model_schema_util_1.validateRequestBody)(usermenufeat
         }
     });
 }); });
-router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete("/:id", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {

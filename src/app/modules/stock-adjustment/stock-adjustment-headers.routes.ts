@@ -6,10 +6,12 @@ import getQuery from "../../utils/get-query.util";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import service from "./stock-adjustment-headers.service";
 import { StockAdjustmentHeaders } from "./entities/stock-adjustment-headers.entity";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(StockAdjustmentHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -25,6 +27,7 @@ router.get(
 
 router.get(
   "/stocks",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await service.findStocks(
@@ -39,6 +42,7 @@ router.get(
 
 router.get(
   "/stocks-download",
+    authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await service.exportUsersToExcel(req, res);
@@ -50,6 +54,7 @@ router.get(
 
 router.post(
   "/",
+  authenticateToken,
   validateRequestBody(StockAdjustmentHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

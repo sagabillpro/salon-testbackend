@@ -23,6 +23,7 @@ for (let [key, value] of Object.entries(routeToEntityMap)) {
   // Define a GET route for each key in the map
   router.get(
     key,
+    authenticateToken,
     validateFilter(value), // Apply the validateFilter middleware
     async (req: Request, res: Response) => {
       try {
@@ -47,6 +48,7 @@ for (let [key, value] of Object.entries(routeToEntityMap)) {
   // Define a POST route for each key in the map
   router.post(
     key,
+    authenticateToken,
     validateRequestBody(value), // Apply the validateRequestBody middleware
     async (req: Request, res: Response) => {
       try {
@@ -322,6 +324,7 @@ router.get(
 //get object for user menus and screens
 router.get(
   "/get-user-features",
+  
   authenticateToken,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
@@ -405,6 +408,7 @@ router.get(
 );
 router.get(
   "/menus-new",
+  
   authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     try {

@@ -11,10 +11,12 @@ import { SaleHeadersSchema } from "../../schema/sale-header.schema";
 import path from "path";
 import ejs from "ejs";
 import getQuerySecure from "../../utils/get-query-secure.util";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(SaleHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -30,6 +32,7 @@ router.get(
 
 router.post(
   "/",
+  authenticateToken,
   validateBodyManual(SaleHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -43,6 +46,7 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   // validateFilter(SaleHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -60,6 +64,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateBodyManual(SaleHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -74,6 +79,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
@@ -86,6 +92,7 @@ router.delete(
 );
 router.post(
   "/bulk",
+  authenticateToken,
   validateBodyManual(SaleHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -150,6 +157,7 @@ router.post(
 
 router.get(
   "/download/generate-invoice/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);

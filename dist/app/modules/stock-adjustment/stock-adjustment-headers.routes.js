@@ -46,8 +46,9 @@ var get_query_util_1 = __importDefault(require("../../utils/get-query.util"));
 var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
 var stock_adjustment_headers_service_1 = __importDefault(require("./stock-adjustment-headers.service"));
 var stock_adjustment_headers_entity_1 = require("./entities/stock-adjustment-headers.entity");
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validate_filter_util_1.validateFilter)(stock_adjustment_headers_entity_1.StockAdjustmentHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(stock_adjustment_headers_entity_1.StockAdjustmentHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -68,7 +69,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(stock_adjustment_head
         }
     });
 }); });
-router.get("/stocks", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/stocks", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_2;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -89,7 +90,7 @@ router.get("/stocks", function (req, res, next) { return __awaiter(void 0, void 
         }
     });
 }); });
-router.get("/stocks-download", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/stocks-download", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -107,7 +108,7 @@ router.get("/stocks-download", function (req, res, next) { return __awaiter(void
         }
     });
 }); });
-router.post("/", (0, get_model_schema_util_1.validateRequestBody)(stock_adjustment_headers_entity_1.StockAdjustmentHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(stock_adjustment_headers_entity_1.StockAdjustmentHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {

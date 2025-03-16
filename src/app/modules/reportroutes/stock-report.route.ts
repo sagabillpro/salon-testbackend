@@ -7,10 +7,12 @@ import { handler } from "../../config/dbconfig";
 import { PassThrough } from "stream";
 import { getWorksheetColumnsFromSchema } from "../../utils/get-report-headers.util";
 import ExcelJS from "exceljs";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+    authenticateToken,
   validateFilter(ItemsStockTrack),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

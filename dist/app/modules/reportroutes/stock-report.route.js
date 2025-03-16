@@ -48,8 +48,9 @@ var dbconfig_1 = require("../../config/dbconfig");
 var stream_1 = require("stream");
 var get_report_headers_util_1 = require("../../utils/get-report-headers.util");
 var exceljs_1 = __importDefault(require("exceljs"));
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validate_filter_util_1.validateFilter)(item_stock_track_entity_1.ItemsStockTrack), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(item_stock_track_entity_1.ItemsStockTrack), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, repo, result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {

@@ -6,10 +6,12 @@ import { Branch } from "./entities/branches.entity";
 import BranchService from "./branches.service";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import getQuerySecure from "../../utils/get-query-secure.util";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(Branch),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -23,6 +25,7 @@ router.get(
 
 router.post(
   "/",
+  authenticateToken,
   validateRequestBody(Branch),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -36,6 +39,7 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   validateFilter(Branch),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -53,6 +57,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateRequestBody(Branch),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -67,6 +72,8 @@ router.put(
 
 router.delete(
   "/:id",
+
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);

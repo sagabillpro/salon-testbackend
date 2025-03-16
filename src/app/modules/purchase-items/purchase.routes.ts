@@ -9,10 +9,12 @@ import { PurchaseHeaders } from "./entities/purchase-headers.entity";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { PurchaseHeadersSchema } from "../../schema";
 import getQuerySecure from "../../utils/get-query-secure.util";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+    authenticateToken,
   validateFilter(PurchaseHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -28,6 +30,7 @@ router.get(
 
 router.post(
   "/",
+    authenticateToken,
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -41,6 +44,7 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   // validateFilter(PurchaseHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -58,6 +62,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -72,6 +77,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
@@ -85,6 +91,7 @@ router.delete(
 
 router.post(
   "/bulk",
+  authenticateToken,
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

@@ -5,10 +5,12 @@ import getQuery from "../../utils/get-query.util";
 import { Feature } from "./entities/features.entity";
 import FeatureService from "./features.service";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(Feature),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -22,6 +24,7 @@ router.get(
 
 router.post(
   "/",
+  authenticateToken,
   validateRequestBody(Feature),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -35,6 +38,7 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   validateFilter(Feature),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -52,6 +56,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateRequestBody(Feature),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -66,6 +71,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
