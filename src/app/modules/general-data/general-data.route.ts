@@ -405,7 +405,7 @@ router.get(
 );
 router.get(
   "/menus-new",
-  //authenticateToken,
+  authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     try {
       //1 . get user specific menus
