@@ -1,1 +1,1 @@
-{"version":3,"file":"entity-route.mapping.js","sourceRoot":"","sources":["../../../../src/app/history/mappings/entity-route.mapping.ts"],"names":[],"mappings":";;;AACA,wDAAqD;AAExC,QAAA,gBAAgB,GAEzB;IACF,kBAAkB,EAAE,iCAAc;CACnC,CAAC"}
+{"version":3,"file":"entity-route.mapping.js","sourceRoot":"","sources":["../../../../src/app/history/mappings/entity-route.mapping.ts"],"names":[],"mappings":";;;AACA,wDAAoG;AAEvF,QAAA,gBAAgB,GAEzB;IACF,kBAAkB,EAAE,iCAAc;IAClC,kBAAkB,EAAE,iCAAc;IAClC,mBAAmB,EAAE,kCAAe;IACpC,gBAAgB,EAAE,+BAAY;CAC/B,CAAC"}

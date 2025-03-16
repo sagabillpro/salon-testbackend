@@ -1,39 +1,37 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
   CreateDateColumn,
-  UpdateDateColumn,
-  OneToMany,
-  JoinColumn,
-  OneToOne,
-  ManyToOne,
   DeleteDateColumn,
-  BeforeInsert,
-  Unique,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
   VersionColumn,
 } from "typeorm";
+import { Company } from "../../modules/company/entities/company.entity";
 import {
   City,
   Country,
   DContactType,
   States,
-} from "../../general-data/entities";
-import { handler } from "../../../config/dbconfig";
-import { Branch } from "../../branches/entities/branches.entity";
-import { Users } from "../../auth/entities/user.entity";
-import { Company } from "../../company/entities/company.entity";
+} from "../../modules/general-data/entities";
+import { Users } from "../../modules/auth/entities/user.entity";
 
-@Entity("contacts")
-export class Contact {
+@Entity("contacts_history")
+export class ContactHistory {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
+
+  @Column({ type: "int", nullable: false })
+  recordId: number;
 
   @Column({ type: "varchar", length: 255, nullable: true, unique: true })
   code: string;
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
+  
   @Column({ type: "int", nullable: true })
   companyId: number;
 
@@ -52,7 +50,6 @@ export class Contact {
   @ManyToOne(() => City, { nullable: true })
   @JoinColumn()
   city: City;
-  
   @Column({ type: "int", nullable: true })
   contactTypeId: number;
   @ManyToOne(() => DContactType, { nullable: false })

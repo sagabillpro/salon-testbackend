@@ -38,7 +38,7 @@ import { Feature } from "../modules/features/entities/features.entity";
 import { MenusAndFeatures } from "../modules/features/entities/menusandfeatures.entity";
 import { UserMenusAndFeatures } from "../modules/features/entities/usermenufeaturemap.entity";
 import { Role } from "../modules/roles/entities/role.entity";
-import { CompanyHistory } from "../history/history-entities";
+import { CompanyHistory, ContactHistory, ServicesHistory, UsersHistory } from "../history/history-entities";
 import { StockAdjustmentHeaders } from "../modules/stock-adjustment/entities/stock-adjustment-headers.entity";
 import { StockAdjustmentLines } from "../modules/stock-adjustment/entities/stock-adjustment.entity";
 
@@ -83,6 +83,9 @@ export const entities:
   DIndustryType,
   DTransactionStatus,
   CompanyHistory,
+  ContactHistory,
+  UsersHistory,
+  ServicesHistory,
   StockAdjustmentHeaders,
   StockAdjustmentLines
  // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)

@@ -69,6 +69,9 @@ exports.entities = [
     entities_1.DIndustryType,
     entities_1.DTransactionStatus,
     history_entities_1.CompanyHistory,
+    history_entities_1.ContactHistory,
+    history_entities_1.UsersHistory,
+    history_entities_1.ServicesHistory,
     stock_adjustment_headers_entity_1.StockAdjustmentHeaders,
     stock_adjustment_entity_1.StockAdjustmentLines
     // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)

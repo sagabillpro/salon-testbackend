@@ -46,6 +46,9 @@ var dotenv_1 = __importDefault(require("dotenv"));
 var path_1 = __importDefault(require("path"));
 var entities_mapping_1 = require("../../mappings/entities.mapping");
 var company_subscriber_1 = require("../../history/event-subscriber/company.subscriber");
+var contact_subscriber_1 = require("../../history/event-subscriber/contact.subscriber");
+var services_subscriber_1 = require("../../history/event-subscriber/services.subscriber");
+var user_subscriber_1 = require("../../history/event-subscriber/user.subscriber");
 // Load environment variables from .env file
 dotenv_1.default.config({ path: path_1.default.join(__dirname, "../../.env") });
 var appDataSource;
@@ -62,12 +65,17 @@ var initializeDataSource = function () { return __awaiter(void 0, void 0, void 0
                     password: process.env.Password,
                     database: process.env.Database,
                     entities: entities_mapping_1.entities,
-                    subscribers: [company_subscriber_1.CompanySubscriber],
+                    subscribers: [
+                        company_subscriber_1.CompanySubscriber,
+                        contact_subscriber_1.ContactSubscriber,
+                        services_subscriber_1.ServicesSubscriber,
+                        user_subscriber_1.UsersSubscriber,
+                    ],
                     //   entities: [
                     //     "../../../src/entities/index/**/*.{ts,js}",
                     //     "../../../build/entities/**/*.{ts,js}",
                     //   ],
-                    // synchronize: true,
+                    synchronize: true,
                     /// logging: true,
                     ssl: {
                         rejectUnauthorized: false, // Disables SSL certificate verification
