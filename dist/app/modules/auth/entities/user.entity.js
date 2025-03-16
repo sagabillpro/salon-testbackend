@@ -80,9 +80,17 @@ var Users = /** @class */ (function () {
         __metadata("design:type", String)
     ], Users.prototype, "modifiedDate", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {}),
+        (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {
+            onDelete: "CASCADE",
+        }),
         __metadata("design:type", Array)
     ], Users.prototype, "userMenusAndFeatures", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {
+            onDelete: "CASCADE",
+        }),
+        __metadata("design:type", Array)
+    ], Users.prototype, "userSessions", void 0);
     __decorate([
         (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
         ,

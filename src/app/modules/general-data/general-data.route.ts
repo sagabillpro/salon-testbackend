@@ -15,6 +15,7 @@ import {
 } from "../../utils/get-model-schema.util";
 import { verifyToken } from "../../services";
 import userService from "../auth/user.service";
+import { MenusAndFeatures } from "../features/entities/menusandfeatures.entity";
 const router = Router();
 // Loop through each entry in the routeToEntityMap
 for (let [key, value] of Object.entries(routeToEntityMap)) {
@@ -208,10 +209,44 @@ router.get(
     try {
       //1 . get user specific menus
       const user: any = req.user;
-      if (user.userType) {
-        const appDataSource = await handler();
-        const repository = appDataSource.getRepository(Menus);
-        ///  const userMenuRepo = appDataSource.getRepository(User);
+      const respo: {
+        title: string;
+        url: string;
+        icon: string;
+        subItems: { title: string; url: string }[];
+      }[] = [];
+      const appDataSource = await handler();
+      const repository = appDataSource.getRepository(Menus);
+      const data = await repository.find({
+        relations: {
+          entities: true,
+        },
+        where: {
+          entities: {
+            isInactive: 0,
+          },
+        },
+      });
+      if (user.userId === 1) {
+        for (let menu of data) {
+          let level1: { title: string; url: string }[] = [];
+          for (let entity of menu.entities) {
+            //1.send all menus for admin
+
+            level1.push({
+              title: entity.displayName,
+              url: entity.route,
+            });
+          }
+          level1.length &&
+            respo.push({
+              title: menu.name,
+              url: "#",
+              icon: menu.icon,
+              subItems: level1,
+            });
+        }
+      } else {
         let mappingObj: {
           [key: number]: boolean;
         } = {};
@@ -250,23 +285,6 @@ router.get(
           }
         });
 
-        const data = await repository.find({
-          relations: {
-            entities: true,
-          },
-          where: {
-            entities: {
-              isInactive: 0,
-            },
-          },
-        });
-
-        const respo: {
-          title: string;
-          url: string;
-          icon: string;
-          subItems: { title: string; url: string }[];
-        }[] = [];
         for (let menu of data) {
           let level1: { title: string; url: string }[] = [];
           for (let entity of menu.entities) {
@@ -289,13 +307,8 @@ router.get(
               subItems: level1,
             });
         }
-        res.status(200).json(respo);
-      } else {
-        throw {
-          message: "No metadata found for given user..",
-          statusCode: 401,
-        };
       }
+      res.status(200).json(respo);
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Error fetching menus", error });
@@ -315,41 +328,70 @@ router.get(
           [key: number]: boolean;
         };
       } = {};
-      const userData = await UserMenusAndFeaturesService.find({
-        relations: {
-          user: true,
-          entity: true,
-          feature: true,
-        },
-        select: {
-          user: {
-            id: true,
-            name: true,
+
+      if (user.userId === 1) {
+        const appDataSource = await handler();
+        const menusAndFeaturesRepository =
+          appDataSource.getRepository(MenusAndFeatures);
+        const userData = await menusAndFeaturesRepository.find({
+          relations: {
+            entity: true,
+            feature: true,
           },
-          entity: {
-            id: true,
+          select: {
+            entity: {
+              id: true,
+            },
+            feature: {
+              id: true,
+            },
           },
-          feature: {
-            id: true,
-          },
-        },
-        where: {
-          user: {
-            id: user.userId,
-          },
-        },
-      });
-      //create mapping object
-      userData.forEach((element) => {
-        if (!mappingObj[element.entity.id]) {
-          mappingObj[element.entity.id] = {};
-        }
-        if(element.isActive === 1){
+        });
+        //create mapping object
+        userData.forEach((element) => {
+          if (!mappingObj[element.entity.id]) {
+            mappingObj[element.entity.id] = {};
+          }
           mappingObj[element.entity.id][element.feature.id] = true;
-        }else{
-          mappingObj[element.entity.id][element.feature.id] = false;
-        }
-      });
+        });
+      } else {
+        const userData = await UserMenusAndFeaturesService.find({
+          relations: {
+            user: true,
+            entity: true,
+            feature: true,
+          },
+          select: {
+            user: {
+              id: true,
+              name: true,
+            },
+            entity: {
+              id: true,
+            },
+            feature: {
+              id: true,
+            },
+          },
+          where: {
+            user: {
+              id: user.userId,
+            },
+          },
+        });
+        //create mapping object
+        userData.forEach((element) => {
+          if (!mappingObj[element.entity.id]) {
+            mappingObj[element.entity.id] = {};
+          }
+          if (element.isActive === 1) {
+            mappingObj[element.entity.id][element.feature.id] = true;
+          } else {
+            mappingObj[element.entity.id][element.feature.id] = false;
+          }
+        });
+      }
+
       res.status(200).json(mappingObj);
     } catch (error) {
       console.log(error);

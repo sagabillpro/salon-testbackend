@@ -64,9 +64,15 @@ export class Users {
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
 
-  @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {})
+  @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
+    onDelete: "CASCADE",
+  })
   userMenusAndFeatures?: UserMenusAndFeatures[];
 
+  @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
+    onDelete: "CASCADE",
+  })
+  userSessions: UserMenusAndFeatures[];
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 
