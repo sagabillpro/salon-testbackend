@@ -69,10 +69,6 @@ export class Users {
   })
   userMenusAndFeatures?: UserMenusAndFeatures[];
 
-  @OneToMany(() => UserMenusAndFeatures, (line) => line.user, {
-    onDelete: "CASCADE",
-  })
-  userSessions: UserMenusAndFeatures[];
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 

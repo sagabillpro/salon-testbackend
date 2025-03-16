@@ -482,9 +482,7 @@ router.get("/get-user-features", authenticate_middleware_1.default, function (re
         }
     });
 }); });
-router.get("/menus-new", 
-//authenticateToken,
-function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/menus-new", authenticate_middleware_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var user, appDataSource, repository, data, filterdData, _i, data_4, menu, entities, _a, _b, item, error_7;
     var _c;
     return __generator(this, function (_d) {
