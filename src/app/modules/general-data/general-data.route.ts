@@ -16,6 +16,7 @@ import {
 import { verifyToken } from "../../services";
 import userService from "../auth/user.service";
 import { MenusAndFeatures } from "../features/entities/menusandfeatures.entity";
+import { FeatureSettings } from "../fetaure-settings/entities/feature-setting.entity";
 const router = Router();
 // Loop through each entry in the routeToEntityMap
 for (let [key, value] of Object.entries(routeToEntityMap)) {
@@ -275,6 +276,9 @@ router.get(
             feature: {
               id: 5,
             },
+            entity: {
+              isAdminMenu: 0,
+            },
           },
         });
         //create mapping object
@@ -393,6 +397,76 @@ router.get(
       }
 
       res.status(200).json(mappingObj);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching menus", error });
+    }
+  }
+);
+router.get(
+  "/menus-new",
+  //authenticateToken,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      //1 . get user specific menus
+      const user: any = req?.user;
+      const appDataSource = await handler();
+      const repository = appDataSource.getRepository(Menus);
+      const data = await repository.find({
+        relations: {
+          entities: {
+            menusAndFeatures: {
+              feature: true,
+            },
+          },
+        },
+        select:{
+          name:true,
+          id:true,
+          entities: {
+            id: true,
+            displayName: true,
+            name: true,
+            route: true,
+            isInactive: true,
+            isAdminMenu: true,
+            isAddOnlyAdmin: true,
+            menusAndFeatures: {
+              id:true,
+              feature: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        }
+      });
+      const filterdData: Menus[] = [];
+      for (let menu of data) {
+        const entities: FeatureSettings[] = [];
+        for (let item of menu.entities) {
+          //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
+          if (item.isAddOnlyAdmin) {
+            if (user?.userId != 1) {
+              entities.push({
+                ...item,
+                menusAndFeatures: item.menusAndFeatures?.filter(
+                  (mf) => mf.feature.id != 1
+                ),
+              });
+            } else {
+              entities.push(item);
+            }
+          } else {
+            entities.push(item);
+          }
+        }
+        filterdData.push({
+          ...menu,
+          entities,
+        });
+      }
+      res.status(200).json(filterdData);
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Error fetching menus", error });

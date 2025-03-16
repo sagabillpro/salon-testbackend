@@ -341,6 +341,9 @@ router.get("/menu-headers-new", authenticate_middleware_1.default, function (req
                             feature: {
                                 id: 5,
                             },
+                            entity: {
+                                isAdminMenu: 0,
+                            },
                         },
                     })];
             case 4:
@@ -426,14 +429,6 @@ router.get("/get-user-features", authenticate_middleware_1.default, function (re
                         mappingObj_2[element.entity.id] = {};
                     }
                     mappingObj_2[element.entity.id][element.feature.id] = true;
-                    // if (!mappingObj[element.entity.id]) {
-                    //   mappingObj[element.entity.id] = {};
-                    // }
-                    // if (element.isActive === 1) {
-                    //   mappingObj[element.entity.id][element.feature.id] = true;
-                    // } else {
-                    //   mappingObj[element.entity.id][element.feature.id] = false;
-                    // }
                 });
                 return [3 /*break*/, 5];
             case 3: return [4 /*yield*/, usermenufeaturemap_service_1.default.find({
@@ -484,6 +479,83 @@ router.get("/get-user-features", authenticate_middleware_1.default, function (re
                 res.status(500).json({ message: "Error fetching menus", error: error_6 });
                 return [3 /*break*/, 7];
             case 7: return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/menus-new", 
+//authenticateToken,
+function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, appDataSource, repository, data, filterdData, _i, data_4, menu, entities, _a, _b, item, error_7;
+    var _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _d.trys.push([0, 3, , 4]);
+                user = req === null || req === void 0 ? void 0 : req.user;
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                appDataSource = _d.sent();
+                repository = appDataSource.getRepository(entities_1.Menus);
+                return [4 /*yield*/, repository.find({
+                        relations: {
+                            entities: {
+                                menusAndFeatures: {
+                                    feature: true,
+                                },
+                            },
+                        },
+                        select: {
+                            name: true,
+                            id: true,
+                            entities: {
+                                id: true,
+                                displayName: true,
+                                name: true,
+                                route: true,
+                                isInactive: true,
+                                isAdminMenu: true,
+                                isAddOnlyAdmin: true,
+                                menusAndFeatures: {
+                                    id: true,
+                                    feature: {
+                                        id: true,
+                                        name: true,
+                                    },
+                                },
+                            },
+                        }
+                    })];
+            case 2:
+                data = _d.sent();
+                filterdData = [];
+                for (_i = 0, data_4 = data; _i < data_4.length; _i++) {
+                    menu = data_4[_i];
+                    entities = [];
+                    for (_a = 0, _b = menu.entities; _a < _b.length; _a++) {
+                        item = _b[_a];
+                        //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
+                        if (item.isAddOnlyAdmin) {
+                            if ((user === null || user === void 0 ? void 0 : user.userId) != 1) {
+                                entities.push(__assign(__assign({}, item), { menusAndFeatures: (_c = item.menusAndFeatures) === null || _c === void 0 ? void 0 : _c.filter(function (mf) { return mf.feature.id != 1; }) }));
+                            }
+                            else {
+                                entities.push(item);
+                            }
+                        }
+                        else {
+                            entities.push(item);
+                        }
+                    }
+                    filterdData.push(__assign(__assign({}, menu), { entities: entities }));
+                }
+                res.status(200).json(filterdData);
+                return [3 /*break*/, 4];
+            case 3:
+                error_7 = _d.sent();
+                console.log(error_7);
+                res.status(500).json({ message: "Error fetching menus", error: error_7 });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });
