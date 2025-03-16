@@ -440,30 +440,27 @@ router.get(
             },
           },
         },
-        where: {
-          entities: {
-            isAdminMenu: 0,
-          },
-        },
       });
       const filterdData: Menus[] = [];
       for (let menu of data) {
         const entities: FeatureSettings[] = [];
         for (let item of menu.entities) {
-          //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
-          if (item.isAddOnlyAdmin) {
-            if (user?.userId != 1) {
-              entities.push({
-                ...item,
-                menusAndFeatures: item.menusAndFeatures?.filter(
-                  (mf) => mf.feature.id != 1
-                ),
-              });
+          if (!item.isAdminMenu) {
+            //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
+            if (item.isAddOnlyAdmin) {
+              if (user?.userId != 1) {
+                entities.push({
+                  ...item,
+                  menusAndFeatures: item.menusAndFeatures?.filter(
+                    (mf) => mf.feature.id != 1
+                  ),
+                });
+              } else {
+                entities.push(item);
+              }
             } else {
               entities.push(item);
             }
-          } else {
-            entities.push(item);
           }
         }
         filterdData.push({

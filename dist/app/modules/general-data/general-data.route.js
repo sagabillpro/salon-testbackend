@@ -524,11 +524,6 @@ function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
                                 },
                             },
                         },
-                        where: {
-                            entities: {
-                                isAdminMenu: 0,
-                            },
-                        },
                     })];
             case 2:
                 data = _d.sent();
@@ -538,17 +533,19 @@ function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
                     entities = [];
                     for (_a = 0, _b = menu.entities; _a < _b.length; _a++) {
                         item = _b[_a];
-                        //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
-                        if (item.isAddOnlyAdmin) {
-                            if ((user === null || user === void 0 ? void 0 : user.userId) != 1) {
-                                entities.push(__assign(__assign({}, item), { menusAndFeatures: (_c = item.menusAndFeatures) === null || _c === void 0 ? void 0 : _c.filter(function (mf) { return mf.feature.id != 1; }) }));
+                        if (!item.isAdminMenu) {
+                            //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
+                            if (item.isAddOnlyAdmin) {
+                                if ((user === null || user === void 0 ? void 0 : user.userId) != 1) {
+                                    entities.push(__assign(__assign({}, item), { menusAndFeatures: (_c = item.menusAndFeatures) === null || _c === void 0 ? void 0 : _c.filter(function (mf) { return mf.feature.id != 1; }) }));
+                                }
+                                else {
+                                    entities.push(item);
+                                }
                             }
                             else {
                                 entities.push(item);
                             }
-                        }
-                        else {
-                            entities.push(item);
                         }
                     }
                     filterdData.push(__assign(__assign({}, menu), { entities: entities }));
