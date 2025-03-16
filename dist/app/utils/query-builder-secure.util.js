@@ -229,7 +229,7 @@ var queryBuilderSecure = function (req, query, model) { return __awaiter(void 0,
                 finalFilter = _b.sent();
                 _a = createSelectObject(finalFilter), select = _a[0], relations = _a[1], where = _a[2], order = _a[3];
                 //modify where add companyId condition
-                console.log("entityMetadata.targetName", entityMetadata.targetName);
+                //console.log("entityMetadata.targetName", entityMetadata.targetName);
                 if (user.userId !== 1) {
                     where = __assign(__assign({}, where), (entityMetadata.targetName === "Company"
                         ? { id: user.companyId }

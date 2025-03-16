@@ -227,7 +227,7 @@ export const queryBuilderSecure = async <T extends EntityTarget<T>>(
   //consist for three things
   let [select, relations, where, order] = createSelectObject(finalFilter);
   //modify where add companyId condition
-  console.log("entityMetadata.targetName", entityMetadata.targetName);
+  //console.log("entityMetadata.targetName", entityMetadata.targetName);
   if (user.userId !== 1) {
     where = {
       ...where,

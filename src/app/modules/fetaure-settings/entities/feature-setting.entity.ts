@@ -35,9 +35,15 @@ export class FeatureSettings {
   @Column({ type: "int", nullable: true })
   order: number;
 
+  @Column({ type: "int", nullable: true })
+  menuId: number;
+
   @ManyToOne(() => Menus)
   @JoinColumn()
   menu: Menus;
+
+  @Column({ type: "int", nullable: true })
+  featureTypeId: number;
 
   @ManyToOne(() => DFeatureType)
   @JoinColumn()
