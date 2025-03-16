@@ -45,10 +45,18 @@ var FeatureSettings = /** @class */ (function () {
         __metadata("design:type", Number)
     ], FeatureSettings.prototype, "order", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], FeatureSettings.prototype, "menuId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.Menus; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.Menus)
     ], FeatureSettings.prototype, "menu", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], FeatureSettings.prototype, "featureTypeId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DFeatureType; }),
         (0, typeorm_1.JoinColumn)(),

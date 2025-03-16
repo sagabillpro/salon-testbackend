@@ -68,35 +68,10 @@ const create = async (data: FeatureSettings) => {
 const updateById = async (id: number, data: FeatureSettings) => {
   try {
     const dataSource = await handler();
-    const featureTypeRepo = dataSource.getRepository(DFeatureType);
-    const menuRepo = dataSource.getRepository(Menus);
-    const ftype = await featureTypeRepo.findOne({
-      where: {
-        id: data.featureType.id,
-      },
-    });
-    const menu = await menuRepo.findOne({
-      where: {
-        id: data.menu.id,
-      },
-    });
-    if (!menu) {
-      throw {
-        message: "Record not found with id: " + data.menu.id,
-        statusCode: 404,
-      };
-    }
-    if (!ftype) {
-      throw {
-        message: "Record not found with id: " + data.featureType.id,
-        statusCode: 404,
-      };
-    }
+
     const repo = await repository();
     await repo.updateById(id, {
       ...data,
-      featureType: ftype,
-      menu: menu,
     });
   } catch (error) {
     throw error;
