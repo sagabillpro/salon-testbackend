@@ -5,6 +5,7 @@ import getQuery from "../../utils/get-query.util";
 import { Contact } from "./entities/contact.entity";
 import ContactService from "./contact.service";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
+import getQuerySecure from "../../utils/get-query-secure.util";
 const router = Router();
 
 router.get(
@@ -12,7 +13,7 @@ router.get(
   validateFilter(Contact),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await ContactService.find(await getQuery(req, Contact));
+      const result = await ContactService.find(await getQuerySecure(req, Contact));
       res.send(result);
     } catch (error) {
       next(error);

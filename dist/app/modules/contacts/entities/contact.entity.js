@@ -50,6 +50,7 @@ var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
 var dbconfig_1 = require("../../../config/dbconfig");
 var user_entity_1 = require("../../auth/entities/user.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var Contact = /** @class */ (function () {
     function Contact() {
     }
@@ -90,6 +91,15 @@ var Contact = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
         __metadata("design:type", String)
     ], Contact.prototype, "name", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], Contact.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.States; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),

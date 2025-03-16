@@ -26,6 +26,7 @@ import { SaleLines } from "./sale-lines.enity";
 import { InventoryLines } from "./inventory-lines.entity";
 import { Contact } from "../../contacts/entities/contact.entity";
 import { handler } from "../../../config/dbconfig";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("sale_headers")
 export class SaleHeaders {
@@ -84,6 +85,13 @@ export class SaleHeaders {
 
   @Column({ type: "int", default: 0, nullable: true })
   isService: number;
+  
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
 
   @OneToMany(() => SaleLines, (line) => line.txnHeader, {
     cascade: true,

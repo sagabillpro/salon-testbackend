@@ -6,7 +6,6 @@ import path from "path";
 import { entities } from "../../mappings/entities.mapping";
 import { CompanySubscriber } from "../../history/event-subscriber/company.subscriber";
 
-
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, "../../.env") });
 let appDataSource: DataSource;
@@ -26,8 +25,8 @@ const initializeDataSource = async (): Promise<DataSource> => {
       //     "../../../src/entities/index/**/*.{ts,js}",
       //     "../../../build/entities/**/*.{ts,js}",
       //   ],
- // synchronize: true,
-     /// logging: true,
+      synchronize: true,
+      /// logging: true,
       ssl: {
         rejectUnauthorized: false, // Disables SSL certificate verification
       },

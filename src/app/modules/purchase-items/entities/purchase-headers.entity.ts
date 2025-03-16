@@ -28,6 +28,7 @@ import { InventoryLines } from "../../sale-items/entities/inventory-lines.entity
 import { Supplier } from "../../suppliers/entities/supplier.entity";
 import { Contact } from "../../contacts/entities/contact.entity";
 import { handler } from "../../../config/dbconfig";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("purchase_headers")
 export class PurchaseHeaders {
@@ -45,6 +46,13 @@ export class PurchaseHeaders {
 
   @CreateDateColumn({ type: "varchar", nullable: true })
   saleInvoiceNumber: string;
+  
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
 
   @Column({ type: "int", nullable: true })
   supplierId: number;

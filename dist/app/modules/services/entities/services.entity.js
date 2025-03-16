@@ -15,6 +15,7 @@ var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var entities_1 = require("../../general-data/entities");
 var item_stocks_entity_1 = require("../../sale-items/entities/item-stocks.entity");
 var user_entity_1 = require("../../auth/entities/user.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var Services = /** @class */ (function () {
     function Services() {
     }
@@ -30,6 +31,15 @@ var Services = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
         __metadata("design:type", String)
     ], Services.prototype, "name", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], Services.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)

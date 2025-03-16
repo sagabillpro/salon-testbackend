@@ -47,6 +47,7 @@ var purchase_service_1 = __importDefault(require("./purchase.service"));
 var purchase_headers_entity_1 = require("./entities/purchase-headers.entity");
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var schema_1 = require("../../schema");
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
 var router = (0, express_1.Router)();
 router.get("/", (0, validate_filter_util_1.validateFilter)(purchase_headers_entity_1.PurchaseHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
@@ -55,7 +56,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(purchase_headers_enti
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = purchase_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, purchase_headers_entity_1.PurchaseHeaders)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, purchase_headers_entity_1.PurchaseHeaders)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();

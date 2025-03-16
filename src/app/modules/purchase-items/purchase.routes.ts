@@ -8,6 +8,7 @@ import purchaseService from "./purchase.service";
 import { PurchaseHeaders } from "./entities/purchase-headers.entity";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { PurchaseHeadersSchema } from "../../schema";
+import getQuerySecure from "../../utils/get-query-secure.util";
 const router = Router();
 
 router.get(
@@ -16,7 +17,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await purchaseService.find(
-        await getQuery(req, PurchaseHeaders)
+        await getQuerySecure(req, PurchaseHeaders)
       );
       res.send(result);
     } catch (error) {

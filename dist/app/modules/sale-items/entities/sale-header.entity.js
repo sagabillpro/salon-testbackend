@@ -16,6 +16,7 @@ var entities_1 = require("../../general-data/entities");
 var sale_lines_enity_1 = require("./sale-lines.enity");
 var inventory_lines_entity_1 = require("./inventory-lines.entity");
 var contact_entity_1 = require("../../contacts/entities/contact.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var SaleHeaders = /** @class */ (function () {
     function SaleHeaders() {
     }
@@ -91,6 +92,15 @@ var SaleHeaders = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "int", default: 0, nullable: true }),
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "isService", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], SaleHeaders.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.OneToMany)(function () { return sale_lines_enity_1.SaleLines; }, function (line) { return line.txnHeader; }, {
             cascade: true,

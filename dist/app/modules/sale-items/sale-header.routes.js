@@ -50,6 +50,7 @@ var sale_header_schema_1 = require("../../schema/sale-header.schema");
 // import wkhtmltopdf from "wkhtmltopdf";
 var path_1 = __importDefault(require("path"));
 var ejs_1 = __importDefault(require("ejs"));
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
 var router = (0, express_1.Router)();
 router.get("/", (0, validate_filter_util_1.validateFilter)(sale_header_entity_1.SaleHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
@@ -58,7 +59,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(sale_header_entity_1.
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = sale_header_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, sale_header_entity_1.SaleHeaders)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, sale_header_entity_1.SaleHeaders)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();

@@ -21,6 +21,7 @@ import {
 import { handler } from "../../../config/dbconfig";
 import { Branch } from "../../branches/entities/branches.entity";
 import { Users } from "../../auth/entities/user.entity";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("contacts")
 @Unique(["recordId", "id"])
@@ -33,7 +34,13 @@ export class Contact {
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
+  @Column({ type: "int", nullable: true })
+  companyId: number;
 
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
+  
   @ManyToOne(() => States, { nullable: true })
   @JoinColumn()
   state: States;

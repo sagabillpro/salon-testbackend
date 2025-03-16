@@ -46,6 +46,7 @@ var get_query_util_1 = __importDefault(require("../../utils/get-query.util"));
 var contact_entity_1 = require("./entities/contact.entity");
 var contact_service_1 = __importDefault(require("./contact.service"));
 var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
 var router = (0, express_1.Router)();
 router.get("/", (0, validate_filter_util_1.validateFilter)(contact_entity_1.Contact), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
@@ -54,7 +55,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(contact_entity_1.Cont
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = contact_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, contact_entity_1.Contact)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, contact_entity_1.Contact)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();

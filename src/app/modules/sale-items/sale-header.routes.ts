@@ -10,6 +10,7 @@ import { SaleHeadersSchema } from "../../schema/sale-header.schema";
 // import wkhtmltopdf from "wkhtmltopdf";
 import path from "path";
 import ejs from "ejs";
+import getQuerySecure from "../../utils/get-query-secure.util";
 const router = Router();
 
 router.get(
@@ -18,7 +19,7 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await saleHeaderService.find(
-        await getQuery(req, SaleHeaders)
+        await getQuerySecure(req, SaleHeaders)
       );
       res.send(result);
     } catch (error) {

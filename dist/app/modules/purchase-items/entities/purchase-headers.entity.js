@@ -16,6 +16,7 @@ var entities_1 = require("../../general-data/entities");
 var purchase_lines_entity_1 = require("./purchase-lines.entity");
 var inventory_lines_entity_1 = require("../../sale-items/entities/inventory-lines.entity");
 var contact_entity_1 = require("../../contacts/entities/contact.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var PurchaseHeaders = /** @class */ (function () {
     function PurchaseHeaders() {
     }
@@ -39,6 +40,15 @@ var PurchaseHeaders = /** @class */ (function () {
         (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: true }),
         __metadata("design:type", String)
     ], PurchaseHeaders.prototype, "saleInvoiceNumber", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], PurchaseHeaders.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)

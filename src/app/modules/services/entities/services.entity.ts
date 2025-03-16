@@ -17,6 +17,7 @@ import { DItemType } from "../../general-data/entities";
 import { ItemAvailable } from "../../sale-items/entities/item-stocks.entity";
 import { Users } from "../../auth/entities/user.entity";
 import { handler } from "../../../config/dbconfig";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("services")
 export class Services {
@@ -28,6 +29,13 @@ export class Services {
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
+  
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
 
   @Column({ type: "int", nullable: true })
   taxId: number;
