@@ -382,12 +382,14 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                 if (!verfied) return [3 /*break*/, 6];
                 accessToken = (0, services_1.generateAccessToken)({
                     userId: foundUser.id,
+                    companyId: foundUser.companyId,
                     userName: foundUser.userName,
                     email: foundUser.email,
                     userType: foundUser.userType,
                 });
                 refreshTokenToken = (0, services_1.generateRefreshToken)({
                     userId: foundUser.id,
+                    companyId: foundUser.companyId,
                     userName: foundUser.userName,
                     email: foundUser.email,
                     userType: foundUser.userType,
@@ -485,6 +487,7 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
                 if (foundSession) {
                     accessToken = (0, services_1.generateAccessToken)({
                         userId: userData.userId,
+                        companyId: userData.companyId,
                         userName: userData.userName,
                         email: userData.email,
                         userType: userData.userType,

@@ -286,6 +286,7 @@ const login = async (data: {
       //a. create refresh token and store in db
       const accessToken = generateAccessToken({
         userId: foundUser.id,
+        companyId:foundUser.companyId,
         userName: foundUser.userName,
         email: foundUser.email,
         userType: foundUser.userType,
@@ -293,6 +294,7 @@ const login = async (data: {
       //b. create accestoken
       const refreshTokenToken = generateRefreshToken({
         userId: foundUser.id,
+        companyId:foundUser.companyId,
         userName: foundUser.userName,
         email: foundUser.email,
         userType: foundUser.userType,
@@ -372,6 +374,7 @@ const generateNewAccessToken = async (data: { token: string }) => {
     //1. check if active refresh token is present decoded user
     const userData: {
       userId: number;
+      companyId: number;
       userName: string;
       email: string;
       userType: {
@@ -392,6 +395,7 @@ const generateNewAccessToken = async (data: { token: string }) => {
       if (foundSession) {
         const accessToken = generateAccessToken({
           userId: userData.userId,
+          companyId:userData.companyId,
           userName: userData.userName,
           email: userData.email,
           userType: userData.userType,
