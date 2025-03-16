@@ -169,7 +169,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
-                                return [4 /*yield*/, repo.remove(respo)];
+                                return [4 /*yield*/, repo.softRemove(respo)];
                             case 2:
                                 _a.sent();
                                 return [3 /*break*/, 4];

@@ -86,7 +86,7 @@ const repository = async () => {
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      await repo.remove(respo);
+      await repo.softRemove(respo);
     } catch (error) {
       throw error;
     }
