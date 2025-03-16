@@ -523,7 +523,12 @@ function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
                                     },
                                 },
                             },
-                        }
+                        },
+                        where: {
+                            entities: {
+                                isAdminMenu: 0,
+                            },
+                        },
                     })];
             case 2:
                 data = _d.sent();

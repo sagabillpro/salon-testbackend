@@ -420,9 +420,9 @@ router.get(
             },
           },
         },
-        select:{
-          name:true,
-          id:true,
+        select: {
+          name: true,
+          id: true,
           entities: {
             id: true,
             displayName: true,
@@ -432,14 +432,19 @@ router.get(
             isAdminMenu: true,
             isAddOnlyAdmin: true,
             menusAndFeatures: {
-              id:true,
+              id: true,
               feature: {
                 id: true,
                 name: true,
               },
             },
           },
-        }
+        },
+        where: {
+          entities: {
+            isAdminMenu: 0,
+          },
+        },
       });
       const filterdData: Menus[] = [];
       for (let menu of data) {
