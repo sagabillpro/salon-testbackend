@@ -13,6 +13,7 @@ exports.ItemsStockTrack = void 0;
 var typeorm_1 = require("typeorm");
 var services_entity_1 = require("../../services/entities/services.entity");
 var purchase_headers_entity_1 = require("./purchase-headers.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var ItemsStockTrack = /** @class */ (function () {
     function ItemsStockTrack() {
     }
@@ -64,6 +65,15 @@ var ItemsStockTrack = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], ItemsStockTrack.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], ItemsStockTrack.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], ItemsStockTrack.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)

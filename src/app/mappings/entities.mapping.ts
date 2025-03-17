@@ -40,7 +40,7 @@ import { UserMenusAndFeatures } from "../modules/features/entities/usermenufeatu
 import { Role } from "../modules/roles/entities/role.entity";
 import { CompanyHistory, ContactHistory, ServicesHistory, UsersHistory } from "../history/history-entities";
 import { StockAdjustmentHeaders } from "../modules/stock-adjustment/entities/stock-adjustment-headers.entity";
-import { StockAdjustmentLines } from "../modules/stock-adjustment/entities/stock-adjustment.entity";
+import { StockAdjustmentLines } from "../modules/stock-adjustment/entities/stock-adjustment-lines.entity";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>

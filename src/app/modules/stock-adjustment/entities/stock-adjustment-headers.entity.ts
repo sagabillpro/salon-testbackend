@@ -13,6 +13,9 @@ import { Users } from "../../auth/entities/user.entity";
 import { DTransactionStatus } from "../../general-data/entities";
 
 import { InventoryLines } from "../../sale-items/entities/inventory-lines.entity";
+import { StockAdjustmentLines } from "./stock-adjustment-lines.entity";
+import { Company } from "../../company/entities/company.entity";
+
 
 @Entity("stock_adjustment_headers")
 export class StockAdjustmentHeaders {
@@ -22,12 +25,12 @@ export class StockAdjustmentHeaders {
   @Column({ type: "varchar", length: 255, nullable: true, unique: true })
   code: string;
 
-  @Column({ type: "varchar", length: 600, nullable: true })
-  description: string;
-
   @CreateDateColumn({ type: "varchar", nullable: false })
   txnDate: string;
 
+  @Column({ type: "int", nullable: false })
+  transactionStatusId: number;
+  
   @ManyToOne(() => DTransactionStatus, { nullable: true })
   @JoinColumn()
   transactionStatus: DTransactionStatus;
@@ -38,12 +41,23 @@ export class StockAdjustmentHeaders {
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
 
-  @OneToMany(() => InventoryLines, (line) => line.purchase, {
+  @OneToMany(() => InventoryLines, (line) => line.stockAdjustment, {
     cascade: true,
     onDelete: "CASCADE",
   })
   inventoryLines: InventoryLines[];
 
+  @OneToMany(() => StockAdjustmentLines, (line) => line.txnHeader, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  stockAdjustmentLines: StockAdjustmentLines[];
+
+  @Column({ type: "int", nullable: false })
+  createdById: number;
+
+  @Column({ type: "int", nullable: false })
+  modifiedById: number;
   @ManyToOne(() => Users)
   @JoinColumn()
   createdBy: Users;
@@ -51,7 +65,12 @@ export class StockAdjustmentHeaders {
   @ManyToOne(() => Users)
   @JoinColumn()
   modifiedBy: Users;
+  @Column({ type: "int", nullable: true })
+  companyId: number;
 
+  @ManyToOne(() => Company)
+  @JoinColumn()
+  company: Company;
   @VersionColumn({ nullable: true })
   version: number;
 }

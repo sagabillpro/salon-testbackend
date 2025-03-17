@@ -15,6 +15,7 @@ var sale_header_entity_1 = require("./sale-header.entity");
 var services_entity_1 = require("../../services/entities/services.entity");
 var purchase_headers_entity_1 = require("../../purchase-items/entities/purchase-headers.entity");
 var item_stock_track_entity_1 = require("../../purchase-items/entities/item-stock-track.entity");
+var stock_adjustment_headers_entity_1 = require("../../stock-adjustment/entities/stock-adjustment-headers.entity");
 var InventoryLines = /** @class */ (function () {
     function InventoryLines() {
     }
@@ -33,6 +34,17 @@ var InventoryLines = /** @class */ (function () {
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", purchase_headers_entity_1.PurchaseHeaders)
     ], InventoryLines.prototype, "purchase", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], InventoryLines.prototype, "stockAdjustmentId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return stock_adjustment_headers_entity_1.StockAdjustmentHeaders; }, {
+            onDelete: "CASCADE",
+        }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", stock_adjustment_headers_entity_1.StockAdjustmentHeaders)
+    ], InventoryLines.prototype, "stockAdjustment", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)

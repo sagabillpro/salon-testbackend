@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 import { Services } from "../../services/entities/services.entity";
 import { PurchaseHeaders } from "./purchase-headers.entity";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("items_stock_track")
 export class ItemsStockTrack {
@@ -48,7 +49,13 @@ export class ItemsStockTrack {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+  
+  @Column({ type: "int", nullable: true })
+  companyId: number;
 
+  @ManyToOne(() => Company)
+  @JoinColumn()
+  company: Company;
   @Column({ type: "int", default: 0 })
   isInactive: number;
 }

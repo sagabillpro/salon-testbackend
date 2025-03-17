@@ -13,6 +13,7 @@ import { Services } from "../../services/entities/services.entity";
 import { Taxes } from "../../taxes/entities/taxes.entity";
 import { PurchaseHeaders } from "../../purchase-items/entities/purchase-headers.entity";
 import { ItemsStockTrack } from "../../purchase-items/entities/item-stock-track.entity";
+import { StockAdjustmentHeaders } from "../../stock-adjustment/entities/stock-adjustment-headers.entity";
 
 @Entity("inventory_lines")
 export class InventoryLines {
@@ -27,6 +28,15 @@ export class InventoryLines {
   })
   @JoinColumn()
   purchase: PurchaseHeaders;
+
+  @Column({ type: "int", nullable: true })
+  stockAdjustmentId: number;
+
+  @ManyToOne(() => StockAdjustmentHeaders, {
+    onDelete: "CASCADE",
+  })
+  @JoinColumn()
+  stockAdjustment: StockAdjustmentHeaders;
 
   @Column({ type: "int", nullable: true })
   stockId: number;

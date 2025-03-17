@@ -697,6 +697,7 @@ import itemStocksService from "../sale-items/item-stocks.service";
 import { Services } from "../services/entities/services.entity";
 import { ItemsStockTrack } from "./entities/item-stock-track.entity";
 import generateUniqueNumber from "../../utils/getuniquenumber.util";
+import { AuthenticatedRequest } from "../../types";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<PurchaseHeaders>) => {
@@ -802,8 +803,9 @@ const deleteById = async (id: number) => {
   }
 };
 //3. create single record
-const createBulk = async (data: PurchaseHeaders) => {
+const createBulk = async (req: AuthenticatedRequest, data: PurchaseHeaders) => {
   try {
+    const user: any = req.user;
     const dataSource = await handler();
     data = await generateCode(20, data);
     const itemIds: number[] = [];
@@ -836,10 +838,10 @@ const createBulk = async (data: PurchaseHeaders) => {
     await dataSource.manager.transaction(
       "SERIALIZABLE",
       async (transactionalEntityManager) => {
-        const headerEntry = transactionalEntityManager.create(
-          PurchaseHeaders,
-          data
-        );
+        const headerEntry = transactionalEntityManager.create(PurchaseHeaders, {
+          ...data,
+          companyId: user.companyId,
+        });
         console.log("pass2");
 
         // ************** A) stock logic start ************************************************************
@@ -855,8 +857,9 @@ const createBulk = async (data: PurchaseHeaders) => {
           stockInstance.unitPrice = value.unitPrice;
           stockInstance.serviceId = value.service.id;
           stockInstance.quantityUvailable = value.quantity;
-          stockInstance.txnHeaderId=headerEntry.id
+          stockInstance.txnHeaderId = headerEntry.id;
           stockInstance.stockNumber = skuMap[value.service.id];
+          stockInstance.companyId=user.companyId;
           stockEntries.push(stockInstance);
         });
         const itemIdStockMap: {

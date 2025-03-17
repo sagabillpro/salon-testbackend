@@ -1,4 +1,4 @@
-import { FindManyOptions, FindOneOptions, Not } from "typeorm";
+import { FindManyOptions, FindOneOptions, In, Not } from "typeorm";
 import { generateCode } from "../../utils/get-object-code.util";
 import repository from "./stock-adjustment-headers.repo";
 
@@ -11,6 +11,11 @@ import { PassThrough } from "stream";
 
 import { Request, Response } from "express";
 import { getWorksheetColumnsFromSchema } from "../../utils/get-report-headers.util";
+import { PurchaseHeaders } from "../purchase-items/entities/purchase-headers.entity";
+import { AuthenticatedRequest } from "../../types";
+import { StockAdjustmentLines } from "./entities/stock-adjustment-lines.entity";
+import { InventoryLines } from "../sale-items/entities/inventory-lines.entity";
+import { ItemAvailable } from "../sale-items/entities/item-stocks.entity";
 //1. find multiple records
 const find = async (filter?: FindManyOptions<StockAdjustmentHeaders>) => {
   try {
@@ -28,6 +33,7 @@ const findStocks = async (filter?: FindManyOptions<StockAdjustmentHeaders>) => {
     const stockRepo = dataSource.getRepository(ItemsStockTrack);
     const stockResponse = await stockRepo.find({
       where: {
+        ...filter?.where,
         isInactive: 0,
       },
       select: {
@@ -49,79 +55,200 @@ const findStocks = async (filter?: FindManyOptions<StockAdjustmentHeaders>) => {
     });
     const data = [
       {
-        id: 30,
-        unitPrice: 178,
-        stockNumber: "GRNP-20241226132106535168",
-        quantityAdded: 7,
-        quantityUvailable: 2,
-        createdDate: "2024-12-26T07:51:05.390Z",
-        modifiedDate: "2024-12-27 05:17:39.484661+00",
-        service: {
-          id: 31,
-          name: "Garnier Men, Face Wash, Brightening",
-        },
+        name: "Garnier Men, Face Wash, Brightening",
+        items: [
+          {
+            id: 30,
+            unitPrice: 178,
+            stockNumber: "GRNP-20241226132106535168",
+            quantityAdded: 7,
+            quantityUvailable: 2,
+            createdDate: "2024-12-26T07:51:05.390Z",
+            modifiedDate: "2024-12-27 05:17:39.484661+00",
+            service: {
+              id: 31,
+              name: "Garnier Men, Face Wash, Brightening",
+            },
+          },
+          {
+            id: 31,
+            unitPrice: 100,
+            stockNumber: "GRNP-20241226132106535169",
+            quantityAdded: 5,
+            quantityUvailable: 3,
+            createdDate: "2024-12-26T07:51:06.390Z",
+            modifiedDate: "2024-12-27 05:17:40.484661+00",
+            service: {
+              id: 31,
+              name: "Garnier Men, Face Wash, Brightening",
+            },
+          },
+        ],
       },
       {
-        id: 31,
-        unitPrice: 100,
-        stockNumber: "GRNP-20241226132106535169",
-        quantityAdded: 5,
-        quantityUvailable: 3,
-        createdDate: "2024-12-26T07:51:06.390Z",
-        modifiedDate: "2024-12-27 05:17:40.484661+00",
-        service: {
-          id: 31,
-          name: "Garnier Men, Face Wash, Brightening",
-        },
-      },
-      {
-        id: 32,
-        unitPrice: 200,
-        stockNumber: "GRNP-20241226132106535170",
-        quantityAdded: 10,
-        quantityUvailable: 10,
-        createdDate: "2024-12-26T07:51:07.390Z",
-        modifiedDate: "2024-12-27 05:17:41.484661+00",
-        service: {
-          id: 32,
-          name: "Nivea Men, Face Wash",
-        },
+        name: "Nivea Men, Face Wash",
+        items: [
+          {
+            id: 32,
+            unitPrice: 200,
+            stockNumber: "GRNP-20241226132106535170",
+            quantityAdded: 10,
+            quantityUvailable: 10,
+            createdDate: "2024-12-26T07:51:07.390Z",
+            modifiedDate: "2024-12-27 05:17:41.484661+00",
+            service: {
+              id: 32,
+              name: "Nivea Men, Face Wash",
+            },
+          },
+        ],
       },
     ];
-    const groupedData = data.reduce((acc: any, item: any) => {
-      const serviceName = item.service.name;
+    // const groupedData = data.reduce((acc: any, item: any) => {
+    //   const serviceName = item.service.name;
 
-      // Check if service name already exists
-      const existingGroup: any = acc.find(
-        (group: any) => group.name === serviceName
-      );
+    //   // Check if service name already exists
+    //   const existingGroup: any = acc.find(
+    //     (group: any) => group.name === serviceName
+    //   );
 
-      if (existingGroup) {
-        existingGroup.items.push(item);
-      } else {
-        acc.push({
-          name: serviceName,
-          items: [item],
-        });
-      }
+    //   if (existingGroup) {
+    //     existingGroup.items.push(item);
+    //   } else {
+    //     acc.push({
+    //       name: serviceName,
+    //       items: [item],
+    //     });
+    //   }
 
-      return acc;
-    }, []);
-    return groupedData;
+    //   return acc;
+    // }, []);
+    return data;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
-//3. create single record
-const create = async (data: StockAdjustmentHeaders) => {
+const create = async (
+  req: AuthenticatedRequest,
+  adjustmentLinesData: StockAdjustmentLines[]
+) => {
   try {
-    const repo = await repository();
-    data = await generateCode(14, data);
+    // // Extract authenticated user
+    const user: any = req.user;
+    // // Get the data source instance
+    // const dataSource = await handler();
+    // let data = new StockAdjustmentHeaders();
+    // // Create a new header entry for the stock adjustment
+    // let headerEntry = new StockAdjustmentHeaders();
+    // headerEntry.txnDate = new Date().toLocaleDateString();
+    // headerEntry.createdById = user?.userId;
+    // headerEntry.modifiedById = user?.userId;
+    // headerEntry.transactionStatusId = 2;
+    // headerEntry.companyId = user?.companyId;
+    // // Repositories for item available and stock track records
+    // const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
+    // const itemsStockTrackRepo = dataSource.getRepository(ItemsStockTrack);
 
-    const respo = repo.create({
-      ...data,
-    });
-    return respo;
+    // // Arrays to hold new inventory lines and final updated records
+    // const inventoryLines: InventoryLines[] = [];
+    // const finalItemAvailable: ItemAvailable[] = [];
+    // const finalItemStockTrack: ItemsStockTrack[] = [];
+
+    // // Create an array to store the service IDs from the adjustment lines
+    // const selectedServiceIds: number[] = [];
+
+    // // Loop through each adjustment line to create inventory line entries
+    // adjustmentLinesData.forEach((line) => {
+    //   const inventory = new InventoryLines();
+    //   // Collect service id for later queries
+    //   selectedServiceIds.push(line.serviceId);
+    //   // Set the inventory line's properties based on the adjustment line
+    //   inventory.quantity = line.finalVariation;
+    //   inventory.stockId = line.stockId;
+    //   inventory.serviceId = line.serviceId;
+    //   inventory.createdDate = new Date().toISOString();
+    //   inventory.modifiedDate = new Date().toISOString();
+    //   inventoryLines.push(inventory);
+    // });
+
+    // // Fetch the current available items for the selected service IDs
+    // const itemsAvailable = await itemAvailableRepo.find({
+    //   where: { service: { id: In(selectedServiceIds) } },
+    //   select: { id: true, quantity: true, service: { id: true, name: true } },
+    // });
+
+    // // Fetch current stock tracking records for the selected service IDs
+    // const stockTracks = await itemsStockTrackRepo.find({
+    //   where: { service: { id: In(selectedServiceIds) } },
+    // });
+
+    // // Create mapping from serviceId to itemAvailable record
+    // const itemAvailableMap: { [key: number]: ItemAvailable } = {};
+    // itemsAvailable.forEach((item) => {
+    //   itemAvailableMap[item.serviceId] = item;
+    // });
+
+    // // Create mapping from stock track id to stock track record
+    // const stockTrackMap: { [key: number]: ItemsStockTrack } = {};
+    // stockTracks.forEach((track) => {
+    //   stockTrackMap[track.id] = track;
+    // });
+
+    // // Build a final mapping for each service: sum up the final variation
+    // // (there might be multiple adjustment lines per service)
+    // const finalMapping: { [key: number]: number } = {};
+    // adjustmentLinesData.forEach((line) => {
+    //   const currentTotal = finalMapping[line.serviceId] || 0;
+    //   finalMapping[line.serviceId] = currentTotal + line.finalVariation;
+    // });
+
+    // // Update the quantity of each item available using the final mapping.
+    // for (const [serviceIdStr, totalFinalVariation] of Object.entries(
+    //   finalMapping
+    // )) {
+    //   const serviceId = Number(serviceIdStr);
+    //   const itemAvailable = itemAvailableMap[serviceId];
+    //   // Update quantity by adding the total variation from adjustments
+    //   itemAvailable.quantity += totalFinalVariation;
+    //   finalItemAvailable.push(itemAvailable);
+    // }
+
+    // // Update each stock track record with the new quantities from adjustment lines.
+    // // Assuming each adjustment line corresponds to a specific stock track entry (using record id).
+    // adjustmentLinesData.forEach((line) => {
+    //   const track = stockTrackMap[line.stockId];
+    //   // Update the track record with new quantities (assumed to be provided in the adjustment line)
+    //   track.quantityAdded = line.quantityAddedNew;
+    //   track.quantityUvailable = line.quantityUvailableNew;
+    //   finalItemStockTrack.push(track);
+    // });
+
+    // // Start a transaction to save header and related updates
+    // await dataSource.manager.transaction(
+    //   "SERIALIZABLE",
+    //   async (transactionalEntityManager) => {
+    //     // Optionally generate a code for the header (assumed generateCode returns a modified header)
+    //     headerEntry = await generateCode(30, headerEntry);
+    //     headerEntry.inventoryLines = inventoryLines;
+    //     headerEntry.stockAdjustmentLines = adjustmentLinesData;
+    //     // Create the header entry (here you might want to pass headerEntry, not adjustmentLines)
+    //     const createdHeader = transactionalEntityManager.create(
+    //       StockAdjustmentHeaders,
+    //       headerEntry
+    //     );
+    //     // Save the header entry
+    //     data = await transactionalEntityManager.save(
+    //       StockAdjustmentHeaders,
+    //       createdHeader
+    //     );
+    //     transactionalEntityManager.save(ItemAvailable, finalItemAvailable);
+    //     transactionalEntityManager.save(ItemsStockTrack, finalItemStockTrack);
+    //   }
+    // );
+
+    // return data;
+    return adjustmentLinesData;
   } catch (error) {
     throw error;
   }
@@ -179,5 +306,72 @@ const exportUsersToExcel = async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error generating Excel file" });
   }
 };
+//1. find multiple records
+const findStockByPurchase = async (id: number) => {
+  try {
+    // const dataSource = await handler();
+    // const repo = dataSource.getRepository(PurchaseHeaders);
+    // const itemStockTrackRepo = dataSource.getRepository(ItemsStockTrack);
+    // const item = await repo.findOne({
+    //   where: {
+    //     id: Number(id),
+    //   },
+    // });
+    // if (!item) {
+    //   throw { message: "Record not found with id: " + id, statusCode: 404 };
+    // }
+    // const foundStocks = await itemStockTrackRepo.find({
+    //   where: {
+    //     txnHeaderId: item.id,
+    //   },
+    //   relations: {
+    //     service: true,
+    //   },
+    //   select: {
+    //     id: true,
+    //     stockNumber: true,
+    //     service: {
+    //       id: true,
+    //       name: true,
+    //     },
+    //     txnHeader: {
+    //       id: true,
+    //       code: true,
+    //       txnDate: true,
+    //     },
+    //   },
+    // });
+    // const finalData = foundStocks.map((found) => {
+    //   return {
+    //     stockNumber: found.stockNumber,
+    //     item: found.service.name,
+    //     purchaseDate: found.txnHeader.txnDate,
+    //   };
+    // });
+    // return finalData;
+    const data = [
+      {
+        stockNumber: "STK-001",
+        purchaseDate: "2024-12-26",
+        item: "ABC1 - Some very long item name that might overflow",
+      },
+      {
+        stockNumber: "STK-002",
+        purchaseDate: "2024-12-27",
+        item: "ABC2 - Another long item description",
+      },
+      { stockNumber: "STK-003", purchaseDate: "2024-12-28", item: "ABC3" },
+    ];
 
-export default { find, create, findStocks, exportUsersToExcel };
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export default {
+  find,
+  create,
+  findStocks,
+  exportUsersToExcel,
+  findStockByPurchase,
+};

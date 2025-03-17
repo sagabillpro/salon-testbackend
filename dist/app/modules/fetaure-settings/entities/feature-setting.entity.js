@@ -83,10 +83,7 @@ var FeatureSettings = /** @class */ (function () {
         __metadata("design:type", String)
     ], FeatureSettings.prototype, "modifiedDate", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return menusandfeatures_entity_1.MenusAndFeatures; }, function (line) { return line.entity; }, {
-            cascade: true,
-            onDelete: "CASCADE",
-        }),
+        (0, typeorm_1.OneToMany)(function () { return menusandfeatures_entity_1.MenusAndFeatures; }, function (line) { return line.entity; }, {}),
         __metadata("design:type", Array)
     ], FeatureSettings.prototype, "menusAndFeatures", void 0);
     FeatureSettings = __decorate([

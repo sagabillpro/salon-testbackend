@@ -65,8 +65,7 @@ export class FeatureSettings {
   modifiedDate: string;
 
   @OneToMany(() => MenusAndFeatures, (line) => line.entity, {
-    cascade: true,
-    onDelete: "CASCADE",
+
   })
   menusAndFeatures: MenusAndFeatures[];
 }

@@ -161,7 +161,7 @@ router.post("/bulk", authenticate_middleware_1.default, (0, validate_req_body_ut
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, purchase_service_1.default.createBulk(req.body)];
+                return [4 /*yield*/, purchase_service_1.default.createBulk(req, req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);

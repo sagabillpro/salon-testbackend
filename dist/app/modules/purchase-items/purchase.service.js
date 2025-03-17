@@ -862,12 +862,13 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 //3. create single record
-var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, itemIds_2, inventory_3, itemRepo, skuMap_1, relatedItems, error_6;
+var createBulk = function (req, data) { return __awaiter(void 0, void 0, void 0, function () {
+    var user_1, dataSource, itemIds_2, inventory_3, itemRepo, skuMap_1, relatedItems, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 5, , 6]);
+                user_1 = req.user;
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
@@ -903,7 +904,7 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                         return __generator(this, function (_a) {
                             switch (_a.label) {
                                 case 0:
-                                    headerEntry = transactionalEntityManager.create(purchase_headers_entity_1.PurchaseHeaders, data);
+                                    headerEntry = transactionalEntityManager.create(purchase_headers_entity_1.PurchaseHeaders, __assign(__assign({}, data), { companyId: user_1.companyId }));
                                     console.log("pass2");
                                     stockEntries = [];
                                     //1. create Stock and save stock
@@ -918,6 +919,7 @@ var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, func
                                         stockInstance.quantityUvailable = value.quantity;
                                         stockInstance.txnHeaderId = headerEntry.id;
                                         stockInstance.stockNumber = skuMap_1[value.service.id];
+                                        stockInstance.companyId = user_1.companyId;
                                         stockEntries.push(stockInstance);
                                     });
                                     itemIdStockMap = {};

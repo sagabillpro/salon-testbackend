@@ -138,11 +138,17 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                         switch (_a.label) {
                             case 0:
                                 _a.trys.push([0, 3, , 4]);
-                                return [4 /*yield*/, repo.findOneBy({
-                                        id: id,
+                                return [4 /*yield*/, repo.findOne({
+                                        where: {
+                                            id: id
+                                        },
+                                        relations: {
+                                            menusAndFeatures: true
+                                        }
                                     })];
                             case 1:
                                 respo = _a.sent();
+                                data.menusAndFeatures = (respo === null || respo === void 0 ? void 0 : respo.menusAndFeatures) ? respo === null || respo === void 0 ? void 0 : respo.menusAndFeatures : [];
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }

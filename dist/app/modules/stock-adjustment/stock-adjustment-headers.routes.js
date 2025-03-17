@@ -43,11 +43,15 @@ var express_1 = require("express");
 var routes_types_1 = require("../../routes/routes.types");
 var validate_filter_util_1 = require("../../utils/validate-filter.util");
 var get_query_util_1 = __importDefault(require("../../utils/get-query.util"));
-var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
 var stock_adjustment_headers_service_1 = __importDefault(require("./stock-adjustment-headers.service"));
 var stock_adjustment_headers_entity_1 = require("./entities/stock-adjustment-headers.entity");
 var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
+var path_1 = __importDefault(require("path"));
 var router = (0, express_1.Router)();
+var ejs_1 = __importDefault(require("ejs"));
+var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
+var stock_adjustment_schema_1 = require("../../schema/stock-adjustment.schema");
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
 router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(stock_adjustment_headers_entity_1.StockAdjustmentHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
@@ -76,7 +80,7 @@ router.get("/stocks", authenticate_middleware_1.default, function (req, res, nex
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = stock_adjustment_headers_service_1.default).findStocks;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, stock_adjustment_headers_entity_1.StockAdjustmentHeaders)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, stock_adjustment_headers_entity_1.StockAdjustmentHeaders)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();
@@ -108,20 +112,62 @@ router.get("/stocks-download", authenticate_middleware_1.default, function (req,
         }
     });
 }); });
-router.post("/", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(stock_adjustment_headers_entity_1.StockAdjustmentHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_4;
+// router.post(
+//   "/",
+//   authenticateToken,
+//   validateRequestBody(StockAdjustmentHeaders),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const result = await service.create(req.body);
+//       res.send(result);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+//render html for stock stickers
+router.get("/stock-stckers-download/:id", 
+//   authenticateToken,
+function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, invoiceData, renderedPath, renderedHtml, error_4;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                id = Number(req.params.id);
+                return [4 /*yield*/, stock_adjustment_headers_service_1.default.findStockByPurchase(id)];
+            case 1:
+                invoiceData = _a.sent();
+                renderedPath = path_1.default.join(process.cwd(), "/dist/app/templates", "stocks.template.ejs");
+                return [4 /*yield*/, ejs_1.default.renderFile(renderedPath, {
+                        data: invoiceData,
+                    })];
+            case 2:
+                renderedHtml = _a.sent();
+                res.send(renderedHtml);
+                return [3 /*break*/, 4];
+            case 3:
+                error_4 = _a.sent();
+                next(error_4);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); });
+router.post("/", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(stock_adjustment_schema_1.stockAdjustmentSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var result, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, stock_adjustment_headers_service_1.default.create(req.body)];
+                return [4 /*yield*/, stock_adjustment_headers_service_1.default.create(req, req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);
                 return [3 /*break*/, 3];
             case 2:
-                error_4 = _a.sent();
-                next(error_4);
+                error_5 = _a.sent();
+                next(error_5);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

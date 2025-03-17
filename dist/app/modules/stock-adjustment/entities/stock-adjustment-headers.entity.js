@@ -14,6 +14,8 @@ var typeorm_1 = require("typeorm");
 var user_entity_1 = require("../../auth/entities/user.entity");
 var entities_1 = require("../../general-data/entities");
 var inventory_lines_entity_1 = require("../../sale-items/entities/inventory-lines.entity");
+var stock_adjustment_lines_entity_1 = require("./stock-adjustment-lines.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var StockAdjustmentHeaders = /** @class */ (function () {
     function StockAdjustmentHeaders() {
     }
@@ -26,13 +28,13 @@ var StockAdjustmentHeaders = /** @class */ (function () {
         __metadata("design:type", String)
     ], StockAdjustmentHeaders.prototype, "code", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 600, nullable: true }),
-        __metadata("design:type", String)
-    ], StockAdjustmentHeaders.prototype, "description", void 0);
-    __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], StockAdjustmentHeaders.prototype, "txnDate", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], StockAdjustmentHeaders.prototype, "transactionStatusId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DTransactionStatus; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
@@ -47,12 +49,27 @@ var StockAdjustmentHeaders = /** @class */ (function () {
         __metadata("design:type", String)
     ], StockAdjustmentHeaders.prototype, "modifiedDate", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return inventory_lines_entity_1.InventoryLines; }, function (line) { return line.purchase; }, {
+        (0, typeorm_1.OneToMany)(function () { return inventory_lines_entity_1.InventoryLines; }, function (line) { return line.stockAdjustment; }, {
             cascade: true,
             onDelete: "CASCADE",
         }),
         __metadata("design:type", Array)
     ], StockAdjustmentHeaders.prototype, "inventoryLines", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return stock_adjustment_lines_entity_1.StockAdjustmentLines; }, function (line) { return line.txnHeader; }, {
+            cascade: true,
+            onDelete: "CASCADE",
+        }),
+        __metadata("design:type", Array)
+    ], StockAdjustmentHeaders.prototype, "stockAdjustmentLines", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], StockAdjustmentHeaders.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], StockAdjustmentHeaders.prototype, "modifiedById", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),
@@ -63,6 +80,15 @@ var StockAdjustmentHeaders = /** @class */ (function () {
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
     ], StockAdjustmentHeaders.prototype, "modifiedBy", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], StockAdjustmentHeaders.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], StockAdjustmentHeaders.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.VersionColumn)({ nullable: true }),
         __metadata("design:type", Number)
