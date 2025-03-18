@@ -21,6 +21,14 @@ var MenusAndFeatures = /** @class */ (function () {
         __metadata("design:type", Number)
     ], MenusAndFeatures.prototype, "id", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int" }),
+        __metadata("design:type", Number)
+    ], MenusAndFeatures.prototype, "entityId", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int" }),
+        __metadata("design:type", Number)
+    ], MenusAndFeatures.prototype, "featureId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return feature_setting_entity_1.FeatureSettings; }, { nullable: false, onDelete: "CASCADE" }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", feature_setting_entity_1.FeatureSettings)

@@ -8,3 +8,5 @@ export * from './menus.entity'
 export * from "./d-item-types.entity"
 export * from "./dp-contact-types"
 export * from "./d-daterange.entity"
+export * from"./d-industry-types.entity"
+export * from "./d-transaction-status.entity"

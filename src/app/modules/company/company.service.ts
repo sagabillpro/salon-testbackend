@@ -5,6 +5,10 @@ import { Company } from "./entities/company.entity";
 import { generateCode } from "../../utils/get-object-code.util";
 import { handler } from "../../config/dbconfig";
 import { City, Country, States } from "../general-data/entities";
+import { Branch } from "../branches/entities/branches.entity";
+import { Taxes } from "../taxes/entities/taxes.entity";
+import { checkUniqueConstraints } from "../../utils/check-duplicate.util";
+import { uploadImageToCloudinary } from "../../utils/upload-image-cloudinary.util";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Company>) => {
@@ -21,6 +25,7 @@ const findById = async (
   filter?: FindOneOptions<Company> | FindManyOptions<Company>
 ) => {
   try {
+    console.log("inside thsi .....");
     const repo = await repository();
     const respo = await repo.findOneById(id, filter);
     return respo;
@@ -29,60 +34,170 @@ const findById = async (
   }
 };
 
-//3. create single record
 const create = async (data: Company) => {
   try {
+    // 1. Get the data source/connection and initialize the repository for Country.
     const dataSource = await handler();
     const countryRepo = dataSource.getRepository(Country);
+    //check duplicates here
+    await checkUniqueConstraints(data, Company);
 
+    //upload logo
+    if (data.logo && data.logo.startsWith("data:")) {
+      const url = await uploadImageToCloudinary(data.logo, "CompanyLogos");
+      if (typeof url === "string") {
+        data.logo = url;
+      }
+    }
+    //upload signature
+    if (data.signature && data.signature.startsWith("data:")) {
+      const url = await uploadImageToCloudinary(
+        data.signature,
+        "CompanySignatures"
+      );
+      if (typeof url === "string") {
+        data.signature = url;
+      }
+    }
+    // 2. Validate that the specified country exists.
     const country = await countryRepo.findOne({
-      where: {
-        id: data.country.id,
-      },
+      where: { id: data.countryId },
     });
     if (!country) {
       throw {
-        message: "Record not found with id: " + data.country.id,
+        message: "Record not found with id: " + data.countryId,
         statusCode: 404,
       };
     }
 
-    const repo = await repository();
-    data = await generateCode(27, data);
-    const respo = repo.create({
-      ...data,
-      country: country,
+    //find for tax and based on the id
+    const taxRepo = dataSource.getRepository(Taxes);
+    const tax = await taxRepo.findOne({
+      where: { id: data.taxId },
     });
-    return respo;
+    if (!tax) {
+      throw {
+        message: "Record not found with id: " + data.taxId,
+        statusCode: 404,
+      };
+    }
+    // 3. Destructure the branches from the incoming data, keeping the rest as headerWithoutLines.
+    let { branches, ...headerWithoutLines } = data;
+
+    // });
+    // 10. Return the newly created company record.
+    await dataSource.manager.transaction("SERIALIZABLE", async (manager) => {
+      // 5. generate a unique code for the company header.
+      headerWithoutLines = await generateCode(27, {
+        ...headerWithoutLines,
+      });
+      // 6. Create and save the company header record.
+      const headerEntry = manager.create(Company, {
+        ...headerWithoutLines,
+        countryId: data.countryId,
+        taxId: tax.id,
+      });
+
+      data = await manager.save(Company, headerEntry);
+      // 7. Initialize an array to hold the Branch instances.
+      const branchesNew: Branch[] = [];
+
+      // 8. Iterate over the provided branches data (if any) to create new Branch instances.
+      //    Each branch is associated with the saved company record (using companyId and companyRecordId).
+      for (const value of branches || []) {
+        try {
+          await checkUniqueConstraints(value, Branch);
+          const branchInstance: Branch = {
+            ...value,
+            companyId: data.id,
+          };
+          branchesNew.push(branchInstance);
+        } catch (error) {
+          // Handle or log the error as needed.
+          throw error;
+        }
+      }
+
+      // 9. Save all new Branch instances.
+      await manager.save(Branch, branchesNew);
+    });
+    return data;
   } catch (error) {
     throw error;
   }
 };
 
-//4. update single record by id
+// 4. Update single Company record by id
 const updateById = async (id: number, data: Company) => {
   try {
+    // Get the data source/connection
     const dataSource = await handler();
-    const countryRepo = dataSource.getRepository(Country);
-    const country = await countryRepo.findOne({
-      where: {
-        id: data.country.id,
-      },
-    });
-    if (!country) {
-      throw {
-        message: "Record not found with id: " + data.country.id,
-        statusCode: 404,
-      };
-    }
 
-    const repo = await repository();
-  //  data = await generateCode(14, data);
-    const respo = repo.updateById(id, {
-      ...data,
-      country: country,
+    // Destructure the branches array from data,
+    // keeping the rest of the company header data in headerWithoutLines.
+    let { branches, ...headerWithoutLines } = data;
+
+    // Start a transaction with SERIALIZABLE isolation level to ensure atomicity
+    await dataSource.manager.transaction("SERIALIZABLE", async (manager) => {
+      // 1. Retrieve the latest (active) Company record by recordId,
+      // including its branches relationship.
+      const currentHeaderRecord = await manager.findOne(Company, {
+        where: { id: id },
+      });
+
+      if (!currentHeaderRecord) {
+        throw {
+          message: "Record not found with id: " + id,
+          statusCode: 404,
+        };
+      }
+      //upload logo
+      if (data.logo && data.logo.startsWith("data:")) {
+        const url = await uploadImageToCloudinary(data.logo, "CompanyLogos");
+        if (typeof url === "string") {
+          data.logo = url;
+        }
+      } else {
+        data.logo = currentHeaderRecord.logo;
+      }
+      //upload signature
+      if (data.signature && data.signature.startsWith("data:")) {
+        const url = await uploadImageToCloudinary(
+          data.signature,
+          "CompanySignatures"
+        );
+        if (typeof url === "string") {
+          data.signature = url;
+        }
+      } else {
+        data.signature = currentHeaderRecord.signature;
+      }
+      // by saving a copy with isInactive set to 1.
+      data = await manager.save(Company, {
+        ...currentHeaderRecord,
+        ...headerWithoutLines,
+      });
+
+      // 7. Initialize an array to hold the Branch instances.
+      const branchesNew: Branch[] = [];
+
+      // 8. Iterate over the provided branches data (if any) to create new Branch instances.
+      //    Each branch is associated with the saved company record (using companyId and companyRecordId).
+      branches?.forEach((value) => {
+        // Create a new branch instance by merging the incoming branch data
+        // with the company association details from the saved company.
+        const branchInstance: Branch = {
+          ...value,
+          companyId: data.id,
+        };
+        branchesNew.push(branchInstance);
+      });
+      // 9. Save all new Branch instances.
+      await manager.save(Branch, branchesNew);
     });
-    return respo;
+
+    // Return the newly created (updated) Company record
+    return data;
   } catch (error) {
     throw error;
   }

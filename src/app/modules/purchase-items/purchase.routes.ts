@@ -8,15 +8,21 @@ import purchaseService from "./purchase.service";
 import { PurchaseHeaders } from "./entities/purchase-headers.entity";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { PurchaseHeadersSchema } from "../../schema";
+import getQuerySecure from "../../utils/get-query-secure.util";
+import authenticateToken from "../../middlewares/authenticate.middleware";
+import path from "path";
+import ejs from "ejs";
+
 const router = Router();
 
 router.get(
   "/",
+    authenticateToken,
   validateFilter(PurchaseHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await purchaseService.find(
-        await getQuery(req, PurchaseHeaders)
+        await getQuerySecure(req, PurchaseHeaders)
       );
       res.send(result);
     } catch (error) {
@@ -27,6 +33,7 @@ router.get(
 
 router.post(
   "/",
+    authenticateToken,
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -40,6 +47,7 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   // validateFilter(PurchaseHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -57,6 +65,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -71,6 +80,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
@@ -84,14 +94,48 @@ router.delete(
 
 router.post(
   "/bulk",
+  authenticateToken,
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await purchaseService.createBulk(req.body);
+      const result = await purchaseService.createBulk(req,req.body);
       res.send(result);
     } catch (error) {
       next(error);
     }
   }
 );
+// router.put(
+//   "bulk",
+//   validateBodyManual(PurchaseHeadersSchema),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const result = await purchaseService.editBulk(req.body);
+//       res.send(result);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+
+// Add new route for purchase invoice
+router.get(
+  "/download/generate-invoice/:id",
+  //authenticateToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const invoiceData = await purchaseService.purchaseInvoiceData(id);
+      
+      // Render the EJS template
+      const templatePath = path.join(__dirname, "../../templates/purchase-invoice.template.ejs");
+      const html = await ejs.renderFile(templatePath, invoiceData);
+      
+      res.send(html);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default new Route("/purchase-headers", router);

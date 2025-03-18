@@ -16,6 +16,7 @@ var entities_1 = require("../../general-data/entities");
 var sale_lines_enity_1 = require("./sale-lines.enity");
 var inventory_lines_entity_1 = require("./inventory-lines.entity");
 var contact_entity_1 = require("../../contacts/entities/contact.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var SaleHeaders = /** @class */ (function () {
     function SaleHeaders() {
     }
@@ -36,7 +37,11 @@ var SaleHeaders = /** @class */ (function () {
         __metadata("design:type", String)
     ], SaleHeaders.prototype, "txnDate", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return contact_entity_1.Contact; }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "customerId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return contact_entity_1.Contact; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", contact_entity_1.Contact)
     ], SaleHeaders.prototype, "customer", void 0);
@@ -51,19 +56,24 @@ var SaleHeaders = /** @class */ (function () {
         __metadata("design:type", entities_1.DPaymentType)
     ], SaleHeaders.prototype, "paymentType", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.DTransactionStatus; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", entities_1.DTransactionStatus)
+    ], SaleHeaders.prototype, "transactionStatus", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "subTotal", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "grandTotal", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "totalDiscount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "totalTax", void 0);
     __decorate([
@@ -83,6 +93,15 @@ var SaleHeaders = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "isService", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], SaleHeaders.prototype, "company", void 0);
+    __decorate([
         (0, typeorm_1.OneToMany)(function () { return sale_lines_enity_1.SaleLines; }, function (line) { return line.txnHeader; }, {
             cascade: true,
             onDelete: "CASCADE",
@@ -96,6 +115,25 @@ var SaleHeaders = /** @class */ (function () {
         }),
         __metadata("design:type", Array)
     ], SaleHeaders.prototype, "inventoryLines", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], SaleHeaders.prototype, "createdBy", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], SaleHeaders.prototype, "modifiedBy", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], SaleHeaders.prototype, "deletedAt", void 0);
+    __decorate([
+        (0, typeorm_1.VersionColumn)({ nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "version", void 0);
     SaleHeaders = __decorate([
         (0, typeorm_1.Entity)("sale_headers")
     ], SaleHeaders);

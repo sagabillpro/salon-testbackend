@@ -49,16 +49,17 @@ var user_entity_1 = require("./entities/user.entity");
 var schema_1 = require("../../schema");
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var new_refresh_token_schema_1 = require("../../schema/new-refresh-token.schema");
-var services_1 = require("../../services");
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validate_filter_util_1.validateFilter)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = user_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, user_entity_1.Users)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, user_entity_1.Users)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();
@@ -72,7 +73,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(user_entity_1.Users),
         }
     });
 }); });
-router.post("/", (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -91,7 +92,7 @@ router.post("/", (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.
         }
     });
 }); });
-router.get("/:id", (0, validate_filter_util_1.validateFilter)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/:id", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, result, _a, _b, _c, error_3;
     return __generator(this, function (_d) {
         switch (_d.label) {
@@ -114,7 +115,7 @@ router.get("/:id", (0, validate_filter_util_1.validateFilter)(user_entity_1.User
         }
     });
 }); });
-router.put("/:id", (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/:id", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -134,7 +135,7 @@ router.put("/:id", (0, get_model_schema_util_1.validateRequestBody)(user_entity_
         }
     });
 }); });
-router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete("/:id", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -154,18 +155,17 @@ router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 
         }
     });
 }); });
-//login route
-router.post("/login", (0, validate_req_body_util_1.validateBodyManual)(schema_1.LoginSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+//bulk create
+router.post("/bulk", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_service_1.default.login(req.body)];
+                return [4 /*yield*/, user_service_1.default.createBulk(req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);
-                next();
                 return [3 /*break*/, 3];
             case 2:
                 error_6 = _a.sent();
@@ -175,18 +175,17 @@ router.post("/login", (0, validate_req_body_util_1.validateBodyManual)(schema_1.
         }
     });
 }); });
-//regenerate access token
-router.post("/new-access-token", (0, validate_req_body_util_1.validateBodyManual)(new_refresh_token_schema_1.NewRefreshToken), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_7;
+router.put("/bulk/:id", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(user_entity_1.Users), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, result, error_7;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_service_1.default.generateNewAccessToken(req.body)];
+                id = Number(req.params.id);
+                return [4 /*yield*/, user_service_1.default.updateById(id, req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);
-                next();
                 return [3 /*break*/, 3];
             case 2:
                 error_7 = _a.sent();
@@ -196,14 +195,14 @@ router.post("/new-access-token", (0, validate_req_body_util_1.validateBodyManual
         }
     });
 }); });
-//logout user
-router.post("/logout", (0, validate_req_body_util_1.validateBodyManual)(new_refresh_token_schema_1.NewRefreshToken), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+//login route
+router.post("/login", (0, validate_req_body_util_1.validateBodyManual)(schema_1.LoginSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_8;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, user_service_1.default.logout(req.body)];
+                return [4 /*yield*/, user_service_1.default.login(req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);
@@ -217,30 +216,60 @@ router.post("/logout", (0, validate_req_body_util_1.validateBodyManual)(new_refr
         }
     });
 }); });
-router.get("/me/data", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var authHeader, token, userData, error_9;
+//regenerate access token
+router.post("/new-access-token", (0, validate_req_body_util_1.validateBodyManual)(new_refresh_token_schema_1.NewRefreshToken), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var result, error_9;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                authHeader = req.headers["authorization"];
-                token = authHeader && authHeader.split(" ")[1];
-                if (!token) {
-                    return [2 /*return*/, res.status(401).json({ message: "Access Token Required" })];
-                }
-                return [4 /*yield*/, (0, services_1.verifyToken)(token)];
+                return [4 /*yield*/, user_service_1.default.generateNewAccessToken(req.body)];
             case 1:
-                userData = _a.sent();
-                res.send(userData);
+                result = _a.sent();
+                res.send(result);
                 next();
                 return [3 /*break*/, 3];
             case 2:
                 error_9 = _a.sent();
-                console.log(error_9);
                 next(error_9);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }
+    });
+}); });
+//logout user
+router.post("/logout", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(new_refresh_token_schema_1.NewRefreshToken), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var result, error_10;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                return [4 /*yield*/, user_service_1.default.logout(req.body)];
+            case 1:
+                result = _a.sent();
+                res.send(result);
+                next();
+                return [3 /*break*/, 3];
+            case 2:
+                error_10 = _a.sent();
+                next(error_10);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/me/data", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var userData;
+    return __generator(this, function (_a) {
+        try {
+            userData = user_service_1.default.decodedToken(req, res, next);
+            res.send(userData);
+        }
+        catch (error) {
+            console.log(error);
+            next(error);
+        }
+        return [2 /*return*/];
     });
 }); });
 exports.default = new routes_types_1.Route("/users", router);

@@ -19,6 +19,12 @@ export class MenusAndFeatures {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
+  @Column({ type: "int" })
+  entityId: number;
+
+  @Column({ type: "int" })
+  featureId: number;
+  
   @ManyToOne(() => FeatureSettings, { nullable: false, onDelete: "CASCADE" })
   @JoinColumn()
   entity: FeatureSettings;

@@ -8,6 +8,10 @@ import {
   JoinColumn,
   OneToOne,
   ManyToOne,
+  DeleteDateColumn,
+  BeforeInsert,
+  Unique,
+  VersionColumn,
 } from "typeorm";
 import { Users } from "../../auth/entities/user.entity";
 import { Customer } from "../../customer/entities/customer.entity";
@@ -15,11 +19,14 @@ import {
   City,
   Country,
   DPaymentType,
+  DTransactionStatus,
   States,
 } from "../../general-data/entities";
 import { SaleLines } from "./sale-lines.enity";
 import { InventoryLines } from "./inventory-lines.entity";
 import { Contact } from "../../contacts/entities/contact.entity";
+import { handler } from "../../../config/dbconfig";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("sale_headers")
 export class SaleHeaders {
@@ -29,13 +36,16 @@ export class SaleHeaders {
   @Column({ type: "varchar", length: 255, nullable: true, unique: true })
   code: string;
 
-  @Column({ type: "varchar", length: 600, nullable: true})
+  @Column({ type: "varchar", length: 600, nullable: true })
   description: string;
 
   @CreateDateColumn({ type: "varchar", nullable: false })
   txnDate: string;
 
-  @ManyToOne(() => Contact)
+  @Column({ type: "int", nullable: true })
+  customerId: number;
+
+ @ManyToOne(() => Contact, { nullable: true })
   @JoinColumn()
   customer: Contact;
 
@@ -47,16 +57,21 @@ export class SaleHeaders {
   @JoinColumn()
   paymentType: DPaymentType;
 
-  @Column({ type: "int", nullable: true })
+  @ManyToOne(() => DTransactionStatus, { nullable: true })
+  @JoinColumn()
+  transactionStatus: DTransactionStatus;
+
+  // Changed from integer to decimal (precision 10, scale 2)
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   subTotal: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   grandTotal: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   totalDiscount: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   totalTax: number;
 
   @CreateDateColumn({ type: "varchar", nullable: false })
@@ -70,6 +85,13 @@ export class SaleHeaders {
 
   @Column({ type: "int", default: 0, nullable: true })
   isService: number;
+  
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
 
   @OneToMany(() => SaleLines, (line) => line.txnHeader, {
     cascade: true,
@@ -82,4 +104,19 @@ export class SaleHeaders {
     onDelete: "CASCADE",
   })
   inventoryLines: InventoryLines[];
+  //************newly added columns
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  createdBy: Users;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  modifiedBy: Users;
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
+
+  @VersionColumn({ nullable: true })
+  version: number;
 }

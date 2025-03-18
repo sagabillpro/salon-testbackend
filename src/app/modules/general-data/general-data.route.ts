@@ -8,41 +8,62 @@ import { Menus } from "./entities";
 import authenticateToken from "../../middlewares/authenticate.middleware";
 import { AuthenticatedRequest } from "../../types";
 import { Services } from "../services/entities/services.entity";
-import { Customer } from "../customer/entities/customer.entity";
-import { SaleHeaders } from "../sale-items/entities/sale-header.entity";
+import UserMenusAndFeaturesService from "../features/usermenufeaturemap.service";
 import {
   getModelSchema,
   validateRequestBody,
 } from "../../utils/get-model-schema.util";
+import { verifyToken } from "../../services";
+import userService from "../auth/user.service";
+import { MenusAndFeatures } from "../features/entities/menusandfeatures.entity";
+import { FeatureSettings } from "../fetaure-settings/entities/feature-setting.entity";
 const router = Router();
+// Loop through each entry in the routeToEntityMap
 for (let [key, value] of Object.entries(routeToEntityMap)) {
+  // Define a GET route for each key in the map
   router.get(
     key,
-    validateFilter(value),
+    authenticateToken,
+    validateFilter(value), // Apply the validateFilter middleware
     async (req: Request, res: Response) => {
       try {
+        // Get the data source
         const appDataSource = await handler();
+        // Get the repository for the current entity
         const repository = appDataSource.getRepository(value);
+        // Fetch data using the repository and query built from the request
         const data = await repository.find(await getQuery(req, value));
+        // Send the fetched data as a JSON response with status 200
         res.status(200).json(data);
       } catch (error) {
+        console.log(error);
+        // Handle errors by sending a 500 status and error message
         res
           .status(500)
           .json({ message: "Error fetching DescriptionType", error });
       }
     }
   );
+
+  // Define a POST route for each key in the map
   router.post(
     key,
-    validateRequestBody(value),
+    authenticateToken,
+    validateRequestBody(value), // Apply the validateRequestBody middleware
     async (req: Request, res: Response) => {
       try {
+        // Get the data source
         const appDataSource = await handler();
+        // Get the repository for the current entity
         const repository = appDataSource.getRepository(value);
+        // Create a new entity instance from the request body
         const data = repository.create(req.body);
+        // Save the new entity instance to the database
         const respo = await repository.save(data);
+        // Send the saved entity as a JSON response with status 200
         res.status(200).json(respo);
       } catch (error) {
+        // Handle errors by sending a 500 status and error message
         res
           .status(500)
           .json({ message: "Error fetching DescriptionType", error });
@@ -183,5 +204,279 @@ router.get(
     }
   }
 );
+//updated route to get menus for user
+router.get(
+  "/menu-headers-new",
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      //1 . get user specific menus
+      const user: any = req.user;
+      const respo: {
+        title: string;
+        url: string;
+        icon: string;
+        subItems: { title: string; url: string }[];
+      }[] = [];
+      const appDataSource = await handler();
+      const repository = appDataSource.getRepository(Menus);
+      const data = await repository.find({
+        relations: {
+          entities: true,
+        },
+        where: {
+          entities: {
+            isInactive: 0,
+          },
+        },
+      });
+      if (user.userId === 1) {
+        for (let menu of data) {
+          let level1: { title: string; url: string }[] = [];
+          for (let entity of menu.entities) {
+            //1.send all menus for admin
 
+            level1.push({
+              title: entity.displayName,
+              url: entity.route,
+            });
+          }
+          level1.length &&
+            respo.push({
+              title: menu.name,
+              url: "#",
+              icon: menu.icon,
+              subItems: level1,
+            });
+        }
+      } else {
+        let mappingObj: {
+          [key: number]: boolean;
+        } = {};
+        const userData = await UserMenusAndFeaturesService.find({
+          relations: {
+            user: true,
+            entity: true,
+            feature: true,
+          },
+          select: {
+            user: {
+              id: true,
+              name: true,
+            },
+            entity: {
+              id: true,
+            },
+            feature: {
+              id: true,
+            },
+          },
+          where: {
+            user: {
+              id: user.userId,
+            },
+            feature: {
+              id: 5,
+            },
+            entity: {
+              isAdminMenu: 0,
+            },
+          },
+        });
+        //create mapping object
+        userData.forEach((element) => {
+          if (element?.feature?.id === 5 && element.isActive === 1) {
+            // Set the feature ID to true in the mapping object for the current entity ID
+            mappingObj[element.entity.id] = true;
+          }
+        });
+
+        for (let menu of data) {
+          let level1: { title: string; url: string }[] = [];
+          for (let entity of menu.entities) {
+            //1.send all menus for admin
+            if (false) {
+              //ad condition which will check for SAGA User and show all menus
+            }
+            if (mappingObj[entity.id]) {
+              level1.push({
+                title: entity.displayName,
+                url: entity.route,
+              });
+            }
+          }
+          level1.length &&
+            respo.push({
+              title: menu.name,
+              url: "#",
+              icon: menu.icon,
+              subItems: level1,
+            });
+        }
+      }
+      res.status(200).json(respo);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching menus", error });
+    }
+  }
+);
+//get object for user menus and screens
+router.get(
+  "/get-user-features",
+  
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      //1 . get user specific menus
+      const user: any = req.user;
+      let mappingObj: {
+        [key: number]: {
+          [key: number]: boolean;
+        };
+      } = {};
+
+      if (user.userId === 1) {
+        const appDataSource = await handler();
+        const menusAndFeaturesRepository =
+          appDataSource.getRepository(MenusAndFeatures);
+        const userData = await menusAndFeaturesRepository.find({
+          relations: {
+            entity: true,
+            feature: true,
+          },
+          select: {
+            entity: {
+              id: true,
+            },
+            feature: {
+              id: true,
+            },
+          },
+        });
+        //create mapping object
+        userData.forEach((element) => {
+          if (!mappingObj[element.entity.id]) {
+            mappingObj[element.entity.id] = {};
+          }
+          mappingObj[element.entity.id][element.feature.id] = true;
+        });
+      } else {
+        const userData = await UserMenusAndFeaturesService.find({
+          relations: {
+            user: true,
+            entity: true,
+            feature: true,
+          },
+          select: {
+            user: {
+              id: true,
+              name: true,
+            },
+            entity: {
+              id: true,
+            },
+            feature: {
+              id: true,
+            },
+          },
+          where: {
+            user: {
+              id: user.userId,
+            },
+          },
+        });
+        //create mapping object
+        userData.forEach((element) => {
+          if (!mappingObj[element.entity.id]) {
+            mappingObj[element.entity.id] = {};
+          }
+          if (element.isActive === 1) {
+            mappingObj[element.entity.id][element.feature.id] = true;
+          } else {
+            mappingObj[element.entity.id][element.feature.id] = false;
+          }
+        });
+      }
+
+      res.status(200).json(mappingObj);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching menus", error });
+    }
+  }
+);
+router.get(
+  "/menus-new",
+  
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response) => {
+    try {
+      //1 . get user specific menus
+      const user: any = req?.user;
+      const appDataSource = await handler();
+      const repository = appDataSource.getRepository(Menus);
+      const data = await repository.find({
+        relations: {
+          entities: {
+            menusAndFeatures: {
+              feature: true,
+            },
+          },
+        },
+        select: {
+          name: true,
+          id: true,
+          entities: {
+            id: true,
+            displayName: true,
+            name: true,
+            route: true,
+            isInactive: true,
+            isAdminMenu: true,
+            isAddOnlyAdmin: true,
+            menusAndFeatures: {
+              id: true,
+              feature: {
+                id: true,
+                name: true,
+              },
+            },
+          },
+        },
+      });
+      const filterdData: Menus[] = [];
+      for (let menu of data) {
+        const entities: FeatureSettings[] = [];
+        for (let item of menu.entities) {
+          if (!item.isAdminMenu) {
+            //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
+            if (item.isAddOnlyAdmin) {
+              if (user?.userId != 1) {
+                entities.push({
+                  ...item,
+                  menusAndFeatures: item.menusAndFeatures?.filter(
+                    (mf) => mf.feature.id != 1
+                  ),
+                });
+              } else {
+                entities.push(item);
+              }
+            } else {
+              entities.push(item);
+            }
+          }
+        }
+        filterdData.push({
+          ...menu,
+          entities,
+        });
+      }
+      res.status(200).json(filterdData);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Error fetching menus", error });
+    }
+  }
+);
 export default new Route("", router);

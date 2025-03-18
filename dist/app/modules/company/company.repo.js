@@ -49,6 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var dbconfig_1 = require("../../../app/config/dbconfig");
 var company_entity_1 = require("./entities/company.entity");
+var branches_entity_1 = require("../branches/entities/branches.entity");
 var repository = function () { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, repo, find, findOne, findOneById, create, updateById, deleteById, createAll, createBulk;
     return __generator(this, function (_a) {
@@ -136,14 +137,14 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                             case 0:
                                 _a.trys.push([0, 3, , 4]);
                                 return [4 /*yield*/, repo.findOneBy({
-                                        id: id,
+                                        isInactive: 0,
                                     })];
                             case 1:
                                 respo = _a.sent();
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
-                                return [4 /*yield*/, repo.save(__assign(__assign({}, respo), data))];
+                                return [4 /*yield*/, repo.save(__assign(__assign(__assign({}, respo), data), { code: respo.code }))];
                             case 2:
                                 _a.sent();
                                 return [3 /*break*/, 4];
@@ -155,27 +156,36 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                     });
                 }); };
                 deleteById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-                    var respo, error_6;
+                    var branchRepo, respo, error_6;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 3, , 4]);
-                                return [4 /*yield*/, repo.findOneBy({
-                                        id: id,
+                                _a.trys.push([0, 4, , 5]);
+                                branchRepo = dataSource.getRepository(branches_entity_1.Branch);
+                                return [4 /*yield*/, repo.findOne({
+                                        where: { id: id },
+                                        relations: ["branches"],
                                     })];
                             case 1:
                                 respo = _a.sent();
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
-                                return [4 /*yield*/, repo.remove(respo)];
+                                return [4 /*yield*/, repo.softRemove(respo)];
                             case 2:
                                 _a.sent();
-                                return [3 /*break*/, 4];
+                                return [4 /*yield*/, branchRepo.update({
+                                        companyId: id,
+                                    }, {
+                                        deletedAt: new Date(),
+                                    })];
                             case 3:
+                                _a.sent();
+                                return [3 /*break*/, 5];
+                            case 4:
                                 error_6 = _a.sent();
                                 throw error_6;
-                            case 4: return [2 /*return*/];
+                            case 5: return [2 /*return*/];
                         }
                     });
                 }); };

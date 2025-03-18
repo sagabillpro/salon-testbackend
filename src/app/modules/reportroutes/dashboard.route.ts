@@ -4,10 +4,11 @@ import { handler } from "../../config/dbconfig";
 import { Users } from "../auth/entities/user.entity";
 import { SaleHeaders } from "../sale-items/entities/sale-header.entity";
 import { SaleLines } from "../sale-items/entities/sale-lines.enity";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 
 const router = Router();
 
-router.get("/", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/",  authenticateToken, async (req: Request, res: Response, next: NextFunction) => {
   try {
     let result: {
       topArtist: any[];

@@ -5,10 +5,12 @@ import getQuery from "../../utils/get-query.util";
 import { Role } from "./entities/role.entity";
 import RoleService from "./role.service";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(Role),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -22,6 +24,7 @@ router.get(
 
 router.post(
   "/",
+  authenticateToken,
   validateRequestBody(Role),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -35,14 +38,12 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   validateFilter(Role),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
-      const result = await RoleService.findById(
-        id,
-        await getQuery(req, Role)
-      );
+      const result = await RoleService.findById(id, await getQuery(req, Role));
       res.send(result);
     } catch (error) {
       next(error);
@@ -52,6 +53,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateRequestBody(Role),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -66,6 +68,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);

@@ -46,15 +46,17 @@ var get_query_util_1 = __importDefault(require("../../utils/get-query.util"));
 var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
 var services_entity_1 = require("./entities/services.entity");
 var services_service_1 = __importDefault(require("./services.service"));
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validate_filter_util_1.validateFilter)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = services_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, services_entity_1.Services)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, services_entity_1.Services)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();
@@ -68,7 +70,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(services_entity_1.Ser
         }
     });
 }); });
-router.post("/", (0, get_model_schema_util_1.validateRequestBody)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -87,7 +89,7 @@ router.post("/", (0, get_model_schema_util_1.validateRequestBody)(services_entit
         }
     });
 }); });
-router.get("/:id", (0, validate_filter_util_1.validateFilter)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/:id", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, result, _a, _b, _c, error_3;
     return __generator(this, function (_d) {
         switch (_d.label) {
@@ -110,7 +112,7 @@ router.get("/:id", (0, validate_filter_util_1.validateFilter)(services_entity_1.
         }
     });
 }); });
-router.put("/:id", (0, get_model_schema_util_1.validateRequestBody)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/:id", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(services_entity_1.Services), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -130,7 +132,7 @@ router.put("/:id", (0, get_model_schema_util_1.validateRequestBody)(services_ent
         }
     });
 }); });
-router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete("/:id", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {

@@ -22,6 +22,7 @@ export class UserSessions {
 
   @Column({ type: "varchar", length: 500, nullable: false })
   token: string;
+  
   @Column({ type: "int", default: 0 })
   isInactive: number;
 

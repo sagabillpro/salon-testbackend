@@ -59,10 +59,14 @@ var routes_types_1 = require("../../routes/routes.types");
 var entities_1 = require("./entities");
 var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var services_entity_1 = require("../services/entities/services.entity");
+var usermenufeaturemap_service_1 = __importDefault(require("../features/usermenufeaturemap.service"));
 var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
+var menusandfeatures_entity_1 = require("../features/entities/menusandfeatures.entity");
 var router = (0, express_1.Router)();
 var _loop_1 = function (key, value) {
-    router.get(key, (0, validate_filter_util_1.validateFilter)(value), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    // Define a GET route for each key in the map
+    router.get(key, authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(value), // Apply the validateFilter middleware
+    function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var appDataSource, repository, data, _a, _b, error_1;
         return __generator(this, function (_c) {
             switch (_c.label) {
@@ -77,10 +81,13 @@ var _loop_1 = function (key, value) {
                 case 2: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
                 case 3:
                     data = _c.sent();
+                    // Send the fetched data as a JSON response with status 200
                     res.status(200).json(data);
                     return [3 /*break*/, 5];
                 case 4:
                     error_1 = _c.sent();
+                    console.log(error_1);
+                    // Handle errors by sending a 500 status and error message
                     res
                         .status(500)
                         .json({ message: "Error fetching DescriptionType", error: error_1 });
@@ -89,7 +96,9 @@ var _loop_1 = function (key, value) {
             }
         });
     }); });
-    router.post(key, (0, get_model_schema_util_1.validateRequestBody)(value), function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    // Define a POST route for each key in the map
+    router.post(key, authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(value), // Apply the validateRequestBody middleware
+    function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
         var appDataSource, repository, data, respo, error_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -103,10 +112,12 @@ var _loop_1 = function (key, value) {
                     return [4 /*yield*/, repository.save(data)];
                 case 2:
                     respo = _a.sent();
+                    // Send the saved entity as a JSON response with status 200
                     res.status(200).json(respo);
                     return [3 /*break*/, 4];
                 case 3:
                     error_2 = _a.sent();
+                    // Handle errors by sending a 500 status and error message
                     res
                         .status(500)
                         .json({ message: "Error fetching DescriptionType", error: error_2 });
@@ -116,6 +127,7 @@ var _loop_1 = function (key, value) {
         });
     }); });
 };
+// Loop through each entry in the routeToEntityMap
 for (var _i = 0, _a = Object.entries(modeltoroutemapping_mapping_1.routeToEntityMap); _i < _a.length; _i++) {
     var _b = _a[_i], key = _b[0], value = _b[1];
     _loop_1(key, value);
@@ -253,6 +265,297 @@ router.get("/get-schema", function (req, res, next) { return __awaiter(void 0, v
                 next(error_4);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
+        }
+    });
+}); });
+//updated route to get menus for user
+router.get("/menu-headers-new", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, respo, appDataSource, repository, data, _i, data_2, menu, level1, _a, _b, entity, mappingObj_1, userData, _c, data_3, menu, level1, _d, _e, entity, error_5;
+    return __generator(this, function (_f) {
+        switch (_f.label) {
+            case 0:
+                _f.trys.push([0, 6, , 7]);
+                user = req.user;
+                respo = [];
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                appDataSource = _f.sent();
+                repository = appDataSource.getRepository(entities_1.Menus);
+                return [4 /*yield*/, repository.find({
+                        relations: {
+                            entities: true,
+                        },
+                        where: {
+                            entities: {
+                                isInactive: 0,
+                            },
+                        },
+                    })];
+            case 2:
+                data = _f.sent();
+                if (!(user.userId === 1)) return [3 /*break*/, 3];
+                for (_i = 0, data_2 = data; _i < data_2.length; _i++) {
+                    menu = data_2[_i];
+                    level1 = [];
+                    for (_a = 0, _b = menu.entities; _a < _b.length; _a++) {
+                        entity = _b[_a];
+                        //1.send all menus for admin
+                        level1.push({
+                            title: entity.displayName,
+                            url: entity.route,
+                        });
+                    }
+                    level1.length &&
+                        respo.push({
+                            title: menu.name,
+                            url: "#",
+                            icon: menu.icon,
+                            subItems: level1,
+                        });
+                }
+                return [3 /*break*/, 5];
+            case 3:
+                mappingObj_1 = {};
+                return [4 /*yield*/, usermenufeaturemap_service_1.default.find({
+                        relations: {
+                            user: true,
+                            entity: true,
+                            feature: true,
+                        },
+                        select: {
+                            user: {
+                                id: true,
+                                name: true,
+                            },
+                            entity: {
+                                id: true,
+                            },
+                            feature: {
+                                id: true,
+                            },
+                        },
+                        where: {
+                            user: {
+                                id: user.userId,
+                            },
+                            feature: {
+                                id: 5,
+                            },
+                            entity: {
+                                isAdminMenu: 0,
+                            },
+                        },
+                    })];
+            case 4:
+                userData = _f.sent();
+                //create mapping object
+                userData.forEach(function (element) {
+                    var _a;
+                    if (((_a = element === null || element === void 0 ? void 0 : element.feature) === null || _a === void 0 ? void 0 : _a.id) === 5 && element.isActive === 1) {
+                        // Set the feature ID to true in the mapping object for the current entity ID
+                        mappingObj_1[element.entity.id] = true;
+                    }
+                });
+                for (_c = 0, data_3 = data; _c < data_3.length; _c++) {
+                    menu = data_3[_c];
+                    level1 = [];
+                    for (_d = 0, _e = menu.entities; _d < _e.length; _d++) {
+                        entity = _e[_d];
+                        //1.send all menus for admin
+                        if (false) {
+                            //ad condition which will check for SAGA User and show all menus
+                        }
+                        if (mappingObj_1[entity.id]) {
+                            level1.push({
+                                title: entity.displayName,
+                                url: entity.route,
+                            });
+                        }
+                    }
+                    level1.length &&
+                        respo.push({
+                            title: menu.name,
+                            url: "#",
+                            icon: menu.icon,
+                            subItems: level1,
+                        });
+                }
+                _f.label = 5;
+            case 5:
+                res.status(200).json(respo);
+                return [3 /*break*/, 7];
+            case 6:
+                error_5 = _f.sent();
+                console.log(error_5);
+                res.status(500).json({ message: "Error fetching menus", error: error_5 });
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); });
+//get object for user menus and screens
+router.get("/get-user-features", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, mappingObj_2, appDataSource, menusAndFeaturesRepository, userData, userData, error_6;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 6, , 7]);
+                user = req.user;
+                mappingObj_2 = {};
+                if (!(user.userId === 1)) return [3 /*break*/, 3];
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                appDataSource = _a.sent();
+                menusAndFeaturesRepository = appDataSource.getRepository(menusandfeatures_entity_1.MenusAndFeatures);
+                return [4 /*yield*/, menusAndFeaturesRepository.find({
+                        relations: {
+                            entity: true,
+                            feature: true,
+                        },
+                        select: {
+                            entity: {
+                                id: true,
+                            },
+                            feature: {
+                                id: true,
+                            },
+                        },
+                    })];
+            case 2:
+                userData = _a.sent();
+                //create mapping object
+                userData.forEach(function (element) {
+                    if (!mappingObj_2[element.entity.id]) {
+                        mappingObj_2[element.entity.id] = {};
+                    }
+                    mappingObj_2[element.entity.id][element.feature.id] = true;
+                });
+                return [3 /*break*/, 5];
+            case 3: return [4 /*yield*/, usermenufeaturemap_service_1.default.find({
+                    relations: {
+                        user: true,
+                        entity: true,
+                        feature: true,
+                    },
+                    select: {
+                        user: {
+                            id: true,
+                            name: true,
+                        },
+                        entity: {
+                            id: true,
+                        },
+                        feature: {
+                            id: true,
+                        },
+                    },
+                    where: {
+                        user: {
+                            id: user.userId,
+                        },
+                    },
+                })];
+            case 4:
+                userData = _a.sent();
+                //create mapping object
+                userData.forEach(function (element) {
+                    if (!mappingObj_2[element.entity.id]) {
+                        mappingObj_2[element.entity.id] = {};
+                    }
+                    if (element.isActive === 1) {
+                        mappingObj_2[element.entity.id][element.feature.id] = true;
+                    }
+                    else {
+                        mappingObj_2[element.entity.id][element.feature.id] = false;
+                    }
+                });
+                _a.label = 5;
+            case 5:
+                res.status(200).json(mappingObj_2);
+                return [3 /*break*/, 7];
+            case 6:
+                error_6 = _a.sent();
+                console.log(error_6);
+                res.status(500).json({ message: "Error fetching menus", error: error_6 });
+                return [3 /*break*/, 7];
+            case 7: return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/menus-new", authenticate_middleware_1.default, function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, appDataSource, repository, data, filterdData, _i, data_4, menu, entities, _a, _b, item, error_7;
+    var _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                _d.trys.push([0, 3, , 4]);
+                user = req === null || req === void 0 ? void 0 : req.user;
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                appDataSource = _d.sent();
+                repository = appDataSource.getRepository(entities_1.Menus);
+                return [4 /*yield*/, repository.find({
+                        relations: {
+                            entities: {
+                                menusAndFeatures: {
+                                    feature: true,
+                                },
+                            },
+                        },
+                        select: {
+                            name: true,
+                            id: true,
+                            entities: {
+                                id: true,
+                                displayName: true,
+                                name: true,
+                                route: true,
+                                isInactive: true,
+                                isAdminMenu: true,
+                                isAddOnlyAdmin: true,
+                                menusAndFeatures: {
+                                    id: true,
+                                    feature: {
+                                        id: true,
+                                        name: true,
+                                    },
+                                },
+                            },
+                        },
+                    })];
+            case 2:
+                data = _d.sent();
+                filterdData = [];
+                for (_i = 0, data_4 = data; _i < data_4.length; _i++) {
+                    menu = data_4[_i];
+                    entities = [];
+                    for (_a = 0, _b = menu.entities; _a < _b.length; _a++) {
+                        item = _b[_a];
+                        if (!item.isAdminMenu) {
+                            //if item.isAddOnlyAdmin is  true THEN CHECK WHETHER THE USERID IS 1 IF NOT THEN DONT ADD ADD FEATURE FROM MENUSANDFEATURE ARRAY ELSE IF NOT THEN ADD FEATURE FROM MENUSANDFEATURE
+                            if (item.isAddOnlyAdmin) {
+                                if ((user === null || user === void 0 ? void 0 : user.userId) != 1) {
+                                    entities.push(__assign(__assign({}, item), { menusAndFeatures: (_c = item.menusAndFeatures) === null || _c === void 0 ? void 0 : _c.filter(function (mf) { return mf.feature.id != 1; }) }));
+                                }
+                                else {
+                                    entities.push(item);
+                                }
+                            }
+                            else {
+                                entities.push(item);
+                            }
+                        }
+                    }
+                    filterdData.push(__assign(__assign({}, menu), { entities: entities }));
+                }
+                res.status(200).json(filterdData);
+                return [3 /*break*/, 4];
+            case 3:
+                error_7 = _d.sent();
+                console.log(error_7);
+                res.status(500).json({ message: "Error fetching menus", error: error_7 });
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });

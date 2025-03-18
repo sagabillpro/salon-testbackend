@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Contact = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
+var user_entity_1 = require("../../auth/entities/user.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var Contact = /** @class */ (function () {
     function Contact() {
     }
@@ -28,6 +30,15 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", String)
     ], Contact.prototype, "name", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], Contact.prototype, "company", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.States; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.States)
@@ -42,6 +53,10 @@ var Contact = /** @class */ (function () {
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.City)
     ], Contact.prototype, "city", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "contactTypeId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DContactType; }, { nullable: false }),
         (0, typeorm_1.JoinColumn)(),
@@ -60,6 +75,14 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", String)
     ], Contact.prototype, "email", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+        __metadata("design:type", String)
+    ], Contact.prototype, "address", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
+        __metadata("design:type", String)
+    ], Contact.prototype, "zipCode", void 0);
+    __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
     ], Contact.prototype, "isInactive", void 0);
@@ -75,6 +98,25 @@ var Contact = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], Contact.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.VersionColumn)(),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "version", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], Contact.prototype, "createdBy", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], Contact.prototype, "modifiedBy", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], Contact.prototype, "deletedAt", void 0);
     Contact = __decorate([
         (0, typeorm_1.Entity)("contacts")
     ], Contact);

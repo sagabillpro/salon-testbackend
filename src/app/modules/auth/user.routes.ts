@@ -11,14 +11,18 @@ import { LoginSchema } from "../../schema";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { NewRefreshToken } from "../../schema/new-refresh-token.schema";
 import { verifyToken } from "../../services";
+import { UserSchema } from "../../schema/user-schema";
+import authenticateToken from "../../middlewares/authenticate.middleware";
+import getQuerySecure from "../../utils/get-query-secure.util";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(Users),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await userService.find(await getQuery(req, Users));
+      const result = await userService.find(await getQuerySecure(req, Users));
       res.send(result);
     } catch (error) {
       next(error);
@@ -28,6 +32,7 @@ router.get(
 
 router.post(
   "/",
+  authenticateToken,
   validateRequestBody(Users),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -41,6 +46,7 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   validateFilter(Users),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -55,6 +61,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateRequestBody(Users),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -69,6 +76,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
@@ -79,7 +87,35 @@ router.delete(
     }
   }
 );
+//bulk create
+router.post(
+  "/bulk",
+  authenticateToken,
+  validateRequestBody(Users),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await userService.createBulk(req.body);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 
+router.put(
+  "/bulk/:id",
+  authenticateToken,
+  validateRequestBody(Users),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const result = await userService.updateById(id, req.body);
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 //login route
 router.post(
   "/login",
@@ -113,6 +149,7 @@ router.post(
 //logout user
 router.post(
   "/logout",
+  authenticateToken,
   validateBodyManual(NewRefreshToken),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -129,23 +166,23 @@ router.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       // const result = await userService.find(await getQuery(req, Users));
-      const authHeader = req.headers["authorization"];
-      const token = authHeader && authHeader.split(" ")[1];
-      if (!token) {
-        return res.status(401).json({ message: "Access Token Required" });
-      }
-      // res.send(result);
-      const userData: {
-        userId: number;
-        userName: string;
-        email: string;
-        userType: {
-          id: number;
-          name: string;
-        };
-      } = await verifyToken(token);
+      // const authHeader = req.headers["authorization"];
+      // const token = authHeader && authHeader.split(" ")[1];
+      // if (!token) {
+      //   return res.status(401).json({ message: "Access Token Required" });
+      // }
+      // // res.send(result);
+      // const userData: {
+      //   userId: number;
+      //   userName: string;
+      //   email: string;
+      //   userType: {
+      //     id: number;
+      //     name: string;
+      //   };
+      // } = await verifyToken(token);
+      const userData = userService.decodedToken(req, res, next);
       res.send(userData);
-      next();
     } catch (error) {
       console.log(error);
       next(error);

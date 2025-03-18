@@ -3,7 +3,6 @@ import { FindManyOptions, FindOneOptions } from "typeorm";
 import { handler } from "../../../app/config/dbconfig";
 import { Taxes } from "./entities/taxes.entity";
 
-
 const repository = async () => {
   const dataSource = await handler();
   const repo = dataSource.getRepository(Taxes);
@@ -63,17 +62,23 @@ const repository = async () => {
   //4. update single records
   const updateById = async (id: number, data: Taxes) => {
     try {
+      // Find the existing record by ID and ensure it is not inactive
       const respo = await repo.findOneBy({
         id: id,
       });
+
+      // If the record is not found, throw a 404 error
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
+
+      // Mark the existing record as inactive
       await repo.save({
         ...respo,
         ...data,
       });
     } catch (error) {
+      // If an error occurs, throw it to be handled by the caller
       throw error;
     }
   };
@@ -81,14 +86,20 @@ const repository = async () => {
   //5. delete single record
   const deleteById = async (id: number): Promise<void> => {
     try {
+      // Find the existing record by ID and ensure it is not inactive
       const respo = await repo.findOneBy({
         id: id,
       });
+
+      // If the record is not found, throw a 404 error
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
+      } else {
+        // Soft remove the record (mark it as deleted without physically removing it from the database)
+        await repo.softRemove(respo);
       }
-      await repo.remove(respo);
     } catch (error) {
+      // If an error occurs, throw it to be handled by the caller
       throw error;
     }
   };
@@ -103,21 +114,7 @@ const repository = async () => {
       throw error;
     }
   };
-  //6. create multiple records
-  const createBulk = async (data: Taxes[]) => {
-    try {
-      const respo = repo.create(data);
-      await repo.save(respo);
-      await dataSource.transaction(async (transactionalEntityManager) => {
-        // execute queries using transactionalEntityManager
-        // 1. generate header entry code
-        //2. update or add main header based on id
-      });
-      return respo;
-    } catch (error) {
-      throw error;
-    }
-  };
+
   return {
     find,
     findOne,

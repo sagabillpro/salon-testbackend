@@ -49,6 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var dbconfig_1 = require("../../../app/config/dbconfig");
 var user_entity_1 = require("./entities/user.entity");
+var usermenufeaturemap_entity_1 = require("../features/entities/usermenufeaturemap.entity");
 var repository = function () { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, repo, find, findOne, findOneById, create, updateById, deleteById, createAll, createBulk;
     return __generator(this, function (_a) {
@@ -130,27 +131,44 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                     });
                 }); };
                 updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-                    var respo, error_5;
+                    var dataSource_1, respo_1, error_5;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 3, , 4]);
+                                _a.trys.push([0, 4, , 5]);
+                                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+                            case 1:
+                                dataSource_1 = _a.sent();
                                 return [4 /*yield*/, repo.findOneBy({
                                         id: id,
                                     })];
-                            case 1:
-                                respo = _a.sent();
-                                if (!respo) {
+                            case 2:
+                                respo_1 = _a.sent();
+                                if (!respo_1) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
-                                return [4 /*yield*/, repo.save(__assign(__assign({}, respo), data))];
-                            case 2:
-                                _a.sent();
-                                return [3 /*break*/, 4];
+                                return [4 /*yield*/, dataSource_1.manager.transaction("SERIALIZABLE", function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
+                                        return __generator(this, function (_a) {
+                                            switch (_a.label) {
+                                                case 0: return [4 /*yield*/, transactionalEntityManager.save(user_entity_1.Users, __assign(__assign({}, respo_1), data))];
+                                                case 1:
+                                                    _a.sent();
+                                                    //2. update items availability
+                                                    return [4 /*yield*/, transactionalEntityManager.save(usermenufeaturemap_entity_1.UserMenusAndFeatures, data.userMenusAndFeatures ? data.userMenusAndFeatures : [])];
+                                                case 2:
+                                                    //2. update items availability
+                                                    _a.sent();
+                                                    return [2 /*return*/];
+                                            }
+                                        });
+                                    }); })];
                             case 3:
+                                _a.sent();
+                                return [3 /*break*/, 5];
+                            case 4:
                                 error_5 = _a.sent();
                                 throw error_5;
-                            case 4: return [2 /*return*/];
+                            case 5: return [2 /*return*/];
                         }
                     });
                 }); };

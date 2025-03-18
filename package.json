@@ -8,7 +8,8 @@
     "build": "tsc",
     "prestart": "npm run build",
     "copy-ejs": "copyfiles -f -u 1 'src/templates/**/*.ejs' dist/templates",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "dev": "nodemon dist/index.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,9 +17,11 @@
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
     "bcryptjs": "^2.4.3",
+    "cloudinary": "^2.6.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
+    "exceljs": "^4.4.0",
     "express": "^4.19.2",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.0",
@@ -37,6 +40,7 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.5.4",
     "@types/nodemailer": "^6.4.16",
-    "copyfiles": "^2.4.1"
+    "copyfiles": "^2.4.1",
+    "nodemon": "^3.1.9"
   }
 }

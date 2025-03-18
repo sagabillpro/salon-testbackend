@@ -51,7 +51,7 @@ var dbconfig_1 = require("../../../app/config/dbconfig");
 var services_entity_1 = require("./entities/services.entity");
 var item_stocks_entity_1 = require("../sale-items/entities/item-stocks.entity");
 var repository = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, repo, find, findOne, findOneById, create, updateById, deleteById, createAll, createBulk;
+    var dataSource, repo, find, findOne, findOneById, create, updateById, deleteById, createAll;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];
@@ -162,11 +162,12 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                     });
                 }); };
                 updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-                    var respo, error_5;
+                    var finalRespo, respo, error_5;
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
                                 _a.trys.push([0, 3, , 4]);
+                                finalRespo = new services_entity_1.Services();
                                 return [4 /*yield*/, repo.findOneBy({
                                         id: id,
                                     })];
@@ -177,8 +178,8 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 }
                                 return [4 /*yield*/, repo.save(__assign(__assign({}, respo), data))];
                             case 2:
-                                _a.sent();
-                                return [3 /*break*/, 4];
+                                finalRespo = _a.sent();
+                                return [2 /*return*/, finalRespo];
                             case 3:
                                 error_5 = _a.sent();
                                 throw error_5;
@@ -200,7 +201,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
-                                return [4 /*yield*/, repo.remove(respo)];
+                                return [4 /*yield*/, repo.softRemove(respo)];
                             case 2:
                                 _a.sent();
                                 return [3 /*break*/, 4];
@@ -229,31 +230,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                         }
                     });
                 }); };
-                createBulk = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-                    var respo, error_8;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                _a.trys.push([0, 3, , 4]);
-                                respo = repo.create(data);
-                                return [4 /*yield*/, repo.save(respo)];
-                            case 1:
-                                _a.sent();
-                                return [4 /*yield*/, dataSource.transaction(function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
-                                        return __generator(this, function (_a) {
-                                            return [2 /*return*/];
-                                        });
-                                    }); })];
-                            case 2:
-                                _a.sent();
-                                return [2 /*return*/, respo];
-                            case 3:
-                                error_8 = _a.sent();
-                                throw error_8;
-                            case 4: return [2 /*return*/];
-                        }
-                    });
-                }); };
+                //6. create multiple records
                 return [2 /*return*/, {
                         find: find,
                         findOne: findOne,

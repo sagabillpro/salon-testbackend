@@ -15,12 +15,17 @@ var sale_header_entity_1 = require("./sale-header.entity");
 var services_entity_1 = require("../../services/entities/services.entity");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var SaleLines = /** @class */ (function () {
+    //@Unique(["recordId", "id"])
     function SaleLines() {
     }
     __decorate([
         (0, typeorm_1.PrimaryGeneratedColumn)({ type: "int" }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "id", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "txnHeaderId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return sale_header_entity_1.SaleHeaders; }, {
             onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
@@ -29,12 +34,20 @@ var SaleLines = /** @class */ (function () {
         __metadata("design:type", sale_header_entity_1.SaleHeaders)
     ], SaleLines.prototype, "txnHeader", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "serviceId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return services_entity_1.Services; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", services_entity_1.Services)
     ], SaleLines.prototype, "service", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "taxId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", taxes_entity_1.Taxes)
     ], SaleLines.prototype, "tax", void 0);
@@ -43,27 +56,27 @@ var SaleLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleLines.prototype, "quantity", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "rate", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "costPrice", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "decimal", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "unitPrice", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "amount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "discountAmount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "taxAmount", void 0);
     __decorate([
@@ -74,23 +87,24 @@ var SaleLines = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], SaleLines.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0 }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "isInactive", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0, nullable: false }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "isService", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], SaleLines.prototype, "deletedAt", void 0);
     SaleLines = __decorate([
         (0, typeorm_1.Entity)("sale_lines")
+        //@Unique(["recordId", "id"])
     ], SaleLines);
     return SaleLines;
 }());
 exports.SaleLines = SaleLines;
-// const data: SaleLines = {
-//   amount: 11,
-//   createdDate: "",
-//   discountAmount: 3,
-//   id: "new1732509039842ci28gux",
-//   modifiedDate: "",
-//   quantity: 1,
-//   rate: 12,
-//   service: { id: 5, name: "Trimming" },
-//   tax: { id: 1, percentage: 18 },
-//   taxAmount: 2,
-//   txnHeader: { id: 0 },
-// };
 //# sourceMappingURL=sale-lines.enity.js.map

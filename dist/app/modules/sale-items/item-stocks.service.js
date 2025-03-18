@@ -64,8 +64,10 @@ var create = function (inventory, itemIds) { return __awaiter(void 0, void 0, vo
                 resultItemStock_1 = [];
                 return [4 /*yield*/, itemAvailableRepo.find({
                         where: {
+                            isInactive: 0,
                             service: {
                                 id: (0, typeorm_1.In)(itemIds),
+                                isInactive: 0,
                             },
                         },
                         relations: {
@@ -75,8 +77,10 @@ var create = function (inventory, itemIds) { return __awaiter(void 0, void 0, vo
             case 2:
                 itemStocks_1 = _a.sent();
                 inventory.forEach(function (element) {
+                    console.log("itemStocks", itemStocks_1);
+                    console.log("element", element);
                     //check if element item present in stock
-                    var foundStockRecord = itemStocks_1.find(function (data) { return data.service.id === element.service.id; });
+                    var foundStockRecord = itemStocks_1.find(function (data) { return data.service.id === element.serviceId; });
                     //if present then update the stock to new stock increament
                     if (foundStockRecord) {
                         resultItemStock_1.push(__assign(__assign({}, foundStockRecord), { quantity: Number(foundStockRecord.quantity + element.quantity) }));
@@ -129,11 +133,12 @@ var createBulk = function (inventory, itemIds) { return __awaiter(void 0, void 0
                     }
                     // if not then add new record in itemStocks and assign vlue
                     else {
-                        resultItemStock_2.push({
-                            quantity: element.quantity,
-                            modifiedDate: element.modifiedDate,
-                            service: element.service,
-                        });
+                        // resultItemStock.push({
+                        //   // quantity: element.quantity,
+                        //   // modifiedDate: element.modifiedDate,
+                        //   // serviceId: element.service.id,
+                        //   // serviceRecordId: element.service.recordId,
+                        // });
                     }
                 });
                 return [2 /*return*/, resultItemStock_2];

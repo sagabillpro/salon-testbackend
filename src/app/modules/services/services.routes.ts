@@ -6,14 +6,17 @@ import getQuery from "../../utils/get-query.util";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import { Services } from "./entities/services.entity";
 import service from "./services.service"
+import authenticateToken from "../../middlewares/authenticate.middleware";
+import getQuerySecure from "../../utils/get-query-secure.util";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(Services),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await service.find(await getQuery(req, Services));
+      const result = await service.find(await getQuerySecure(req, Services));
       res.send(result);
     } catch (error) {
       next(error);
@@ -23,6 +26,7 @@ router.get(
 
 router.post(
   "/",
+  authenticateToken,
   validateRequestBody(Services),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -36,6 +40,7 @@ router.post(
 
 router.get(
   "/:id",
+  authenticateToken,
   validateFilter(Services),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -53,6 +58,7 @@ router.get(
 
 router.put(
   "/:id",
+  authenticateToken,
   validateRequestBody(Services),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -67,6 +73,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);

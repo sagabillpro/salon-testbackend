@@ -54,6 +54,7 @@ const repository = async () => {
     try {
       //
       let respo = new Services();
+
       if (!data.isService) {
         const itv = new ItemAvailable();
         itv.modifiedDate = data.modifiedDate;
@@ -99,16 +100,15 @@ const repository = async () => {
   //4. update single records
   const updateById = async (id: number, data: Services) => {
     try {
+      let finalRespo = new Services();
       const respo = await repo.findOneBy({
         id: id,
       });
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      await repo.save({
-        ...respo,
-        ...data,
-      });
+      finalRespo = await repo.save({ ...respo, ...data });
+      return finalRespo;
     } catch (error) {
       throw error;
     }
@@ -123,7 +123,7 @@ const repository = async () => {
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
-      await repo.remove(respo);
+      await repo.softRemove(respo);
     } catch (error) {
       throw error;
     }
@@ -140,20 +140,6 @@ const repository = async () => {
     }
   };
   //6. create multiple records
-  const createBulk = async (data: Services[]) => {
-    try {
-      const respo = repo.create(data);
-      await repo.save(respo);
-      await dataSource.transaction(async (transactionalEntityManager) => {
-        // execute queries using transactionalEntityManager
-        // 1. generate header entry code
-        //2. update or add main header based on id
-      });
-      return respo;
-    } catch (error) {
-      throw error;
-    }
-  };
   return {
     find,
     findOne,

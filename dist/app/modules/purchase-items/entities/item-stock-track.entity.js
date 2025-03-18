@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ItemsStockTrack = void 0;
 var typeorm_1 = require("typeorm");
 var services_entity_1 = require("../../services/entities/services.entity");
+var purchase_headers_entity_1 = require("./purchase-headers.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var ItemsStockTrack = /** @class */ (function () {
     function ItemsStockTrack() {
     }
@@ -20,10 +22,25 @@ var ItemsStockTrack = /** @class */ (function () {
         __metadata("design:type", Number)
     ], ItemsStockTrack.prototype, "id", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], ItemsStockTrack.prototype, "serviceId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return services_entity_1.Services; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", services_entity_1.Services)
     ], ItemsStockTrack.prototype, "service", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], ItemsStockTrack.prototype, "txnHeaderId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return purchase_headers_entity_1.PurchaseHeaders; }, {
+            onDelete: "CASCADE", // Automatically remove this line when the sale header is deleted
+        }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", purchase_headers_entity_1.PurchaseHeaders)
+    ], ItemsStockTrack.prototype, "txnHeader", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "decimal", nullable: true }),
         __metadata("design:type", Number)
@@ -48,6 +65,19 @@ var ItemsStockTrack = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], ItemsStockTrack.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], ItemsStockTrack.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], ItemsStockTrack.prototype, "company", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0 }),
+        __metadata("design:type", Number)
+    ], ItemsStockTrack.prototype, "isInactive", void 0);
     ItemsStockTrack = __decorate([
         (0, typeorm_1.Entity)("items_stock_track")
     ], ItemsStockTrack);

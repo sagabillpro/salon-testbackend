@@ -16,6 +16,7 @@ var entities_1 = require("../../general-data/entities");
 var purchase_lines_entity_1 = require("./purchase-lines.entity");
 var inventory_lines_entity_1 = require("../../sale-items/entities/inventory-lines.entity");
 var contact_entity_1 = require("../../contacts/entities/contact.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var PurchaseHeaders = /** @class */ (function () {
     function PurchaseHeaders() {
     }
@@ -40,20 +41,46 @@ var PurchaseHeaders = /** @class */ (function () {
         __metadata("design:type", String)
     ], PurchaseHeaders.prototype, "saleInvoiceNumber", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return contact_entity_1.Contact; }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], PurchaseHeaders.prototype, "company", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "supplierId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return contact_entity_1.Contact; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", contact_entity_1.Contact)
     ], PurchaseHeaders.prototype, "supplier", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "userId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
     ], PurchaseHeaders.prototype, "user", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "paymentTypeId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DPaymentType; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DPaymentType)
     ], PurchaseHeaders.prototype, "paymentType", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.DTransactionStatus; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", entities_1.DTransactionStatus)
+    ], PurchaseHeaders.prototype, "transactionStatus", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
@@ -92,6 +119,29 @@ var PurchaseHeaders = /** @class */ (function () {
         }),
         __metadata("design:type", Array)
     ], PurchaseHeaders.prototype, "inventoryLines", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], PurchaseHeaders.prototype, "createdBy", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], PurchaseHeaders.prototype, "modifiedBy", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0 }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "isInactive", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], PurchaseHeaders.prototype, "deletedAt", void 0);
+    __decorate([
+        (0, typeorm_1.VersionColumn)({ nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "version", void 0);
     PurchaseHeaders = __decorate([
         (0, typeorm_1.Entity)("purchase_headers")
     ], PurchaseHeaders);

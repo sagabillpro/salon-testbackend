@@ -8,6 +8,10 @@ import {
   JoinColumn,
   OneToOne,
   ManyToOne,
+  DeleteDateColumn,
+  BeforeInsert,
+  Unique,
+  VersionColumn,
 } from "typeorm";
 import {
   City,
@@ -15,6 +19,10 @@ import {
   DContactType,
   States,
 } from "../../general-data/entities";
+import { handler } from "../../../config/dbconfig";
+import { Branch } from "../../branches/entities/branches.entity";
+import { Users } from "../../auth/entities/user.entity";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("contacts")
 export class Contact {
@@ -26,6 +34,12 @@ export class Contact {
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
 
   @ManyToOne(() => States, { nullable: true })
   @JoinColumn()
@@ -38,7 +52,9 @@ export class Contact {
   @ManyToOne(() => City, { nullable: true })
   @JoinColumn()
   city: City;
-
+  
+  @Column({ type: "int", nullable: true })
+  contactTypeId: number;
   @ManyToOne(() => DContactType, { nullable: false })
   @JoinColumn()
   contactType: DContactType;
@@ -52,6 +68,12 @@ export class Contact {
   @CreateDateColumn({ type: "varchar", nullable: true })
   email: string;
 
+  @Column({ type: "varchar", nullable: true })
+  address: string;
+
+  @Column({ type: "varchar", nullable: true })
+  zipCode: string;
+
   @Column({ type: "int", default: 0 })
   isInactive: number;
 
@@ -63,4 +85,18 @@ export class Contact {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+
+  @VersionColumn()
+  version: number;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  createdBy: Users;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  modifiedBy: Users;
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
 }

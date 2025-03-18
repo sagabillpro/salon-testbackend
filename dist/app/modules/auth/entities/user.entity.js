@@ -12,6 +12,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.Users = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
+var usermenufeaturemap_entity_1 = require("../../features/entities/usermenufeaturemap.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var Users = /** @class */ (function () {
     function Users() {
     }
@@ -32,14 +34,27 @@ var Users = /** @class */ (function () {
         __metadata("design:type", String)
     ], Users.prototype, "userName", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
     ], Users.prototype, "password", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.DUserType; }),
+        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "userTypeId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.DUserType; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DUserType)
     ], Users.prototype, "userType", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], Users.prototype, "company", void 0);
     __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: true }),
         __metadata("design:type", String)
@@ -64,6 +79,21 @@ var Users = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], Users.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.OneToMany)(function () { return usermenufeaturemap_entity_1.UserMenusAndFeatures; }, function (line) { return line.user; }, {
+            onDelete: "CASCADE",
+        }),
+        __metadata("design:type", Array)
+    ], Users.prototype, "userMenusAndFeatures", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], Users.prototype, "deletedAt", void 0);
+    __decorate([
+        (0, typeorm_1.VersionColumn)({ nullable: true }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "version", void 0);
     Users = __decorate([
         (0, typeorm_1.Entity)("users")
     ], Users);

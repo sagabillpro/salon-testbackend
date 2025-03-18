@@ -46,16 +46,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __rest = (this && this.__rest) || function (s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var typeorm_1 = require("typeorm");
 var get_object_code_util_1 = require("../../utils/get-object-code.util");
 var dbconfig_1 = require("../../config/dbconfig");
 var entities_1 = require("../general-data/entities");
 var user_repo_1 = __importDefault(require("./user.repo"));
+var user_entity_1 = require("./entities/user.entity");
 var services_1 = require("../../services");
 var user_sessions_entity_1 = require("./entities/user-sessions.entity");
+var usermenufeaturemap_entity_1 = require("../features/entities/usermenufeaturemap.entity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -137,13 +151,158 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
         }
     });
 }); };
-//4. update single record by id
-var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, userTypeRepo, userType, repo, respo, error_4;
+//4. create record in bulk
+var createBulk = function (data) { return __awaiter(void 0, void 0, void 0, function () {
+    var response_1, dataSource, repo_1, respo, respo, userTypeRepo, userMenusAndFeaturesRepo, userType_1, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 9, , 10]);
+                response_1 = new user_entity_1.Users();
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _a.sent();
+                return [4 /*yield*/, (0, user_repo_1.default)()];
+            case 2:
+                repo_1 = _a.sent();
+                if (!data.id) return [3 /*break*/, 4];
+                return [4 /*yield*/, repo_1.find({
+                        where: {
+                            userName: data.userName,
+                            id: (0, typeorm_1.Not)(data.id),
+                        },
+                    })];
+            case 3:
+                respo = _a.sent();
+                // 4. If user already exists, throw an error with status code 409 (Conflict)
+                if (respo.length) {
+                    throw {
+                        message: "User with this user name already exists.",
+                        statusCode: 409,
+                    };
+                }
+                return [3 /*break*/, 6];
+            case 4: return [4 /*yield*/, repo_1.find({
+                    where: {
+                        userName: data.userName,
+                    },
+                })];
+            case 5:
+                respo = _a.sent();
+                // 4. If user already exists, throw an error with status code 409 (Conflict)
+                if (respo.length) {
+                    throw {
+                        message: "User with this user name already exists.",
+                        statusCode: 409,
+                    };
+                }
+                _a.label = 6;
+            case 6:
+                userTypeRepo = dataSource.getRepository(entities_1.DUserType);
+                userMenusAndFeaturesRepo = dataSource.getRepository(usermenufeaturemap_entity_1.UserMenusAndFeatures);
+                return [4 /*yield*/, userTypeRepo.findOne({
+                        where: {
+                            id: data.userTypeId,
+                        },
+                    })];
+            case 7:
+                userType_1 = _a.sent();
+                // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
+                if (!userType_1) {
+                    throw {
+                        message: "Record not found with id: " + data.userType.id,
+                        statusCode: 404,
+                    };
+                }
+                // 8. Start a database transaction with SERIALIZABLE isolation level
+                return [4 /*yield*/, dataSource.manager.transaction("SERIALIZABLE", function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
+                        var hashedPassword, userMenusAndFeatures, headerWithoutLines, currentUser, userMenusAndFeaturesNew;
+                        return __generator(this, function (_a) {
+                            switch (_a.label) {
+                                case 0:
+                                    if (!!data.id) return [3 /*break*/, 2];
+                                    return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(18, data)];
+                                case 1:
+                                    data = _a.sent();
+                                    _a.label = 2;
+                                case 2:
+                                    hashedPassword = "";
+                                    if (!!data.id) return [3 /*break*/, 4];
+                                    return [4 /*yield*/, (0, services_1.hashPassword)(data.password)];
+                                case 3:
+                                    hashedPassword = _a.sent();
+                                    _a.label = 4;
+                                case 4:
+                                    userMenusAndFeatures = data.userMenusAndFeatures, headerWithoutLines = __rest(data, ["userMenusAndFeatures"]);
+                                    if (!!data.id) return [3 /*break*/, 5];
+                                    headerWithoutLines = transactionalEntityManager.create(user_entity_1.Users, __assign(__assign({}, headerWithoutLines), { password: hashedPassword, userType: userType_1 }));
+                                    return [3 /*break*/, 9];
+                                case 5: return [4 /*yield*/, repo_1.findOne({
+                                        where: {
+                                            id: data.id,
+                                        },
+                                    })];
+                                case 6:
+                                    currentUser = _a.sent();
+                                    // 7. If userType ID is invalid, throw an error with status code 404 (Not Found)
+                                    if (!currentUser) {
+                                        throw {
+                                            message: "Record not found with id: " + data.id,
+                                            statusCode: 404,
+                                        };
+                                    }
+                                    if (!(data.password != "")) return [3 /*break*/, 8];
+                                    return [4 /*yield*/, (0, services_1.hashPassword)(data.password)];
+                                case 7:
+                                    hashedPassword = _a.sent();
+                                    _a.label = 8;
+                                case 8:
+                                    headerWithoutLines = __assign(__assign({}, headerWithoutLines), (data.password != ""
+                                        ? { password: hashedPassword }
+                                        : { password: currentUser.password }));
+                                    _a.label = 9;
+                                case 9:
+                                    userMenusAndFeaturesNew = [];
+                                    return [4 /*yield*/, transactionalEntityManager.save(user_entity_1.Users, headerWithoutLines)];
+                                case 10:
+                                    response_1 = _a.sent();
+                                    // 13. Iterate over userMenusAndFeatures data and create instances
+                                    userMenusAndFeatures === null || userMenusAndFeatures === void 0 ? void 0 : userMenusAndFeatures.forEach(function (value, index) {
+                                        var userMenusAndFeaturesInstance = new usermenufeaturemap_entity_1.UserMenusAndFeatures();
+                                        userMenusAndFeaturesInstance = __assign(__assign({}, value), { userId: response_1.id });
+                                        userMenusAndFeaturesNew.push(userMenusAndFeaturesInstance);
+                                    });
+                                    // 14. Assign the userMenusAndFeatures array to the user entry
+                                    // 15. Save the new user entry into the database
+                                    return [4 /*yield*/, transactionalEntityManager.save(usermenufeaturemap_entity_1.UserMenusAndFeatures, userMenusAndFeaturesNew ? userMenusAndFeaturesNew : [])];
+                                case 11:
+                                    // 14. Assign the userMenusAndFeatures array to the user entry
+                                    // 15. Save the new user entry into the database
+                                    _a.sent();
+                                    return [2 /*return*/];
+                            }
+                        });
+                    }); })];
+            case 8:
+                // 8. Start a database transaction with SERIALIZABLE isolation level
+                _a.sent();
+                // 16. Return the created user data
+                return [2 /*return*/, data];
+            case 9:
+                error_4 = _a.sent();
+                // 17. Throw the error to be handled by the caller
+                throw error_4;
+            case 10: return [2 /*return*/];
+        }
+    });
+}); };
+//4. update single record by id
+var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, userTypeRepo, userType, repo, respo, error_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 4, , 5]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
@@ -164,21 +323,18 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 return [4 /*yield*/, (0, user_repo_1.default)()];
             case 3:
                 repo = _a.sent();
-                return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(14, data)];
-            case 4:
-                data = _a.sent();
                 respo = repo.updateById(id, __assign(__assign({}, data), { userType: userType }));
                 return [2 /*return*/, respo];
-            case 5:
-                error_4 = _a.sent();
-                throw error_4;
-            case 6: return [2 /*return*/];
+            case 4:
+                error_5 = _a.sent();
+                throw error_5;
+            case 5: return [2 /*return*/];
         }
     });
 }); };
 //5. delete single record by id
 var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, function () {
-    var repo, error_5;
+    var repo, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -191,8 +347,8 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
                 _a.sent();
                 return [3 /*break*/, 4];
             case 3:
-                error_5 = _a.sent();
-                throw error_5;
+                error_6 = _a.sent();
+                throw error_6;
             case 4: return [2 /*return*/];
         }
     });
@@ -226,12 +382,14 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                 if (!verfied) return [3 /*break*/, 6];
                 accessToken = (0, services_1.generateAccessToken)({
                     userId: foundUser.id,
+                    companyId: foundUser.companyId,
                     userName: foundUser.userName,
                     email: foundUser.email,
                     userType: foundUser.userType,
                 });
                 refreshTokenToken = (0, services_1.generateRefreshToken)({
                     userId: foundUser.id,
+                    companyId: foundUser.companyId,
                     userName: foundUser.userName,
                     email: foundUser.email,
                     userType: foundUser.userType,
@@ -277,9 +435,9 @@ var logout = function (data) { return __awaiter(void 0, void 0, void 0, function
                             token: data.token,
                             isInactive: 0,
                             user: {
-                                id: userData === null || userData === void 0 ? void 0 : userData.userId
-                            }
-                        }
+                                id: userData === null || userData === void 0 ? void 0 : userData.userId,
+                            },
+                        },
                     })];
             case 2:
                 foundSession = _a.sent();
@@ -290,7 +448,10 @@ var logout = function (data) { return __awaiter(void 0, void 0, void 0, function
                 //make session inactive
                 _a.sent();
                 return [2 /*return*/, { status: 200, message: "user logged out succesfully..." }];
-            case 4: throw { message: "Active Session not found for this user", statusCode: 404 };
+            case 4: throw {
+                message: "Active Session not found for this user",
+                statusCode: 404,
+            };
             case 5: return [3 /*break*/, 7];
             case 6:
                 err_1 = _a.sent();
@@ -317,15 +478,16 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
                             token: data.token,
                             isInactive: 0,
                             user: {
-                                id: userData === null || userData === void 0 ? void 0 : userData.userId
-                            }
-                        }
+                                id: userData === null || userData === void 0 ? void 0 : userData.userId,
+                            },
+                        },
                     })];
             case 2:
                 foundSession = _a.sent();
                 if (foundSession) {
                     accessToken = (0, services_1.generateAccessToken)({
                         userId: userData.userId,
+                        companyId: userData.companyId,
                         userName: userData.userName,
                         email: userData.email,
                         userType: userData.userType,
@@ -333,7 +495,10 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
                     return [2 /*return*/, { accessToken: accessToken }];
                 }
                 else {
-                    throw { message: "Active Session not found for this user", statusCode: 404 };
+                    throw {
+                        message: "Active Session not found for this user",
+                        statusCode: 404,
+                    };
                 }
                 _a.label = 3;
             case 3: return [3 /*break*/, 5];
@@ -341,6 +506,29 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
                 err_2 = _a.sent();
                 throw err_2;
             case 5: return [2 /*return*/];
+        }
+    });
+}); };
+//6. user login
+var decodedToken = function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var authHeader, token, userData, err_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                authHeader = req.headers["authorization"];
+                token = authHeader && authHeader.split(" ")[1];
+                if (!token) {
+                    return [2 /*return*/, res.status(401).json({ message: "Access Token Required" })];
+                }
+                return [4 /*yield*/, (0, services_1.verifyToken)(token)];
+            case 1:
+                userData = _a.sent();
+                return [2 /*return*/, userData];
+            case 2:
+                err_3 = _a.sent();
+                throw err_3;
+            case 3: return [2 /*return*/];
         }
     });
 }); };
@@ -353,5 +541,7 @@ exports.default = {
     login: login,
     generateNewAccessToken: generateNewAccessToken,
     logout: logout,
+    createBulk: createBulk,
+    decodedToken: decodedToken,
 };
 //# sourceMappingURL=user.service.js.map

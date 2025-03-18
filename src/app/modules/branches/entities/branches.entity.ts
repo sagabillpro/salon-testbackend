@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
   ManyToOne,
   JoinColumn,
+  DeleteDateColumn,
 } from "typeorm";
 import { Country, States, City } from "../../general-data/entities";
 import { Company } from "../../company/entities/company.entity";
@@ -14,17 +15,18 @@ import { Company } from "../../company/entities/company.entity";
 export class Branch {
   @PrimaryGeneratedColumn({ type: "int" })
   id: number;
-  @Column({ type: "varchar", length: 255, nullable: true, unique: true })
-  code: string;
-  
+
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
 
   @Column({ type: "varchar", length: 100, nullable: false, unique: true })
   branchCode: string;
 
-  @ManyToOne(() => Company, { nullable: false, onDelete: "CASCADE" })
-  @JoinColumn({ name: "companyId" })
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
+  @ManyToOne(() => Company)
+  @JoinColumn()
   company: Company;
 
   @Column({ type: "varchar", length: 255, nullable: true })
@@ -62,4 +64,7 @@ export class Branch {
 
   @UpdateDateColumn({ type: "timestamp" })
   modifiedDate: Date;
+
+  @DeleteDateColumn({ nullable: true })
+  deletedAt?: Date;
 }

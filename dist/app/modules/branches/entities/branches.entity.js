@@ -21,10 +21,6 @@ var Branch = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Branch.prototype, "id", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, unique: true }),
-        __metadata("design:type", String)
-    ], Branch.prototype, "code", void 0);
-    __decorate([
         (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false }),
         __metadata("design:type", String)
     ], Branch.prototype, "name", void 0);
@@ -33,8 +29,12 @@ var Branch = /** @class */ (function () {
         __metadata("design:type", String)
     ], Branch.prototype, "branchCode", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: false, onDelete: "CASCADE" }),
-        (0, typeorm_1.JoinColumn)({ name: "companyId" }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Branch.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }),
+        (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", company_entity_1.Company)
     ], Branch.prototype, "company", void 0);
     __decorate([
@@ -84,6 +84,10 @@ var Branch = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "timestamp" }),
         __metadata("design:type", Date)
     ], Branch.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)({ nullable: true }),
+        __metadata("design:type", Date)
+    ], Branch.prototype, "deletedAt", void 0);
     Branch = __decorate([
         (0, typeorm_1.Entity)("branches")
     ], Branch);

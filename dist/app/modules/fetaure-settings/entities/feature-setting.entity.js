@@ -45,10 +45,18 @@ var FeatureSettings = /** @class */ (function () {
         __metadata("design:type", Number)
     ], FeatureSettings.prototype, "order", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], FeatureSettings.prototype, "menuId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.Menus; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.Menus)
     ], FeatureSettings.prototype, "menu", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], FeatureSettings.prototype, "featureTypeId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DFeatureType; }),
         (0, typeorm_1.JoinColumn)(),
@@ -63,6 +71,10 @@ var FeatureSettings = /** @class */ (function () {
         __metadata("design:type", Number)
     ], FeatureSettings.prototype, "isInactive", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", default: 0, nullable: true }),
+        __metadata("design:type", Number)
+    ], FeatureSettings.prototype, "isAddOnlyAdmin", void 0);
+    __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], FeatureSettings.prototype, "createdDate", void 0);
@@ -71,10 +83,7 @@ var FeatureSettings = /** @class */ (function () {
         __metadata("design:type", String)
     ], FeatureSettings.prototype, "modifiedDate", void 0);
     __decorate([
-        (0, typeorm_1.OneToMany)(function () { return menusandfeatures_entity_1.MenusAndFeatures; }, function (line) { return line.entity; }, {
-            cascade: true,
-            onDelete: "CASCADE",
-        }),
+        (0, typeorm_1.OneToMany)(function () { return menusandfeatures_entity_1.MenusAndFeatures; }, function (line) { return line.entity; }, {}),
         __metadata("design:type", Array)
     ], FeatureSettings.prototype, "menusAndFeatures", void 0);
     FeatureSettings = __decorate([

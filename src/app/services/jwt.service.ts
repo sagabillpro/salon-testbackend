@@ -7,6 +7,7 @@ dotenv.config({ path: path.join(__dirname, "../../.env") });
 // 1. Generate Access Token
 export function generateAccessToken(payload: {
   userId: number,
+  companyId:number,
   userName: string;
   email: string;
   userType: {
@@ -23,6 +24,7 @@ export function generateAccessToken(payload: {
 export function generateRefreshToken(payload: {
   userName: string;
   userId: number,
+  companyId:number,
   email: string;
   userType: {
     id: number;

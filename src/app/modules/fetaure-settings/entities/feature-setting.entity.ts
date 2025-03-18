@@ -35,9 +35,15 @@ export class FeatureSettings {
   @Column({ type: "int", nullable: true })
   order: number;
 
+  @Column({ type: "int", nullable: true })
+  menuId: number;
+
   @ManyToOne(() => Menus)
   @JoinColumn()
   menu: Menus;
+
+  @Column({ type: "int", nullable: true })
+  featureTypeId: number;
 
   @ManyToOne(() => DFeatureType)
   @JoinColumn()
@@ -49,6 +55,9 @@ export class FeatureSettings {
   @Column({ type: "int", default: 0, nullable: true })
   isInactive: number;
 
+  @Column({ type: "int", default: 0, nullable: true })
+  isAddOnlyAdmin: number;
+
   @CreateDateColumn({ type: "varchar", nullable: false })
   createdDate: string;
 
@@ -56,8 +65,7 @@ export class FeatureSettings {
   modifiedDate: string;
 
   @OneToMany(() => MenusAndFeatures, (line) => line.entity, {
-    cascade: true,
-    onDelete: "CASCADE",
+
   })
   menusAndFeatures: MenusAndFeatures[];
 }

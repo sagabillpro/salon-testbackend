@@ -27,6 +27,8 @@ var company_routes_1 = __importDefault(require("../modules/company/company.route
 var features_routes_1 = __importDefault(require("../modules/features/features.routes"));
 var role_routes_1 = __importDefault(require("../modules/roles/role.routes"));
 var usermenufeaturemap_route_1 = __importDefault(require("../modules/features/usermenufeaturemap.route"));
+var history_route_1 = __importDefault(require("../history/history.route"));
+var stock_adjustment_headers_routes_1 = __importDefault(require("../modules/stock-adjustment/stock-adjustment-headers.routes"));
 exports.routes = [
     items_routes_1.default,
     general_data_route_1.default,
@@ -50,6 +52,8 @@ exports.routes = [
     company_routes_1.default,
     features_routes_1.default,
     role_routes_1.default,
-    usermenufeaturemap_route_1.default
+    usermenufeaturemap_route_1.default,
+    history_route_1.default,
+    stock_adjustment_headers_routes_1.default
 ];
 //# sourceMappingURL=routes.data.js.map

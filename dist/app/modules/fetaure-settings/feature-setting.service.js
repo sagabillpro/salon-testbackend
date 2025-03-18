@@ -144,53 +144,25 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
 }); };
 //4. update single record by id
 var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, featureTypeRepo, menuRepo, ftype, menu, repo, error_4;
+    var dataSource, repo, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 6, , 7]);
+                _a.trys.push([0, 4, , 5]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
-                featureTypeRepo = dataSource.getRepository(entities_1.DFeatureType);
-                menuRepo = dataSource.getRepository(entities_1.Menus);
-                return [4 /*yield*/, featureTypeRepo.findOne({
-                        where: {
-                            id: data.featureType.id,
-                        },
-                    })];
-            case 2:
-                ftype = _a.sent();
-                return [4 /*yield*/, menuRepo.findOne({
-                        where: {
-                            id: data.menu.id,
-                        },
-                    })];
-            case 3:
-                menu = _a.sent();
-                if (!menu) {
-                    throw {
-                        message: "Record not found with id: " + data.menu.id,
-                        statusCode: 404,
-                    };
-                }
-                if (!ftype) {
-                    throw {
-                        message: "Record not found with id: " + data.featureType.id,
-                        statusCode: 404,
-                    };
-                }
                 return [4 /*yield*/, (0, feature_setting_repo_1.default)()];
-            case 4:
+            case 2:
                 repo = _a.sent();
-                return [4 /*yield*/, repo.updateById(id, __assign(__assign({}, data), { featureType: ftype, menu: menu }))];
-            case 5:
+                return [4 /*yield*/, repo.updateById(id, __assign({}, data))];
+            case 3:
                 _a.sent();
-                return [3 /*break*/, 7];
-            case 6:
+                return [3 /*break*/, 5];
+            case 4:
                 error_4 = _a.sent();
                 throw error_4;
-            case 7: return [2 /*return*/];
+            case 5: return [2 /*return*/];
         }
     });
 }); };

@@ -6,10 +6,12 @@ import getQuery from "../../utils/get-query.util";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import featureSettingService from "./feature-setting.service";
 import { FeatureSettings } from "./entities/feature-setting.entity";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilter(FeatureSettings),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -23,6 +25,7 @@ router.get(
 
 router.post(
   "/",
+    authenticateToken,
   validateRequestBody(FeatureSettings),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -34,7 +37,7 @@ router.post(
   }
 );
 
-router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
+router.get("/:id",   authenticateToken,async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = Number(req.params.id);
     const result = await featureSettingService.findById(id);
@@ -46,6 +49,7 @@ router.get("/:id", async (req: Request, res: Response, next: NextFunction) => {
 
 router.put(
   "/:id",
+  authenticateToken,
   validateRequestBody(FeatureSettings),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -60,6 +64,7 @@ router.put(
 
 router.delete(
   "/:id",
+  authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);

@@ -18,8 +18,10 @@ const create = async (
     //update inventory stocks
     const itemStocks = await itemAvailableRepo.find({
       where: {
+        isInactive: 0,
         service: {
           id: In(itemIds),
+          isInactive: 0,
         },
       },
       relations: {
@@ -28,9 +30,11 @@ const create = async (
     });
 
     inventory.forEach((element) => {
+      console.log("itemStocks",itemStocks);
+      console.log("element",element);
       //check if element item present in stock
       const foundStockRecord = itemStocks.find(
-        (data) => data.service.id === element.service.id
+        (data) => data.service.id === element.serviceId
       );
       //if present then update the stock to new stock increament
       if (foundStockRecord) {
@@ -90,11 +94,12 @@ const createBulk = async (
       }
       // if not then add new record in itemStocks and assign vlue
       else {
-        resultItemStock.push({
-          quantity: element.quantity,
-          modifiedDate: element.modifiedDate,
-          service: element.service,
-        });
+        // resultItemStock.push({
+        //   // quantity: element.quantity,
+        //   // modifiedDate: element.modifiedDate,
+        //   // serviceId: element.service.id,
+        //   // serviceRecordId: element.service.recordId,
+        // });
       }
     });
     return resultItemStock;

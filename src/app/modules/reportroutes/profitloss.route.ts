@@ -6,11 +6,13 @@ import { validateFilter } from "../../utils/validate-filter.util";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { ReportSchema } from "../../schema/report.schema";
 import { validateFilterManual } from "../../utils/validateFilterManual.util";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilterManual(ReportSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

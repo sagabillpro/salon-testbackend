@@ -50,7 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var dbconfig_1 = require("../../../app/config/dbconfig");
 var taxes_entity_1 = require("./entities/taxes.entity");
 var repository = function () { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, repo, find, findOne, findOneById, create, updateById, deleteById, createAll, createBulk;
+    var dataSource, repo, find, findOne, findOneById, create, updateById, deleteById, createAll;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];
@@ -140,15 +140,19 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                     })];
                             case 1:
                                 respo = _a.sent();
+                                // If the record is not found, throw a 404 error
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
+                                // Mark the existing record as inactive
                                 return [4 /*yield*/, repo.save(__assign(__assign({}, respo), data))];
                             case 2:
+                                // Mark the existing record as inactive
                                 _a.sent();
                                 return [3 /*break*/, 4];
                             case 3:
                                 error_5 = _a.sent();
+                                // If an error occurs, throw it to be handled by the caller
                                 throw error_5;
                             case 4: return [2 /*return*/];
                         }
@@ -159,23 +163,27 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
-                                _a.trys.push([0, 3, , 4]);
+                                _a.trys.push([0, 5, , 6]);
                                 return [4 /*yield*/, repo.findOneBy({
                                         id: id,
                                     })];
                             case 1:
                                 respo = _a.sent();
-                                if (!respo) {
-                                    throw { message: "Record not found with id: " + id, statusCode: 404 };
-                                }
-                                return [4 /*yield*/, repo.remove(respo)];
-                            case 2:
-                                _a.sent();
-                                return [3 /*break*/, 4];
+                                if (!!respo) return [3 /*break*/, 2];
+                                throw { message: "Record not found with id: " + id, statusCode: 404 };
+                            case 2: 
+                            // Soft remove the record (mark it as deleted without physically removing it from the database)
+                            return [4 /*yield*/, repo.softRemove(respo)];
                             case 3:
+                                // Soft remove the record (mark it as deleted without physically removing it from the database)
+                                _a.sent();
+                                _a.label = 4;
+                            case 4: return [3 /*break*/, 6];
+                            case 5:
                                 error_6 = _a.sent();
+                                // If an error occurs, throw it to be handled by the caller
                                 throw error_6;
-                            case 4: return [2 /*return*/];
+                            case 6: return [2 /*return*/];
                         }
                     });
                 }); };
@@ -194,31 +202,6 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 error_7 = _a.sent();
                                 throw error_7;
                             case 3: return [2 /*return*/];
-                        }
-                    });
-                }); };
-                createBulk = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-                    var respo, error_8;
-                    return __generator(this, function (_a) {
-                        switch (_a.label) {
-                            case 0:
-                                _a.trys.push([0, 3, , 4]);
-                                respo = repo.create(data);
-                                return [4 /*yield*/, repo.save(respo)];
-                            case 1:
-                                _a.sent();
-                                return [4 /*yield*/, dataSource.transaction(function (transactionalEntityManager) { return __awaiter(void 0, void 0, void 0, function () {
-                                        return __generator(this, function (_a) {
-                                            return [2 /*return*/];
-                                        });
-                                    }); })];
-                            case 2:
-                                _a.sent();
-                                return [2 /*return*/, respo];
-                            case 3:
-                                error_8 = _a.sent();
-                                throw error_8;
-                            case 4: return [2 /*return*/];
                         }
                     });
                 }); };

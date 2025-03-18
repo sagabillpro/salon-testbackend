@@ -9,11 +9,13 @@ import { validateFilterManual } from "../../utils/validateFilterManual.util";
 import { SaleLines } from "../sale-items/entities/sale-lines.enity";
 import { SaleHeaders } from "../sale-items/entities/sale-header.entity";
 import { Services } from "../services/entities/services.entity";
+import authenticateToken from "../../middlewares/authenticate.middleware";
 
 const router = Router();
 
 router.get(
   "/",
+  authenticateToken,
   validateFilterManual(ReportSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {

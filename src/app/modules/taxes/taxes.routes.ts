@@ -6,7 +6,11 @@ import getQuery from "../../utils/get-query.util";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import taxesService from "./taxes.service";
 import { Taxes } from "./entities/taxes.entity";
+// import wkhtmltopdf from "wkhtmltopdf";
+import path from "path";
 const router = Router();
+import ejs from "ejs";
+import { PassThrough, pipeline } from "stream";
 
 router.get(
   "/",
@@ -77,4 +81,21 @@ router.delete(
     }
   }
 );
+//crate route which will upload image to
+
+// router.post("/uploadImage", async (req: Request, res: Response) => {
+//   try {
+//     if (!req.body) {
+//       return res.status(400).send("No files were uploaded.");
+//     }
+//     const { image } = req.body;
+//     const url = await uploadImageToCloudinary(image, "CompanyLogos");
+//     return res.status(200).send({
+//       data: url,
+//     });
+//   } catch (error) {
+//     return res.status(500).send(error.message);
+//   }
+// });
+
 export default new Route("/taxes", router);

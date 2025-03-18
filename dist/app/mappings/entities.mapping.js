@@ -27,6 +27,9 @@ var features_entity_1 = require("../modules/features/entities/features.entity");
 var menusandfeatures_entity_1 = require("../modules/features/entities/menusandfeatures.entity");
 var usermenufeaturemap_entity_1 = require("../modules/features/entities/usermenufeaturemap.entity");
 var role_entity_1 = require("../modules/roles/entities/role.entity");
+var history_entities_1 = require("../history/history-entities");
+var stock_adjustment_headers_entity_1 = require("../modules/stock-adjustment/entities/stock-adjustment-headers.entity");
+var stock_adjustment_lines_entity_1 = require("../modules/stock-adjustment/entities/stock-adjustment-lines.entity");
 exports.entities = [
     items_entity_1.Item,
     item_images_entity_1.ItemImage,
@@ -62,6 +65,15 @@ exports.entities = [
     features_entity_1.Feature,
     menusandfeatures_entity_1.MenusAndFeatures,
     usermenufeaturemap_entity_1.UserMenusAndFeatures,
-    role_entity_1.Role
+    role_entity_1.Role,
+    entities_1.DIndustryType,
+    entities_1.DTransactionStatus,
+    history_entities_1.CompanyHistory,
+    history_entities_1.ContactHistory,
+    history_entities_1.UsersHistory,
+    history_entities_1.ServicesHistory,
+    stock_adjustment_headers_entity_1.StockAdjustmentHeaders,
+    stock_adjustment_lines_entity_1.StockAdjustmentLines
+    // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];
 //# sourceMappingURL=entities.mapping.js.map

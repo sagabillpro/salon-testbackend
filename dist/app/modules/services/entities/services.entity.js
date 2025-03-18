@@ -14,6 +14,8 @@ var typeorm_1 = require("typeorm");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var entities_1 = require("../../general-data/entities");
 var item_stocks_entity_1 = require("../../sale-items/entities/item-stocks.entity");
+var user_entity_1 = require("../../auth/entities/user.entity");
+var company_entity_1 = require("../../company/entities/company.entity");
 var Services = /** @class */ (function () {
     function Services() {
     }
@@ -30,15 +32,36 @@ var Services = /** @class */ (function () {
         __metadata("design:type", String)
     ], Services.prototype, "name", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: false }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "companyId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", company_entity_1.Company)
+    ], Services.prototype, "company", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "taxId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", taxes_entity_1.Taxes)
     ], Services.prototype, "tax", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "itemTypeId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DItemType; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DItemType)
     ], Services.prototype, "itemType", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "inStockId", void 0);
     __decorate([
         (0, typeorm_1.OneToOne)(function () { return item_stocks_entity_1.ItemAvailable; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
@@ -120,6 +143,25 @@ var Services = /** @class */ (function () {
         }),
         __metadata("design:type", Number)
     ], Services.prototype, "rating", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], Services.prototype, "createdBy", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], Services.prototype, "modifiedBy", void 0);
+    __decorate([
+        (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
+        ,
+        __metadata("design:type", Date)
+    ], Services.prototype, "deletedAt", void 0);
+    __decorate([
+        (0, typeorm_1.VersionColumn)({ nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "version", void 0);
     Services = __decorate([
         (0, typeorm_1.Entity)("services")
     ], Services);

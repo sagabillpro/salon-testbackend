@@ -4,6 +4,10 @@ import { DataSource } from "typeorm";
 import dotenv from "dotenv";
 import path from "path";
 import { entities } from "../../mappings/entities.mapping";
+import { CompanySubscriber } from "../../history/event-subscriber/company.subscriber";
+import { ContactSubscriber } from "../../history/event-subscriber/contact.subscriber";
+import { ServicesSubscriber } from "../../history/event-subscriber/services.subscriber";
+import { UsersSubscriber } from "../../history/event-subscriber/user.subscriber";
 
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, "../../.env") });
@@ -19,12 +23,18 @@ const initializeDataSource = async (): Promise<DataSource> => {
       password: process.env.Password,
       database: process.env.Database,
       entities: entities,
+      subscribers: [
+        CompanySubscriber,
+        ContactSubscriber,
+        ServicesSubscriber,
+        UsersSubscriber,
+      ],
       //   entities: [
       //     "../../../src/entities/index/**/*.{ts,js}",
       //     "../../../build/entities/**/*.{ts,js}",
       //   ],
-      synchronize: true,
-      // logging: true,
+     // synchronize: true,
+      /// logging: true,
       ssl: {
         rejectUnauthorized: false, // Disables SSL certificate verification
       },

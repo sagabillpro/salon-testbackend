@@ -57,23 +57,29 @@ const repository = async () => {
     }
   };
 
-  //4. update single records
-  const updateById = async (id: number, data: FeatureSettings) => {
-    try {
-      const respo = await repo.findOneBy({
-        id: id,
-      });
-      if (!respo) {
-        throw { message: "Record not found with id: " + id, statusCode: 404 };
+//4. update single records
+const updateById = async (id: number, data: FeatureSettings) => {
+  try {
+    const respo = await repo.findOne({
+      where: {
+        id: id
+      },
+      relations: {
+        menusAndFeatures: true
       }
-      await repo.save({
-        ...respo,
-        ...data,
-      });
-    } catch (error) {
-      throw error;
+    });
+    data.menusAndFeatures = respo?.menusAndFeatures ? respo?.menusAndFeatures : []
+    if (!respo) {
+      throw { message: "Record not found with id: " + id, statusCode: 404 };
     }
-  };
+    await repo.save({
+      ...respo,
+      ...data,
+    });
+  } catch (error) {
+    throw error;
+  }
+};
 
   //5. delete single record
   const deleteById = async (id: number): Promise<void> => {

@@ -7,10 +7,17 @@ import {
   JoinColumn,
   ManyToOne,
   OneToOne,
+  DeleteDateColumn,
+  BeforeInsert,
+  Unique,
+  VersionColumn,
 } from "typeorm";
 import { Taxes } from "../../taxes/entities/taxes.entity";
 import { DItemType } from "../../general-data/entities";
 import { ItemAvailable } from "../../sale-items/entities/item-stocks.entity";
+import { Users } from "../../auth/entities/user.entity";
+import { handler } from "../../../config/dbconfig";
+import { Company } from "../../company/entities/company.entity";
 
 @Entity("services")
 export class Services {
@@ -22,14 +29,30 @@ export class Services {
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
+  
+  @Column({ type: "int", nullable: true })
+  companyId: number;
 
-  @ManyToOne(() => Taxes, { nullable: false })
+  @ManyToOne(() => Company, { nullable: true })
+  @JoinColumn()
+  company: Company;
+
+  @Column({ type: "int", nullable: true })
+  taxId: number;
+
+  @ManyToOne(() => Taxes, { nullable: true })
   @JoinColumn()
   tax: Taxes;
+  
+  @Column({ type: "int", nullable: true })
+  itemTypeId: number;
 
   @ManyToOne(() => DItemType, { nullable: true })
   @JoinColumn()
   itemType: DItemType;
+
+  @Column({ type: "int", nullable: true })
+  inStockId: number;
 
   @OneToOne(() => ItemAvailable, { nullable: true })
   @JoinColumn()
@@ -94,4 +117,19 @@ export class Services {
     nullable: true,
   })
   rating: number;
+
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  createdBy: Users;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  modifiedBy: Users;
+
+  @DeleteDateColumn() // 👈 Automatically set when deleted
+  deletedAt?: Date;
+
+  @VersionColumn({ nullable: true })
+  version: number;
 }

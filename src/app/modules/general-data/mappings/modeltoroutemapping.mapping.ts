@@ -10,6 +10,8 @@ import {
   States,
   DContactType,
   DDateRangeType,
+  DIndustryType,
+  DTransactionStatus,
 } from "../entities";
 
 export const routeToEntityMap: {
@@ -25,4 +27,6 @@ export const routeToEntityMap: {
   "/item-types": DItemType,
   "/contact-types": DContactType,
   "/date-range-types": DDateRangeType,
+  "/industry-types": DIndustryType,
+  "/transaction-status": DTransactionStatus,
 };

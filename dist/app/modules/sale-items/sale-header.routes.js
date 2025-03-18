@@ -47,15 +47,20 @@ var sale_header_service_1 = __importDefault(require("./sale-header.service"));
 var sale_header_entity_1 = require("./entities/sale-header.entity");
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var sale_header_schema_1 = require("../../schema/sale-header.schema");
+// import wkhtmltopdf from "wkhtmltopdf";
+var path_1 = __importDefault(require("path"));
+var ejs_1 = __importDefault(require("ejs"));
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validate_filter_util_1.validateFilter)(sale_header_entity_1.SaleHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(sale_header_entity_1.SaleHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = sale_header_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, sale_header_entity_1.SaleHeaders)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, sale_header_entity_1.SaleHeaders)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();
@@ -69,7 +74,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(sale_header_entity_1.
         }
     });
 }); });
-router.post("/", (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -88,7 +93,7 @@ router.post("/", (0, validate_req_body_util_1.validateBodyManual)(sale_header_sc
         }
     });
 }); });
-router.get("/:id", 
+router.get("/:id", authenticate_middleware_1.default, 
 // validateFilter(SaleHeaders),
 function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, result, _a, _b, _c, error_3;
@@ -113,7 +118,7 @@ function (req, res, next) { return __awaiter(void 0, void 0, void 0, function ()
         }
     });
 }); });
-router.put("/:id", (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/:id", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -133,7 +138,7 @@ router.put("/:id", (0, validate_req_body_util_1.validateBodyManual)(sale_header_
         }
     });
 }); });
-router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete("/:id", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -153,7 +158,7 @@ router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 
         }
     });
 }); });
-router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/bulk", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -169,6 +174,77 @@ router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(sale_heade
                 next(error_6);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
+        }
+    });
+}); });
+// router.put(
+//   "bulk",
+//   validateBodyManual(SaleHeadersSchema),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const result = await saleHeaderService.editBulk(req.body);
+//       res.send(result);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+// router.get(
+//   "/download/:id",
+//   // validateFilter(SaleHeaders),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const id = Number(req.params.id);
+//       const reportData = await saleHeaderService.saleInvoiceData(id);
+//       // Path to your EJS template file
+//       const renderedPath = path.join(
+//         process.cwd(),
+//         "/dist/app/templates",
+//         "sale-invoice.template.ejs"
+//       );
+//       console.log("renderedPath", renderedPath);
+//       // Render the EJS template to HTML
+//       const renderedHtml = await ejs.renderFile(renderedPath, reportData);
+//       // Create a PDF stream from the HTML using html-pdf
+//       const options = { format: "A4" };
+//       pdf.create(renderedHtml, options).toStream((err, pdfStream) => {
+//         if (err) {
+//           console.error("PDF generation error:", err);
+//           return res.status(500).send("Error generating PDF");
+//         }
+//         // Set HTTP headers for PDF download
+//         res.setHeader("Content-Type", "application/pdf");
+//         res.setHeader("Content-Disposition", "attachment; filename=report.pdf");
+//         // Pipe the PDF stream to the response
+//         pdfStream.pipe(res);
+//       });
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+router.get("/download/generate-invoice/:id", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, invoiceData, renderedPath, renderedHtml, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                id = Number(req.params.id);
+                return [4 /*yield*/, sale_header_service_1.default.saleInvoiceData(id)];
+            case 1:
+                invoiceData = _a.sent();
+                renderedPath = path_1.default.join(process.cwd(), "/dist/app/templates", "sale-invoice.template.ejs");
+                return [4 /*yield*/, ejs_1.default.renderFile(renderedPath, invoiceData)];
+            case 2:
+                renderedHtml = _a.sent();
+                res.send(renderedHtml);
+                return [3 /*break*/, 4];
+            case 3:
+                error_7 = _a.sent();
+                console.log(error_7);
+                res.status(500).send("Error generating invoice");
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });

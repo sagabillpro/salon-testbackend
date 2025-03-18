@@ -47,15 +47,19 @@ var purchase_service_1 = __importDefault(require("./purchase.service"));
 var purchase_headers_entity_1 = require("./entities/purchase-headers.entity");
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var schema_1 = require("../../schema");
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
+var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
+var path_1 = __importDefault(require("path"));
+var ejs_1 = __importDefault(require("ejs"));
 var router = (0, express_1.Router)();
-router.get("/", (0, validate_filter_util_1.validateFilter)(purchase_headers_entity_1.PurchaseHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(purchase_headers_entity_1.PurchaseHeaders), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = purchase_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, purchase_headers_entity_1.PurchaseHeaders)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, purchase_headers_entity_1.PurchaseHeaders)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();
@@ -69,7 +73,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(purchase_headers_enti
         }
     });
 }); });
-router.post("/", (0, validate_req_body_util_1.validateBodyManual)(schema_1.PurchaseHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(schema_1.PurchaseHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -88,7 +92,7 @@ router.post("/", (0, validate_req_body_util_1.validateBodyManual)(schema_1.Purch
         }
     });
 }); });
-router.get("/:id", 
+router.get("/:id", authenticate_middleware_1.default, 
 // validateFilter(PurchaseHeaders),
 function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, result, _a, _b, _c, error_3;
@@ -113,7 +117,7 @@ function (req, res, next) { return __awaiter(void 0, void 0, void 0, function ()
         }
     });
 }); });
-router.put("/:id", (0, validate_req_body_util_1.validateBodyManual)(schema_1.PurchaseHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/:id", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(schema_1.PurchaseHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -133,7 +137,7 @@ router.put("/:id", (0, validate_req_body_util_1.validateBodyManual)(schema_1.Pur
         }
     });
 }); });
-router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.delete("/:id", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_5;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -153,13 +157,13 @@ router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 
         }
     });
 }); });
-router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(schema_1.PurchaseHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.post("/bulk", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(schema_1.PurchaseHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                return [4 /*yield*/, purchase_service_1.default.createBulk(req.body)];
+                return [4 /*yield*/, purchase_service_1.default.createBulk(req, req.body)];
             case 1:
                 result = _a.sent();
                 res.send(result);
@@ -169,6 +173,45 @@ router.post("/bulk", (0, validate_req_body_util_1.validateBodyManual)(schema_1.P
                 next(error_6);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
+        }
+    });
+}); });
+// router.put(
+//   "bulk",
+//   validateBodyManual(PurchaseHeadersSchema),
+//   async (req: Request, res: Response, next: NextFunction) => {
+//     try {
+//       const result = await purchaseService.editBulk(req.body);
+//       res.send(result);
+//     } catch (error) {
+//       next(error);
+//     }
+//   }
+// );
+// Add new route for purchase invoice
+router.get("/download/generate-invoice/:id", 
+//authenticateToken,
+function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var id, invoiceData, templatePath, html, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                id = Number(req.params.id);
+                return [4 /*yield*/, purchase_service_1.default.purchaseInvoiceData(id)];
+            case 1:
+                invoiceData = _a.sent();
+                templatePath = path_1.default.join(__dirname, "../../templates/purchase-invoice.template.ejs");
+                return [4 /*yield*/, ejs_1.default.renderFile(templatePath, invoiceData)];
+            case 2:
+                html = _a.sent();
+                res.send(html);
+                return [3 /*break*/, 4];
+            case 3:
+                error_7 = _a.sent();
+                next(error_7);
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });
