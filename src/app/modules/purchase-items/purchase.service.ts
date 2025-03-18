@@ -275,7 +275,7 @@ const purchaseInvoiceData = async (id: number) => {
     const companyRepo = dataSource.getRepository(Company);
     const company = await companyRepo.findOne({
       where: {
-        id: 40, // TODO: Get this from user context/request
+        id: 40, 
       },
       select: {
         id: true,

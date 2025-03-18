@@ -383,7 +383,7 @@ var purchaseInvoiceData = function (id) { return __awaiter(void 0, void 0, void 
                 companyRepo = dataSource.getRepository(company_entity_1.Company);
                 return [4 /*yield*/, companyRepo.findOne({
                         where: {
-                            id: 40, // TODO: Get this from user context/request
+                            id: 40,
                         },
                         select: {
                             id: true,
