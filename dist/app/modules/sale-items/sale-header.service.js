@@ -876,7 +876,7 @@ var createBulk = function (data_1) {
         args_1[_i - 1] = arguments[_i];
     }
     return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isService) {
-        var dataSource_2, companyRepo, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
+        var dataSource_2, companyRepo, itemLines, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
         var _a, _b;
         if (isService === void 0) { isService = false; }
         return __generator(this, function (_c) {
@@ -890,6 +890,7 @@ var createBulk = function (data_1) {
                 case 2:
                     dataSource_2 = _c.sent();
                     companyRepo = dataSource_2.getRepository(company_entity_1.Company);
+                    itemLines = data.saleLines.filter(function (line) { return !line.isService; });
                     return [4 /*yield*/, companyRepo.findOne({
                             where: {
                                 id: 40,
@@ -950,8 +951,19 @@ var createBulk = function (data_1) {
                         clientZip: customer.zipCode,
                         clientEmail: customer.email,
                     };
-                    console.log("check 1");
                     data.saleLines.forEach(function (value) {
+                        var _a, _b;
+                        newInvoiceItems_1.push({
+                            description: (_a = value === null || value === void 0 ? void 0 : value.service) === null || _a === void 0 ? void 0 : _a.name,
+                            quantity: value === null || value === void 0 ? void 0 : value.quantity,
+                            unitCost: value.rate,
+                            taxPercentage: (_b = value === null || value === void 0 ? void 0 : value.tax) === null || _b === void 0 ? void 0 : _b.name,
+                            taxAmount: value.taxAmount,
+                            lineTotal: Number(value.amount),
+                        });
+                    });
+                    console.log("check 1");
+                    itemLines.forEach(function (value) {
                         var _a, _b;
                         // invoiceItems.push({
                         //   name: value.service.name,
@@ -1003,7 +1015,7 @@ var createBulk = function (data_1) {
                     });
                     //check availabilty
                     console.log("check 4");
-                    data.saleLines.forEach(function (value) {
+                    itemLines.forEach(function (value) {
                         var _a, _b, _c;
                         if (itemToQauntityMap_1[value.service.id]) {
                             if (((_a = itemToQauntityMap_1[value.service.id]) === null || _a === void 0 ? void 0 : _a.quantity) < value.quantity) {
@@ -1046,7 +1058,7 @@ var createBulk = function (data_1) {
                         };
                     });
                     console.log("check 7");
-                    data.saleLines.forEach(function (value) {
+                    itemLines.forEach(function (value) {
                         //1. filter out stock entries for each item
                         var idx = 0;
                         var itmRemain = value.quantity;

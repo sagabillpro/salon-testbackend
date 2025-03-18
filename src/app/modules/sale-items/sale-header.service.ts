@@ -822,7 +822,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
   try {
     const dataSource = await handler();
     const companyRepo = dataSource.getRepository(Company);
-
+    const itemLines = data.saleLines.filter((line) => !line.isService);
     const company = await companyRepo.findOne({
       where: {
         id: 40,
@@ -903,9 +903,18 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       clientZip: customer.zipCode,
       clientEmail: customer.email,
     };
-
-    console.log("check 1");
     data.saleLines.forEach((value) => {
+      newInvoiceItems.push({
+        description: value?.service?.name,
+        quantity: value?.quantity,
+        unitCost: value.rate,
+        taxPercentage: value?.tax?.name,
+        taxAmount: value.taxAmount,
+        lineTotal: Number(value.amount),
+      });
+    });
+    console.log("check 1");
+    itemLines.forEach((value) => {
       // invoiceItems.push({
       //   name: value.service.name,
       //   quantity: value.quantity,
@@ -955,7 +964,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
     });
     //check availabilty
     console.log("check 4");
-    data.saleLines.forEach((value) => {
+    itemLines.forEach((value) => {
       if (itemToQauntityMap[value.service.id]) {
         if (itemToQauntityMap[value.service.id]?.quantity < value.quantity) {
           errors.push(
@@ -1009,7 +1018,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       };
     });
     console.log("check 7");
-    data.saleLines.forEach((value) => {
+    itemLines.forEach((value) => {
       //1. filter out stock entries for each item
       let idx = 0;
       let itmRemain = value.quantity;
