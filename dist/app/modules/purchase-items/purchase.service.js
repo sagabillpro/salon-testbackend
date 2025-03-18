@@ -1,5 +1,4 @@
 "use strict";
-// import { FindManyOptions, FindOneOptions, In } from "typeorm";
 var __assign = (this && this.__assign) || function () {
     __assign = Object.assign || function(t) {
         for (var s, i = 1, n = arguments.length; i < n; i++) {
@@ -60,637 +59,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-// import { generateCode } from "../../utils/get-object-code.util";
-// import { handler } from "../../config/dbconfig";
-// import { City, Country, States } from "../general-data/entities";
-// import repository from "./purchase.repo";
-// import { PurchaseHeaders } from "./entities/purchase-headers.entity";
-// import { InventoryLines } from "../sale-items/entities/inventory-lines.entity";
-// import { ItemAvailable } from "../sale-items/entities/item-stocks.entity";
-// import itemStocksService from "../sale-items/item-stocks.service";
-// import { Services } from "../services/entities/services.entity";
-// import { ItemsStockTrack } from "./entities/item-stock-track.entity";
-// import generateUniqueNumber from "../../utils/getuniquenumber.util";
-// import { PurchaseLines } from "./entities/purchase-lines.entity";
-// import { BlobOptions } from "buffer";
-// //1. find multiple records
-// const find = async (filter?: FindManyOptions<PurchaseHeaders>) => {
-//   try {
-//     const repo = await repository();
-//     return repo.find(filter);
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// //2. find single records
-// const findById = async (
-//   id: number,
-//   filter?: FindOneOptions<PurchaseHeaders> | FindManyOptions<PurchaseHeaders>
-// ) => {
-//   try {
-//     const repo = await repository();
-//     const respo = await repo.findOneById(id, filter);
-//     return respo;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// //3. create single record
-// const create = async (data: PurchaseHeaders, isService: boolean = false) => {
-//   try {
-//     const repo = await repository();
-//     const dataSource = await handler();
-//     const itemStocksRepo = dataSource.getRepository(ItemAvailable);
-//     data = await generateCode(20, data);
-//     const itemIds: number[] = [];
-//     const inventory: InventoryLines[] = [];
-//     // check if lenght applicable
-//     if (data.purchaseLines.length) {
-//     }
-//     if (!isService) {
-//       data.purchaseLines.forEach((value) => {
-//         const il = new InventoryLines();
-//         (il.service = value.service),
-//           (il.quantity = -Number(value.quantity)),
-//           (il.createdDate = value.createdDate),
-//           (il.modifiedDate = value.modifiedDate);
-//         itemIds.push(value.service.id);
-//         inventory.push(il);
-//       });
-//       data.inventoryLines = inventory;
-//       // create stock elements
-//       const resultItemStock = await itemStocksService.create(
-//         inventory,
-//         itemIds
-//       );
-//       const itemStockResponse = itemStocksRepo.create(resultItemStock);
-//       await itemStocksRepo.save(itemStockResponse);
-//     }
-//     const respo = repo.create({
-//       ...data,
-//     });
-//     return respo;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// //4. update single record by id
-// const updateById = async (
-//   id: number,
-//   data: PurchaseHeaders,
-//   isService: boolean = false
-// ) => {
-//   try {
-//     const repo = await repository();
-//     data = await generateCode(20, data);
-//     const inventory: InventoryLines[] = [];
-//     if (!isService) {
-//       data.purchaseLines.forEach((value) => {
-//         const il = new InventoryLines();
-//         (il.service = value.service),
-//           (il.quantity = -Number(value.quantity)),
-//           (il.createdDate = value.createdDate),
-//           (il.modifiedDate = value.modifiedDate);
-//         inventory.push(il);
-//       });
-//       data.inventoryLines = inventory;
-//     }
-//     const respo = repo.updateById(id, {
-//       ...data,
-//     });
-//     return respo;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// //5. delete single record by id
-// const deleteById = async (id: number) => {
-//   try {
-//     const repo = await repository();
-//     await repo.deleteById(id);
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// // //3. create single record
-// // const createBulk = async (data: PurchaseHeaders) => {
-// //   try {
-// //     const dataSource = await handler();
-// //     data = await generateCode(20, data);
-// //     const itemIds: number[] = [];
-// //     const inventory: InventoryLines[] = [];
-// //     const itemRepo = dataSource.getRepository(Services);
-// //     data.purchaseLines.forEach((value) => {
-// //       itemIds.push(value.service.id);
-// //     });
-// //     //. 1.create itemId and sku mapping
-// //     const skuMap: {
-// //       [key: number]: string;
-// //     } = {};
-// //     //2. get related items only
-// //     const relatedItems = await itemRepo.find({
-// //       where: {
-// //         id: In(itemIds),
-// //         isInactive: 0,
-// //       },
-// //       select: {
-// //         sku: true,
-// //         id: true,
-// //       },
-// //     });
-// //     //create latest items mapping
-// //     const latestItemMap = {};
-// //     relatedItems.forEach((val) => {
-// //       latestItemMap[val.recordId] = val.id;
-// //     });
-// //     data.purchaseLines = data.purchaseLines.map((value) => {
-// //       return {
-// //         ...value,
-// //         serviceId: latestItemMap[value.service.id],
-// //         serviceRecordId: value.service.id,
-// //       };
-// //     });
-// //     //3. create sku mapping for future
-// //     relatedItems.forEach((val) => {
-// //       skuMap[val.id] = val.sku + "-" + generateUniqueNumber();
-// //     });
-// //     //3. start transaction
-// //     await dataSource.manager.transaction(
-// //       "SERIALIZABLE",
-// //       async (transactionalEntityManager) => {
-// //         const headerEntry = transactionalEntityManager.create(
-// //           PurchaseHeaders,
-// //           data
-// //         );
-// //         // ************** A) stock logic start ************************************************************
-// //         const stockEntries: ItemsStockTrack[] = [];
-// //         //1. create Stock and save stock
-// //         data.purchaseLines.forEach((value) => {
-// //           const stockInstance = new ItemsStockTrack();
-// //           stockInstance.createdDate = value.createdDate;
-// //           stockInstance.modifiedDate = value.modifiedDate;
-// //           stockInstance.quantityAdded = value.quantity;
-// //           stockInstance.unitPrice = value.unitPrice;
-// //           // stockInstance.service = value.service;
-// //           stockInstance.serviceId = latestItemMap[value.service.id];
-// //           stockInstance.serviceRecordId = value.service.id;
-// //           stockInstance.quantityUvailable = value.quantity;
-// //           stockInstance.stockNumber = skuMap[value.service.id];
-// //           stockEntries.push(stockInstance);
-// //         });
-// //         const itemIdStockMap: {
-// //           [key: number]: ItemsStockTrack;
-// //         } = {};
-// //         const stockTrackEntry = transactionalEntityManager.create(
-// //           ItemsStockTrack,
-// //           stockEntries
-// //         );
-// //         //2. update items availability
-// //         const stockTrackResult = await transactionalEntityManager.save(
-// //           ItemsStockTrack,
-// //           stockTrackEntry
-// //         );
-// //         // add entries into mapping object
-// //         stockTrackResult.forEach((val) => {
-// //           itemIdStockMap[val.service.id] = val;
-// //         });
-// //         //************** stock logic end ***********************************************************************/
-// //         //**************** B) inventory lodic start **********************************************************
-// //         //2. create inventory
-// //         data.purchaseLines.forEach((value) => {
-// //           const il = new InventoryLines();
-// //           // il.service = value.service;
-// //           il.serviceRecordId = value.service.id;
-// //           il.serviceId = latestItemMap[value.service.id];
-// //           il.quantity = Number(value.quantity);
-// //           il.createdDate = value.createdDate;
-// //           il.modifiedDate = value.modifiedDate;
-// //           il.stock = itemIdStockMap[value.service.id];
-// //           inventory.push(il);
-// //         });
-// //         //attch the object to inventory
-// //         headerEntry.inventoryLines = inventory;
-// //         // *************** inventory lodic end  *********************************************************
-// //         // *************** C) item available start ********************************************************
-// //         //1. create stock elements
-// //         const resultItemAvailable = await itemStocksService.create(
-// //           inventory,
-// //           itemIds
-// //         );
-// //         const itemAvailableEntry = transactionalEntityManager.create(
-// //           ItemAvailable,
-// //           resultItemAvailable
-// //         );
-// //         //2. update items availability
-// //         await transactionalEntityManager.save(
-// //           ItemAvailable,
-// //           itemAvailableEntry
-// //         );
-// //         // *************** item available end ********************************************************
-// //         //********** D) header entry save start ***************/
-// //         const headerEntryResult = await transactionalEntityManager.save(
-// //           PurchaseHeaders,
-// //           headerEntry
-// //         );
-// //         //********** header entry save end *********************************************************************/
-// //         data = headerEntryResult;
-// //       }
-// //     );
-// //     return data;
-// //   } catch (error) {
-// //     throw error;
-// //   }
-// // };
-// const createBulk = async (
-//   data: PurchaseHeaders,
-//   isCalledForEdit: Boolean = false
-// ) => {
-//   try {
-//     const dataSource = await handler();
-//     // Generate a unique code for the purchase header
-//     data = await generateCode(20, data);
-//     // Extract all service IDs from purchase lines
-//     const itemIds = data.purchaseLines.map((line) => line.serviceId);
-//     const itemRepo = dataSource.getRepository(Services);
-//     // Fetch related (active) services with required fields
-//     const relatedItems = await itemRepo.find({
-//       where: { id: In(itemIds), isInactive: 0 },
-//       select: { sku: true, id: true },
-//     });
-//     // Build mappings for latest service and SKU generation
-//     const skuMap: Record<number, string> = {};
-//     relatedItems.forEach((item) => {
-//       skuMap[item.id] = `${item.sku}-${generateUniqueNumber()}`;
-//     });
-//     // Update purchase lines with latest serviceId and store original record id
-//     data.purchaseLines = data.purchaseLines.map((line) => ({
-//       ...line,
-//       serviceId: line.serviceId,
-//       //serviceRecordId: line.service.id,
-//     }));
-//     // Start transaction to handle stock updates, inventory, and header insertion
-//     await dataSource.manager.transaction("SERIALIZABLE", async (manager) => {
-//       // Create the purchase header entry
-//       const headerEntry = manager.create(PurchaseHeaders, data);
-//       // === STOCK LOGIC ===
-//       // Create stock entries for each purchase line
-//       const stockEntries = data.purchaseLines.map((line) => {
-//         const stock = new ItemsStockTrack();
-//         stock.createdDate = line.createdDate;
-//         stock.modifiedDate = line.modifiedDate;
-//         stock.quantityAdded = line.quantity;
-//         stock.unitPrice = line.unitPrice;
-//         stock.serviceId = line.serviceId;
-//         stock.quantityUvailable = line.quantity;
-//         stock.stockNumber = skuMap[line.service.id];
-//         return stock;
-//       });
-//       // Save stock entries and build a mapping by service id
-//       const stockTrackResult = await manager.save(
-//         ItemsStockTrack,
-//         stockEntries
-//       );
-//       const itemIdStockMap: Record<number, ItemsStockTrack> = {};
-//       stockTrackResult.forEach((stock) => {
-//         itemIdStockMap[stock.service.id] = stock;
-//       });
-//       // === INVENTORY LOGIC ===
-//       // Create inventory lines referencing the saved stock entries
-//       const inventory = data.purchaseLines.map((line) => {
-//         const invLine = new InventoryLines();
-//         invLine.serviceId = line.serviceId;
-//         invLine.quantity = Number(line.quantity);
-//         invLine.createdDate = line.createdDate;
-//         invLine.modifiedDate = line.modifiedDate;
-//         invLine.stock = itemIdStockMap[line.service.id];
-//         return invLine;
-//       });
-//       headerEntry.inventoryLines = inventory;
-//       // === ITEM AVAILABLE LOGIC ===
-//       // Create/update item availability based on inventory changes
-//       const resultItemAvailable = await itemStocksService.create(
-//         inventory,
-//         itemIds
-//       );
-//       // const itemAvailableEntry = manager.create(
-//       //   ItemAvailable,
-//       //   resultItemAvailable
-//       // );
-//       await manager.save(ItemAvailable, resultItemAvailable);
-//       // === HEADER ENTRY SAVE ===
-//       const headerEntryResult = await manager.save(
-//         PurchaseHeaders,
-//         headerEntry
-//       );
-//       const stockTrackResultNew = stockTrackResult.map((stock) => {
-//         stock.txnHeaderId = headerEntryResult.id;
-//         return stock; // Ensure the modified stock object is returned
-//       });
-//       await manager.save(ItemsStockTrack, stockTrackResultNew);
-//       data = headerEntryResult;
-//     });
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// const editBulk = async (data: PurchaseHeaders) => {
-//   try {
-//     //1. get the purchase header latest
-//     const dataSource = await handler();
-//     const headerRepo = dataSource.getRepository(PurchaseHeaders);
-//     const purchaseLinesRepo = dataSource.getRepository(PurchaseLines);
-//     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
-//     const itemsStockTrackRepo = dataSource.getRepository(ItemsStockTrack);
-//     const inventoryLinesRepo = dataSource.getRepository(InventoryLines);
-//     let headerResponse = await headerRepo.findOne({
-//       where: {
-//         id: data.id,
-//         isInactive: 0,
-//       },
-//     });
-//     if (!headerResponse) {
-//       throw {
-//         message: "Record not found with id: " + data.id,
-//         statusCode: 404,
-//       };
-//     }
-//     //2. get the purchase lines latest
-//     const purchaseLinesOld = await purchaseLinesRepo.find({
-//       where: {
-//         txnHeaderId: data.id,
-//         isInactive: 0,
-//       },
-//     });
-//     //5. get the item stock track latest
-//     const itemStockTrack = await itemsStockTrackRepo.find({
-//       where: {
-//         txnHeaderId: data.id,
-//         isInactive: 0,
-//       },
-//     });
-//     //if in itemStockTrack if quantityAdded is not equal to quantityUvailable  then throw error
-//     itemStockTrack.forEach((val) => {
-//       if (val.quantityAdded !== val.quantityUvailable) {
-//         throw {
-//           message:
-//             "This purchase transaction is in use and cannot be edited, please contact support",
-//           statusCode: 409,
-//         };
-//       }
-//     });
-//     //3. get the inventory lines latest
-//     const inventoryLines = await inventoryLinesRepo.find({
-//       where: {
-//         purchaseId: data.id,
-//         isInactive: 0,
-//       },
-//     });
-//     //loop inventoryLines and create mapping object for serviceId and quantity
-//     const inventoryMap = {};
-//     purchaseLinesOld.forEach((val) => {
-//       inventoryMap[val.serviceId] = val.quantity;
-//     });
-//     //4. get the item available latest and minus the quantity from the item available using inventoryMap
-//     const itemAvailable = await itemAvailableRepo.find({
-//       where: {
-//         serviceId: In(Object.keys(inventoryMap)),
-//         isInactive: 0,
-//       },
-//     });
-//     //create mapping object for serviceId and quantity
-//     const itemAvailableMap = {};
-//     itemAvailable.forEach((val) => {
-//       itemAvailableMap[val.serviceId] = val.quantity;
-//     });
-//     //loop through the inventoryMap and minus the quantity from itemAvailableMap
-//     Object.keys(inventoryMap).forEach((key) => {
-//       //if this is negative means any conflict happent throw error
-//       if (itemAvailableMap[key] - inventoryMap[key] < 0) {
-//         throw {
-//           message:
-//             "This purchase transaction is in use and cannot be edited, please contact support",
-//           statusCode: 409,
-//         };
-//       }
-//       itemAvailableMap[key] = itemAvailableMap[key] - inventoryMap[key];
-//     });
-//     //update the itemAvailable
-//     const itemAvailableUpdate = itemAvailable.map((val) => {
-//       val.quantity = itemAvailableMap[val.serviceId];
-//       return val;
-//     });
-//     //create new purchase transaction
-//     await dataSource.manager.transaction("SERIALIZABLE", async (manager) => {
-//       //update the itemAvailable for rollback
-//       await manager.save(ItemAvailable, itemAvailableUpdate);
-//       //make purchaseLines iteStockTrack and inventoryLines inactive
-//       await manager.save(
-//         PurchaseLines,
-//         purchaseLinesOld.map((val) => {
-//           val.isInactive = 1;
-//           return val;
-//         })
-//       );
-//       await manager.save(
-//         ItemsStockTrack,
-//         itemStockTrack.map((val) => {
-//           val.isInactive = 1;
-//           return val;
-//         })
-//       );
-//       await manager.save(
-//         InventoryLines,
-//         inventoryLines.map((val) => {
-//           val.isInactive = 1;
-//           return val;
-//         })
-//       );
-//       let { purchaseLines, ...headerWithoutLines } = data;
-//       headerResponse = await manager.save(PurchaseHeaders, {
-//         ...headerResponse,
-//         ...headerWithoutLines,
-//       });
-//       //create new purchase transaction
-//       // add new line data for edited transaction
-//       // Extract all service IDs from purchase lines
-//       const itemIds = purchaseLines.map((line) => line.serviceId);
-//       const itemRepo = dataSource.getRepository(Services);
-//       // Fetch related (active) services with required fields
-//       const relatedItems = await itemRepo.find({
-//         where: { id: In(itemIds), isInactive: 0 },
-//         select: { sku: true, id: true },
-//       });
-//       // Build mappings for latest service and SKU generation
-//       const skuMap: Record<number, string> = {};
-//       relatedItems.forEach((item) => {
-//         skuMap[item.id] = `${item.sku}-${generateUniqueNumber()}`;
-//       });
-//       // === STOCK LOGIC ===
-//       // Create stock entries for each purchase line
-//       const stockEntries = purchaseLines.map((line) => {
-//         const stock = new ItemsStockTrack();
-//         stock.createdDate = line.createdDate;
-//         stock.modifiedDate = line.modifiedDate;
-//         stock.quantityAdded = line.quantity;
-//         stock.unitPrice = line.unitPrice;
-//         stock.serviceId = line.serviceId;
-//         stock.txnHeaderId = headerResponse ? headerResponse.id : 0;
-//         stock.quantityUvailable = line.quantity;
-//         stock.stockNumber = skuMap[line.service.id];
-//         return stock;
-//       });
-//       // Save stock entries and build a mapping by service id
-//       const stockTrackResult = await manager.save(
-//         ItemsStockTrack,
-//         stockEntries
-//       );
-//       const itemIdStockMap: Record<number, number> = {};
-//       stockTrackResult.forEach((stock) => {
-//         itemIdStockMap[stock.serviceId] = stock.id;
-//       });
-//       // === INVENTORY LOGIC ===
-//       // Create inventory lines referencing the saved stock entries
-//       const inventory = purchaseLines.map((line) => {
-//         const invLine = new InventoryLines();
-//         invLine.serviceId = line.serviceId;
-//         invLine.quantity = Number(line.quantity);
-//         invLine.createdDate = line.createdDate;
-//         invLine.modifiedDate = line.modifiedDate;
-//         invLine.stockId = itemIdStockMap[line.serviceId];
-//         invLine.purchaseId = headerResponse ? headerResponse.id : 0;
-//         return invLine;
-//       });
-//       // === ITEM AVAILABLE LOGIC ===
-//       // Create/update item availability based on inventory changes
-//       const resultItemAvailable = await itemStocksService.create(
-//         inventory,
-//         itemIds
-//       );
-//       await manager.save(ItemAvailable, resultItemAvailable);
-//       data = headerResponse;
-//     });
-//     return data;
-//   } catch (error) {
-//     throw error;
-//   }
-// };
-// // const purchaseReturn = async (
-// //   data: PurchaseHeaders
-// // ): Promise<PurchaseHeaders> => {
-// //   try {
-// //     const dataSource = await handler();
-// //     const headerRepo = dataSource.getRepository(PurchaseHeaders);
-// //     const purchaseLinesRepo = dataSource.getRepository(PurchaseLines);
-// //     const inventoryLinesRepo = dataSource.getRepository(InventoryLines);
-// //     const stockTrackRepo = dataSource.getRepository(ItemsStockTrack);
-// //     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
-// //     // 1. Fetch the active purchase header and its related records
-// //     const header = await headerRepo.findOne({
-// //       where: { recordId: data.recordId, isInactive: 0 },
-// //     });
-// //     const purchaseLines = await purchaseLinesRepo.find({
-// //       where: { txnHeaderRecordId: data.recordId, isInactive: 0 },
-// //     });
-// //     const inventoryLines = await inventoryLinesRepo.find({
-// //       where: { purchaseRecordId: data.recordId, isInactive: 0 },
-// //       relations: { stock: true },
-// //     });
-// //     const stockTracks = await stockTrackRepo.find({
-// //       where: { txnHeaderRecordId: data.recordId, isInactive: 0 },
-// //     });
-// //     // 2. Validate eligibility for return (ensure no partial processing has occurred)
-// //     stockTracks.forEach((stock) => {
-// //       if (stock.quantityAdded !== stock.quantityUvailable) {
-// //         throw {
-// //           message: "Purchase transaction is in use and cannot be returned.",
-// //           statusCode: 409,
-// //         };
-// //       }
-// //     });
-// //     // 3. Build mapping of serviceId to total purchased quantity from purchase lines
-// //     const purchasedQuantityMap: Record<number, number> = {};
-// //     purchaseLines.forEach((line) => {
-// //       purchasedQuantityMap[line.serviceId] =
-// //         (purchasedQuantityMap[line.serviceId] || 0) + line.quantity;
-// //     });
-// //     // 4. Fetch item availability records for these services
-// //     const availableItems = await itemAvailableRepo.find({
-// //       where: {
-// //         serviceId: In(Object.keys(purchasedQuantityMap).map(Number)),
-// //         isInactive: 0,
-// //       },
-// //     });
-// //     // Build mapping for current available quantity per service
-// //     const availableMap: Record<number, number> = {};
-// //     availableItems.forEach((item) => {
-// //       availableMap[item.serviceId] = item.quantity;
-// //     });
-// //     // For purchase return, reverse the addition done during purchase by subtracting the purchased quantities
-// //     Object.keys(purchasedQuantityMap).forEach((serviceIdStr) => {
-// //       const serviceId = Number(serviceIdStr);
-// //       // If subtracting results in negative availability, then it's an error (cannot return more than available)
-// //       if (availableMap[serviceId] - purchasedQuantityMap[serviceId] < 0) {
-// //         throw {
-// //           message:
-// //             "Purchase transaction is in use and cannot be returned, please contact support",
-// //           statusCode: 409,
-// //         };
-// //       }
-// //       availableMap[serviceId] =
-// //         availableMap[serviceId] - purchasedQuantityMap[serviceId];
-// //     });
-// //     // Prepare updated item available records for purchase return
-// //     const updatedAvailableItems = availableItems.map((item) => {
-// //       item.quantity = availableMap[item.serviceId];
-// //       return item;
-// //     });
-// //     // 5. Wrap operations in a transaction
-// //     let newPurchaseReturn: PurchaseHeaders;
-// //     await dataSource.manager.transaction("SERIALIZABLE", async (manager) => {
-// //       // Update item availability for the return
-// //       await manager.save(ItemAvailable, updatedAvailableItems);
-// //       // Mark original purchase lines, stock tracks, and inventory lines as inactive
-// //       await manager.save(
-// //         PurchaseLines,
-// //         purchaseLines.map((line) => ({ ...line, isInactive: 1 }))
-// //       );
-// //       await manager.save(
-// //         ItemsStockTrack,
-// //         stockTracks.map((stock) => ({ ...stock, isInactive: 1 }))
-// //       );
-// //       await manager.save(
-// //         InventoryLines,
-// //         inventoryLines.map((inv) => ({ ...inv, isInactive: 1 }))
-// //       );
-// //       // Mark the purchase header as inactive
-// //       const updatedHeader = await manager.save(PurchaseHeaders, {
-// //         ...header,
-// //         isInactive: 1,
-// //       });
-// //       // 6. Create a new purchase return transaction record referencing the original purchase
-// //       // You can create a function like createBulkPurchaseReturn similar to createBulk but for returns
-// //       // newPurchaseReturn = await createBulkPurchaseReturn({
-// //       //   ...data,
-// //       //   recordId: updatedHeader.recordId,
-// //       //   code: updatedHeader.code,
-// //       //   // Additional fields for return details, e.g., returnDate
-// //       // });
-// //     });
-// //     return {} as PurchaseHeaders;
-// //   } catch (error) {
-// //     throw error;
-// //   }
-// // };
-// export default {
-//   find,
-//   findById,
-//   create,
-//   deleteById,
-//   updateById,
-//   createBulk,
-//   editBulk,
-// };
 var typeorm_1 = require("typeorm");
 var get_object_code_util_1 = require("../../utils/get-object-code.util");
 var dbconfig_1 = require("../../config/dbconfig");
@@ -702,6 +70,7 @@ var item_stocks_service_1 = __importDefault(require("../sale-items/item-stocks.s
 var services_entity_1 = require("../services/entities/services.entity");
 var item_stock_track_entity_1 = require("./entities/item-stock-track.entity");
 var getuniquenumber_util_1 = __importDefault(require("../../utils/getuniquenumber.util"));
+var company_entity_1 = require("../company/entities/company.entity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -985,5 +354,106 @@ var createBulk = function (req, data) { return __awaiter(void 0, void 0, void 0,
         }
     });
 }); };
-exports.default = { find: find, findById: findById, create: create, deleteById: deleteById, updateById: updateById, createBulk: createBulk };
+//create service which will get purchaseHeader information based on id also its lines
+var purchaseInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, function () {
+    var data, dataSource, companyRepo, company, invoiceItems, companyDetails, invoiceDetails, supplierDetails, finalData, error_7;
+    var _a, _b, _c, _d;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
+            case 0:
+                _e.trys.push([0, 4, , 5]);
+                return [4 /*yield*/, findById(id, {
+                        relations: {
+                            purchaseLines: {
+                                service: true,
+                                tax: true,
+                            },
+                            supplier: {
+                                state: true,
+                                country: true,
+                                city: true,
+                            },
+                        },
+                    })];
+            case 1:
+                data = _e.sent();
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 2:
+                dataSource = _e.sent();
+                companyRepo = dataSource.getRepository(company_entity_1.Company);
+                return [4 /*yield*/, companyRepo.findOne({
+                        where: {
+                            id: 40, // TODO: Get this from user context/request
+                        },
+                        select: {
+                            id: true,
+                            name: true,
+                            addressLine1: true,
+                            email: true,
+                            phoneNumber: true,
+                            signature: true,
+                            logo: true,
+                        },
+                    })];
+            case 3:
+                company = _e.sent();
+                if (!company) {
+                    throw { message: "Company record not found", statusCode: 404 };
+                }
+                invoiceItems = data.purchaseLines.map(function (line) {
+                    var _a, _b;
+                    return ({
+                        description: (_a = line === null || line === void 0 ? void 0 : line.service) === null || _a === void 0 ? void 0 : _a.name,
+                        quantity: line === null || line === void 0 ? void 0 : line.quantity,
+                        unitCost: line.unitPrice,
+                        taxPercentage: (_b = line === null || line === void 0 ? void 0 : line.tax) === null || _b === void 0 ? void 0 : _b.name,
+                        taxAmount: line.taxAmount,
+                        lineTotal: Number(line.amount),
+                    });
+                });
+                companyDetails = {
+                    companyName: company.name,
+                    companyAddress: company.addressLine1,
+                    companyEmail: company.email,
+                    companyPhone: company.phoneNumber,
+                    signatureUrl: company.signature,
+                    logoUrl: company.logo,
+                };
+                invoiceDetails = {
+                    invoiceNumber: data.code,
+                    invoiceDate: data.txnDate,
+                    dueDate: data.txnDate,
+                    subtotal: data.subTotal,
+                    tax: data.totalTax,
+                    discount: data.totalDiscount,
+                    totalPayable: data.grandTotal,
+                };
+                supplierDetails = {
+                    supplierName: data.supplier.name,
+                    supplierAddress: data.supplier.address,
+                    supplierCity: (_b = (_a = data === null || data === void 0 ? void 0 : data.supplier) === null || _a === void 0 ? void 0 : _a.city) === null || _b === void 0 ? void 0 : _b.name,
+                    supplierState: (_d = (_c = data === null || data === void 0 ? void 0 : data.supplier) === null || _c === void 0 ? void 0 : _c.state) === null || _d === void 0 ? void 0 : _d.name,
+                    supplierZip: data === null || data === void 0 ? void 0 : data.supplier.zipCode,
+                    supplierEmail: data.supplier.email,
+                };
+                finalData = {
+                    data: __assign(__assign(__assign(__assign({}, companyDetails), invoiceDetails), supplierDetails), { items: invoiceItems }),
+                };
+                return [2 /*return*/, finalData];
+            case 4:
+                error_7 = _e.sent();
+                throw error_7;
+            case 5: return [2 /*return*/];
+        }
+    });
+}); };
+exports.default = {
+    find: find,
+    findById: findById,
+    create: create,
+    deleteById: deleteById,
+    updateById: updateById,
+    createBulk: createBulk,
+    purchaseInvoiceData: purchaseInvoiceData,
+};
 //# sourceMappingURL=purchase.service.js.map

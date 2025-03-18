@@ -10,6 +10,9 @@ import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { PurchaseHeadersSchema } from "../../schema";
 import getQuerySecure from "../../utils/get-query-secure.util";
 import authenticateToken from "../../middlewares/authenticate.middleware";
+import path from "path";
+import ejs from "ejs";
+
 const router = Router();
 
 router.get(
@@ -114,4 +117,25 @@ router.post(
 //     }
 //   }
 // );
+
+// Add new route for purchase invoice
+router.get(
+  "/download/generate-invoice/:id",
+  //authenticateToken,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const id = Number(req.params.id);
+      const invoiceData = await purchaseService.purchaseInvoiceData(id);
+      
+      // Render the EJS template
+      const templatePath = path.join(__dirname, "../../templates/purchase-invoice.template.ejs");
+      const html = await ejs.renderFile(templatePath, invoiceData);
+      
+      res.send(html);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 export default new Route("/purchase-headers", router);
