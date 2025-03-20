@@ -14,7 +14,6 @@ var typeorm_1 = require("typeorm");
 var company_entity_1 = require("../../modules/company/entities/company.entity");
 var taxes_entity_1 = require("../../modules/taxes/entities/taxes.entity");
 var entities_1 = require("../../modules/general-data/entities");
-var item_stocks_entity_1 = require("../../modules/sale-items/entities/item-stocks.entity");
 var user_entity_1 = require("../../modules/auth/entities/user.entity");
 var ServicesHistory = /** @class */ (function () {
     function ServicesHistory() {
@@ -28,7 +27,7 @@ var ServicesHistory = /** @class */ (function () {
         __metadata("design:type", Number)
     ], ServicesHistory.prototype, "recordId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, unique: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true }),
         __metadata("design:type", String)
     ], ServicesHistory.prototype, "code", void 0);
     __decorate([
@@ -63,20 +62,15 @@ var ServicesHistory = /** @class */ (function () {
         __metadata("design:type", entities_1.DItemType)
     ], ServicesHistory.prototype, "itemType", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true, unique: false }),
         __metadata("design:type", Number)
     ], ServicesHistory.prototype, "inStockId", void 0);
     __decorate([
-        (0, typeorm_1.OneToOne)(function () { return item_stocks_entity_1.ItemAvailable; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", item_stocks_entity_1.ItemAvailable)
-    ], ServicesHistory.prototype, "inStock", void 0);
-    __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], ServicesHistory.prototype, "taxAmount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], ServicesHistory.prototype, "amount", void 0);
     __decorate([
@@ -100,13 +94,7 @@ var ServicesHistory = /** @class */ (function () {
         __metadata("design:type", String)
     ], ServicesHistory.prototype, "description", void 0);
     __decorate([
-        (0, typeorm_1.Column)({
-            type: "decimal",
-            precision: 5,
-            scale: 2,
-            default: 0,
-            nullable: true,
-        }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], ServicesHistory.prototype, "discount", void 0);
     __decorate([
@@ -130,7 +118,7 @@ var ServicesHistory = /** @class */ (function () {
         __metadata("design:type", Boolean)
     ], ServicesHistory.prototype, "isFeatured", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 100, unique: true, nullable: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 100, nullable: true }),
         __metadata("design:type", String)
     ], ServicesHistory.prototype, "sku", void 0);
     __decorate([

@@ -89,6 +89,7 @@ const updateById = async (id: number, data: Services) => {
     });
     return respo;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };

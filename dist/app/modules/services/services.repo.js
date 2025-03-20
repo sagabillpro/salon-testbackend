@@ -176,6 +176,7 @@ var repository = function () { return __awaiter(void 0, void 0, void 0, function
                                 if (!respo) {
                                     throw { message: "Record not found with id: " + id, statusCode: 404 };
                                 }
+                                console.log(__assign(__assign({}, respo), data));
                                 return [4 /*yield*/, repo.save(__assign(__assign({}, respo), data))];
                             case 2:
                                 finalRespo = _a.sent();

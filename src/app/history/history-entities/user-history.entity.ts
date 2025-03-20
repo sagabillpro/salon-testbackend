@@ -25,13 +25,13 @@ export class UsersHistory {
   @Column({ type: "int", nullable: false })
   recordId: number;
 
-  @Column({ type: "varchar", length: 255, nullable: true, unique: true })
+  @Column({ type: "varchar", length: 255, nullable: true,  })
   code: string;
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
 
-  @Column({ type: "varchar", length: 255, nullable: false, unique: true })
+  @Column({ type: "varchar", length: 255, nullable: false,})
   userName: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })

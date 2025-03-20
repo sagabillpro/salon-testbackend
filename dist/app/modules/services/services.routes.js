@@ -83,6 +83,7 @@ router.post("/", authenticate_middleware_1.default, (0, get_model_schema_util_1.
                 return [3 /*break*/, 3];
             case 2:
                 error_2 = _a.sent();
+                console.log(error_2);
                 next(error_2);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
@@ -126,6 +127,7 @@ router.put("/:id", authenticate_middleware_1.default, (0, get_model_schema_util_
                 return [3 /*break*/, 3];
             case 2:
                 error_4 = _a.sent();
+                console.log(error_4);
                 next(error_4);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];

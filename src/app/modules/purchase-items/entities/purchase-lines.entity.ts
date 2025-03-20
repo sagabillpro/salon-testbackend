@@ -40,25 +40,25 @@ export class PurchaseLines {
   @JoinColumn()
   tax: Taxes;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   rate: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   costPrice: number;
 
-  @Column({ type: "decimal", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   unitPrice: number;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   quantity: number;
 
   @Column({ type: "int", nullable: false })
   amount: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   discountAmount: number;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   taxAmount: number;
 
   @CreateDateColumn({ type: "varchar", nullable: false })

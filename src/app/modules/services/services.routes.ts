@@ -33,6 +33,7 @@ router.post(
       const result = await service.create(req.body);
       res.send(result);
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }
@@ -66,6 +67,7 @@ router.put(
       await service.updateById(id, req.body);
       res.send();
     } catch (error) {
+      console.log(error);
       next(error);
     }
   }

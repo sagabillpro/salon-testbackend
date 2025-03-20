@@ -107,6 +107,7 @@ const repository = async () => {
       if (!respo) {
         throw { message: "Record not found with id: " + id, statusCode: 404 };
       }
+      console.log({ ...respo, ...data });
       finalRespo = await repo.save({ ...respo, ...data });
       return finalRespo;
     } catch (error) {

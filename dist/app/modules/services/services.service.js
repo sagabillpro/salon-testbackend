@@ -171,6 +171,7 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 return [2 /*return*/, respo];
             case 5:
                 error_4 = _a.sent();
+                console.log(error_4);
                 throw error_4;
             case 6: return [2 /*return*/];
         }
