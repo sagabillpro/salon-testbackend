@@ -37,12 +37,12 @@ const create = async (data: Contact) => {
 
     const country = await countryRepo.findOne({
       where: {
-        id: data.country.id,
+        id: data.countryId,
       },
     });
     if (!country) {
       throw {
-        message: "Record not found with id: " + data.country.id,
+        message: "Record not found with id: " + data.countryId,
         statusCode: 404,
       };
     }
@@ -66,12 +66,12 @@ const updateById = async (id: number, data: Contact) => {
     const countryRepo = dataSource.getRepository(Country);
     const country = await countryRepo.findOne({
       where: {
-        id: data.country.id,
+        id: data.countryId,
       },
     });
     if (!country) {
       throw {
-        message: "Record not found with id: " + data.country.id,
+        message: "Record not found with id: " + data.countryId,
         statusCode: 404,
       };
     }

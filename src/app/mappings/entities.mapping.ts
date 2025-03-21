@@ -4,6 +4,7 @@ import {
   City,
   Country,
   DContactType,
+  DCoupounType,
   DDateRangeType,
   DFeatureType,
   DIndustryType,
@@ -41,6 +42,8 @@ import { Role } from "../modules/roles/entities/role.entity";
 import { CompanyHistory, ContactHistory, ServicesHistory, UsersHistory } from "../history/history-entities";
 import { StockAdjustmentHeaders } from "../modules/stock-adjustment/entities/stock-adjustment-headers.entity";
 import { StockAdjustmentLines } from "../modules/stock-adjustment/entities/stock-adjustment-lines.entity";
+import { CompanyCoupouns } from "../modules/send-coupouns/entities/company-coupons.entity";
+import { CoupounsList } from "../modules/send-coupouns/entities/coupons-list.entity";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -87,6 +90,9 @@ export const entities:
   UsersHistory,
   ServicesHistory,
   StockAdjustmentHeaders,
-  StockAdjustmentLines
+  StockAdjustmentLines,
+  DCoupounType,
+  CompanyCoupouns,
+  CoupounsList
  // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];

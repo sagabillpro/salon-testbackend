@@ -23,6 +23,7 @@ var authenticateToken = function (req, res, next) {
             return res.status(440).json({ message: "401" });
         }
         // Attach the decoded data to the request object
+        console.log(decoded);
         req.user = decoded;
         next();
     });

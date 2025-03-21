@@ -34,20 +34,28 @@ export class Contact {
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
+
   @Column({ type: "int", nullable: true })
   companyId: number;
 
   @ManyToOne(() => Company, { nullable: true })
   @JoinColumn()
   company: Company;
-
+  @Column({ type: "int", nullable: true })
+  stateId: number;
   @ManyToOne(() => States, { nullable: true })
   @JoinColumn()
   state: States;
 
+  @Column({ type: "int", nullable: true })
+  countryId: number;
+
   @ManyToOne(() => Country, { nullable: true })
   @JoinColumn()
   country: Country;
+
+  @Column({ type: "int", nullable: true })
+  cityId: number;
 
   @ManyToOne(() => City, { nullable: true })
   @JoinColumn()
@@ -55,11 +63,12 @@ export class Contact {
   
   @Column({ type: "int", nullable: true })
   contactTypeId: number;
-  @ManyToOne(() => DContactType, { nullable: false })
+
+  @ManyToOne(() => DContactType, { nullable: true })
   @JoinColumn()
   contactType: DContactType;
 
-  @CreateDateColumn({ type: "varchar", nullable: true })
+  @CreateDateColumn({ type: "date", nullable: true })
   birthDate: string;
 
   @CreateDateColumn({ type: "varchar", nullable: false })
@@ -86,7 +95,7 @@ export class Contact {
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
 
-  @VersionColumn()
+  @VersionColumn({ nullable: true })
   version: number;
 
   @ManyToOne(() => Users)

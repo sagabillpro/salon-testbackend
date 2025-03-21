@@ -26,4 +26,5 @@ __exportStar(require("./dp-contact-types"), exports);
 __exportStar(require("./d-daterange.entity"), exports);
 __exportStar(require("./d-industry-types.entity"), exports);
 __exportStar(require("./d-transaction-status.entity"), exports);
+__exportStar(require("./d-coupoun-types.entity"), exports);
 //# sourceMappingURL=index.js.map

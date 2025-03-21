@@ -39,15 +39,27 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", company_entity_1.Company)
     ], Contact.prototype, "company", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "stateId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.States; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.States)
     ], Contact.prototype, "state", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "countryId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.Country; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.Country)
     ], Contact.prototype, "country", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "cityId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.City; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
@@ -58,12 +70,12 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Contact.prototype, "contactTypeId", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.DContactType; }, { nullable: false }),
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.DContactType; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DContactType)
     ], Contact.prototype, "contactType", void 0);
     __decorate([
-        (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: true }),
+        (0, typeorm_1.CreateDateColumn)({ type: "date", nullable: true }),
         __metadata("design:type", String)
     ], Contact.prototype, "birthDate", void 0);
     __decorate([
@@ -99,7 +111,7 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", String)
     ], Contact.prototype, "modifiedDate", void 0);
     __decorate([
-        (0, typeorm_1.VersionColumn)(),
+        (0, typeorm_1.VersionColumn)({ nullable: true }),
         __metadata("design:type", Number)
     ], Contact.prototype, "version", void 0);
     __decorate([

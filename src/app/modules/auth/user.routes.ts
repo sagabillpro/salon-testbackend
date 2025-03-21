@@ -14,6 +14,7 @@ import { verifyToken } from "../../services";
 import { UserSchema } from "../../schema/user-schema";
 import authenticateToken from "../../middlewares/authenticate.middleware";
 import getQuerySecure from "../../utils/get-query-secure.util";
+import { AuthenticatedRequest } from "../../types";
 const router = Router();
 
 router.get(
@@ -163,7 +164,8 @@ router.post(
 );
 router.get(
   "/me/data",
-  async (req: Request, res: Response, next: NextFunction) => {
+  authenticateToken,
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       // const result = await userService.find(await getQuery(req, Users));
       // const authHeader = req.headers["authorization"];
@@ -181,7 +183,8 @@ router.get(
       //     name: string;
       //   };
       // } = await verifyToken(token);
-      const userData = userService.decodedToken(req, res, next);
+      const userData: any = req?.user;
+      // const userData = userService.decodedToken(req, res, next);
       res.send(userData);
     } catch (error) {
       console.log(error);

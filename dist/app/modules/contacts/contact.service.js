@@ -106,14 +106,14 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                 countryRepo = dataSource.getRepository(entities_1.Country);
                 return [4 /*yield*/, countryRepo.findOne({
                         where: {
-                            id: data.country.id,
+                            id: data.countryId,
                         },
                     })];
             case 2:
                 country = _a.sent();
                 if (!country) {
                     throw {
-                        message: "Record not found with id: " + data.country.id,
+                        message: "Record not found with id: " + data.countryId,
                         statusCode: 404,
                     };
                 }
@@ -145,14 +145,14 @@ var updateById = function (id, data) { return __awaiter(void 0, void 0, void 0, 
                 countryRepo = dataSource.getRepository(entities_1.Country);
                 return [4 /*yield*/, countryRepo.findOne({
                         where: {
-                            id: data.country.id,
+                            id: data.countryId,
                         },
                     })];
             case 2:
                 country = _a.sent();
                 if (!country) {
                     throw {
-                        message: "Record not found with id: " + data.country.id,
+                        message: "Record not found with id: " + data.countryId,
                         statusCode: 404,
                     };
                 }

@@ -33,7 +33,11 @@ var Taxes = /** @class */ (function () {
         __metadata("design:type", String)
     ], Taxes.prototype, "description", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.Country; }),
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Taxes.prototype, "countryId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.Country; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.Country)
     ], Taxes.prototype, "country", void 0);
@@ -68,6 +72,10 @@ var Taxes = /** @class */ (function () {
         ,
         __metadata("design:type", Date)
     ], Taxes.prototype, "deletedAt", void 0);
+    __decorate([
+        (0, typeorm_1.VersionColumn)({ nullable: true }),
+        __metadata("design:type", Number)
+    ], Taxes.prototype, "version", void 0);
     Taxes = __decorate([
         (0, typeorm_1.Entity)("taxes")
     ], Taxes);

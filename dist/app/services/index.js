@@ -18,4 +18,5 @@ __exportStar(require("./send-mail.services"), exports);
 __exportStar(require("./hash-password.service"), exports);
 __exportStar(require("./jwt.service"), exports);
 __exportStar(require("./send-invoice-mail.service"), exports);
+__exportStar(require("./send-birthday-mail.service"), exports);
 //# sourceMappingURL=index.js.map
