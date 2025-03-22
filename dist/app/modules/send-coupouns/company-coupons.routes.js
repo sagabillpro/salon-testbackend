@@ -49,17 +49,16 @@ var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
 var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
 var validateCoupons_schema_1 = require("../../schema/validateCoupons.schema");
+var get_query_secure_util_1 = __importDefault(require("../../utils/get-query-secure.util"));
 var router = (0, express_1.Router)();
-router.get("/", 
-// authenticateToken,
-(0, validate_filter_util_1.validateFilter)(company_coupons_entity_1.CompanyCoupouns), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/", authenticate_middleware_1.default, (0, validate_filter_util_1.validateFilter)(company_coupons_entity_1.CompanyCoupouns), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
         switch (_c.label) {
             case 0:
                 _c.trys.push([0, 3, , 4]);
                 _b = (_a = company_coupons_service_1.default).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, company_coupons_entity_1.CompanyCoupouns)];
+                return [4 /*yield*/, (0, get_query_secure_util_1.default)(req, company_coupons_entity_1.CompanyCoupouns)];
             case 1: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 2:
                 result = _c.sent();
