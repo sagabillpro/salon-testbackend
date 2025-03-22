@@ -6,6 +6,9 @@ import { CompanyCoupouns } from "./entities/company-coupons.entity";
 import CompanyCoupounsService from "./company-coupons.service";
 import { validateRequestBody } from "../../utils/get-model-schema.util";
 import authenticateToken from "../../middlewares/authenticate.middleware";
+import { AuthenticatedRequest } from "../../types";
+import { validateBodyManual } from "../../utils/validate-req-body.util";
+import { ValidateCouponSchema } from "../../schema/validateCoupons.schema";
 const router = Router();
 
 router.get(
@@ -60,7 +63,7 @@ router.put(
   "/:id",
   authenticateToken,
   validateRequestBody(CompanyCoupouns),
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);
       await CompanyCoupounsService.updateById(id, req.body);
@@ -91,6 +94,24 @@ router.get(
     try {
       await CompanyCoupounsService.birthdayScheduler();
       res.send();
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+router.post(
+  "/apply/coupon",
+  authenticateToken,
+  validateBodyManual(ValidateCouponSchema),
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const user: any = req.user;
+      const result = await CompanyCoupounsService.validateCouponCode(
+        user.companyId,
+        req.body.couponCode,
+        req.body.customerId
+      );
+      res.send(result);
     } catch (error) {
       next(error);
     }

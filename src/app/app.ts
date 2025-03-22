@@ -85,10 +85,11 @@ export const startServer = async () => {
 
     // Schedule the job at 3 PM every day
     cron.schedule(
-      "20 13 * * *",
+      "30 20 * * *",
       async () => {
         console.log("🎉 Running Birthday Cron Job at 3 PM");
         await CompanyCoupounsService.birthdayScheduler(); // Your function to fetch customers and send emails
+        await CompanyCoupounsService.anniverseryScheduler();
       },
       { timezone: "Asia/Kolkata" }
     );

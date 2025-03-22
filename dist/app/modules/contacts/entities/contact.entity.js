@@ -75,9 +75,22 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", entities_1.DContactType)
     ], Contact.prototype, "contactType", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "referedById", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Contact; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", Contact)
+    ], Contact.prototype, "referedBy", void 0);
+    __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "date", nullable: true }),
         __metadata("design:type", String)
     ], Contact.prototype, "birthDate", void 0);
+    __decorate([
+        (0, typeorm_1.CreateDateColumn)({ type: "date", nullable: true }),
+        __metadata("design:type", String)
+    ], Contact.prototype, "anniverseryDate", void 0);
     __decorate([
         (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)

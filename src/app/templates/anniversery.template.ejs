@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Happy Anniversary, <%= customerName %>!</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f7f9fc;
+      color: #333333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 650px;
+      margin: auto;
+      background-color: #ffffff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      border: 1px solid #e0e0e0;
+    }
+
+    .header {
+      background-color: #d980d9;
+      color: #ffffff;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .header img {
+      max-width: 120px;
+      margin-bottom: 15px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      margin: 0;
+    }
+
+    .content {
+      padding: 35px 25px;
+      line-height: 1.8;
+      color: #555555;
+      text-align: center;
+    }
+
+    .highlight {
+      color: #d980d9;
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 25px;
+    }
+
+    .coupon {
+      display: inline-block;
+      background-color: #d980d9;
+      color: #ffffff;
+      padding: 16px 32px;
+      border-radius: 8px;
+      font-size: 20px;
+      font-weight: bold;
+      margin: 25px 0;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    .expiry {
+      color: #d9534f;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+
+    .company-message {
+      background-color: #f4f4f4;
+      padding: 20px;
+      border-left: 5px solid #d980d9;
+      margin-top: 30px;
+      font-style: italic;
+      color: #444;
+      border-radius: 5px;
+    }
+
+    .footer {
+      background-color: #f9f9f9;
+      text-align: center;
+      padding: 20px;
+      font-size: 14px;
+      color: #777777;
+      border-top: 1px solid #e0e0e0;
+    }
+
+    .footer strong {
+      color: #d980d9;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="<%= companyLogo %>" alt="<%= companyName %> Logo">
+      <h1>Happy Anniversary, <%= customerName %>! 💖</h1>
+    </div>
+
+    <div class="content">
+      <p class="highlight">A Special Day, A Special Thank You!</p>
+
+      <p>Today marks another year of wonderful moments shared together. We’re truly grateful for your continued trust and loyalty. 💫</p>
+
+      <p>To celebrate this milestone, we’re thrilled to offer you an exclusive <strong>Anniversary Gift!</strong></p>
+
+      <div class="coupon"><%= couponCode %></div>
+
+      <p class="expiry">🎯 Redeem by: <%= couponExpiry %></p>
+
+      <p>Use this special coupon on your next visit and let us be a part of your celebration. Here’s to creating more amazing memories together!</p>
+
+      <div class="company-message">
+        <%= companyMessage %>
+      </div>
+    </div>
+
+    <div class="footer">
+      <strong><%= companyTagline %></strong><br>
+      &copy; <%= new Date().getFullYear() %> <%= companyName %>. All rights reserved.
+    </div>
+  </div>
+</body>
+
+</html>

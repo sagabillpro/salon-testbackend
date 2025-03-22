@@ -62,11 +62,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.sendBirthdayEmail = sendBirthdayEmail;
+exports.sendReferalEmail = sendReferalEmail;
 var path_1 = __importDefault(require("path"));
 var smtpconfig_1 = require("../config/smtpconfig");
 var ejs = __importStar(require("ejs"));
-function sendBirthdayEmail(_a) {
+function sendReferalEmail(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
         var currentDate, templatePath, htmlContent, mailOptions;
         var customer = _b.customer, company = _b.company, couponCode = _b.couponCode, expiresIn = _b.expiresIn, message = _b.message;
@@ -77,7 +77,7 @@ function sendBirthdayEmail(_a) {
                     currentDate.setDate(currentDate.getDate() + expiresIn);
                     // console.log(currentDate.toDateString()); // Example output: "Thu Mar 27 2025"
                     console.log("insode this 2");
-                    templatePath = path_1.default.join(__dirname, "../templates", "birthday.template.ejs");
+                    templatePath = path_1.default.join(__dirname, "../templates", "referal.template.ejs");
                     return [4 /*yield*/, ejs.renderFile(templatePath, {
                             customerName: customer.name,
                             companyLogo: company.logo,
@@ -101,4 +101,4 @@ function sendBirthdayEmail(_a) {
         });
     });
 }
-//# sourceMappingURL=send-birthday-mail.service.js.map
+//# sourceMappingURL=send-referal-code.service.js.map

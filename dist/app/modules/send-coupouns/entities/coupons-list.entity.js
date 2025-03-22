@@ -28,18 +28,26 @@ var CoupounsList = /** @class */ (function () {
         __metadata("design:type", Number)
     ], CoupounsList.prototype, "couponId", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], CoupounsList.prototype, "companyId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return company_coupons_entity_1.CompanyCoupouns; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", company_coupons_entity_1.CompanyCoupouns)
     ], CoupounsList.prototype, "coupon", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
+        __metadata("design:type", Number)
+    ], CoupounsList.prototype, "discountPer", void 0);
+    __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
-    ], CoupounsList.prototype, "isInactive", void 0);
+    ], CoupounsList.prototype, "isUsed", void 0);
     __decorate([
-        (0, typeorm_1.CreateDateColumn)({ type: "timestamp" }),
+        (0, typeorm_1.Column)({ type: "timestamp", nullable: true }),
         __metadata("design:type", Date)
-    ], CoupounsList.prototype, "createdDate", void 0);
+    ], CoupounsList.prototype, "expireAt", void 0);
     CoupounsList = __decorate([
         (0, typeorm_1.Entity)("coupouns_list")
     ], CoupounsList);

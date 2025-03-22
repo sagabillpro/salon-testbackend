@@ -2,7 +2,7 @@ import path from "path";
 import { transporter } from "../config/smtpconfig";
 import * as ejs from "ejs";
 
-export async function sendBirthdayEmail({
+export async function sendAnniverseryEmail({
   customer,
   company,
   couponCode,
@@ -23,7 +23,7 @@ export async function sendBirthdayEmail({
   const templatePath = path.join(
     __dirname,
     "../templates",
-    "birthday.template.ejs"
+    "anniversery.template.ejs"
   );
   const htmlContent = await ejs.renderFile(templatePath, {
     customerName: customer.name,

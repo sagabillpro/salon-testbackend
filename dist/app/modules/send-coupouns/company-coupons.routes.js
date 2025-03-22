@@ -47,6 +47,8 @@ var company_coupons_entity_1 = require("./entities/company-coupons.entity");
 var company_coupons_service_1 = __importDefault(require("./company-coupons.service"));
 var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
 var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
+var validate_req_body_util_1 = require("../../utils/validate-req-body.util");
+var validateCoupons_schema_1 = require("../../schema/validateCoupons.schema");
 var router = (0, express_1.Router)();
 router.get("/", 
 // authenticateToken,
@@ -167,6 +169,26 @@ router.get("/send-coupouns/ss", function (req, res, next) { return __awaiter(voi
             case 2:
                 error_6 = _a.sent();
                 next(error_6);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
+router.post("/apply/coupon", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(validateCoupons_schema_1.ValidateCouponSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, result, error_7;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                user = req.user;
+                return [4 /*yield*/, company_coupons_service_1.default.validateCouponCode(user.companyId, req.body.couponCode, req.body.customerId)];
+            case 1:
+                result = _a.sent();
+                res.send(result);
+                return [3 /*break*/, 3];
+            case 2:
+                error_7 = _a.sent();
+                next(error_7);
                 return [3 /*break*/, 3];
             case 3: return [2 /*return*/];
         }

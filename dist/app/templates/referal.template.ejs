@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Happy Birthday, <%= customerName %>!</title>
+    <title>You've Earned a Reward, <%= customerName %>!</title>
     <style>
       body {
         font-family: 'Arial', sans-serif;
@@ -23,7 +23,7 @@
       }
 
       .header {
-        background-color: #8141d9;
+        background-color: #28a745;
         color: #ffffff;
         text-align: center;
         padding: 40px 20px;
@@ -47,7 +47,7 @@
       }
 
       .highlight {
-        color: #8141d9;
+        color: #28a745;
         font-size: 20px;
         font-weight: 600;
         margin-bottom: 20px;
@@ -55,7 +55,7 @@
 
       .coupon {
         display: inline-block;
-        background-color: #8141d9;
+        background-color: #28a745;
         color: #ffffff;
         padding: 16px 32px;
         border-radius: 8px;
@@ -75,7 +75,7 @@
       .company-message {
         background-color: #f4f4f4;
         padding: 20px;
-        border-left: 5px solid #8141d9;
+        border-left: 5px solid #28a745;
         margin-top: 30px;
         font-style: italic;
         color: #444;
@@ -92,7 +92,7 @@
       }
 
       .footer strong {
-        color: #8141d9;
+        color: #28a745;
       }
     </style>
   </head>
@@ -101,14 +101,16 @@
     <div class="container">
       <div class="header">
         <img src="<%= companyLogo %>" alt="<%= companyName %> Logo" />
-        <h1>Happy Birthday, <%= customerName %>! 🎉</h1>
+        <h1>Congratulations, <%= customerName %>! 🎉</h1>
       </div>
 
       <div class="content">
-        <p class="highlight">Celebrate your special day with us!</p>
+        <p class="highlight">Your Referral Just Paid Off!</p>
         <p>
-          We’re thrilled to be part of your journey. As a token of appreciation,
-          here’s an exclusive birthday gift just for you:
+          We're excited to let you know that your friend
+          <strong><%= referredPersonName %></strong> visited our salon!
+          <br />
+          As promised, here's your exclusive reward coupon:
         </p>
 
         <div class="coupon"><%= couponCode %></div>
@@ -116,11 +118,17 @@
         <p class="expiry">🎯 Valid until: <%= couponExpiry %></p>
 
         <p>
-          Use this coupon on your next visit. Because birthdays deserve to be
-          celebrated in style!
+          Use this coupon on your next visit and enjoy
+          <strong><%= rewardDetails %></strong> on us!
+          <br />
+          Thank you for spreading the word and being a valuable part of the <%=
+          companyName %> family.
         </p>
 
-        <div class="company-message"><%= companyMessage %></div>
+        <div class="company-message">
+          Referrals make everything better. Keep sharing the love and earn more
+          rewards with every successful referral!
+        </div>
       </div>
 
       <div class="footer">

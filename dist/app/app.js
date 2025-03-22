@@ -67,7 +67,7 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                 (0, routes_1.registerRoutes)(app);
                 app.use(errorHandler_middleware_1.errorHandler);
                 // Schedule the job at 3 PM every day
-                node_cron_1.default.schedule("20 13 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+                node_cron_1.default.schedule("30 20 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:
@@ -75,6 +75,9 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                                 return [4 /*yield*/, company_coupons_service_1.default.birthdayScheduler()];
                             case 1:
                                 _a.sent(); // Your function to fetch customers and send emails
+                                return [4 /*yield*/, company_coupons_service_1.default.anniverseryScheduler()];
+                            case 2:
+                                _a.sent();
                                 return [2 /*return*/];
                         }
                     });

@@ -12,7 +12,7 @@ import { CompanyCoupouns } from "./company-coupons.entity";
 @Entity("coupouns_list")
 export class CoupounsList {
   @PrimaryGeneratedColumn({ type: "int" })
-  id: number;
+  id?: number;
 
   @Column({ type: "varchar", length: 255, nullable: true })
   code: string;
@@ -20,13 +20,20 @@ export class CoupounsList {
   @Column({ type: "int", nullable: true })
   couponId: number;
 
+  @Column({ type: "int", nullable: true })
+  companyId: number;
+
   @ManyToOne(() => CompanyCoupouns, { nullable: true })
   @JoinColumn()
-  coupon: CompanyCoupouns;
 
+  coupon?: CompanyCoupouns;
+  
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
+  discountPer: number;
   @Column({ type: "int", default: 0 })
-  isInactive: number;
+  isUsed: number;
 
-  @CreateDateColumn({ type: "timestamp" })
-  createdDate: Date;
+  // ✅ Expiry Date column added
+  @Column({ type: "timestamp", nullable: true })
+  expireAt: Date;
 }

@@ -27,6 +27,9 @@ export class CompanyCoupouns {
   @Column({ type: "int", nullable: true })
   companyId: number;
 
+  @Column({ type: "int", nullable: true })
+  expiresIn: number;
+
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   discountPer: number;
 
@@ -40,8 +43,6 @@ export class CompanyCoupouns {
   @ManyToOne(() => DCoupounType, { nullable: false })
   @JoinColumn()
   coupounType: DCoupounType;
-
-
 
   @Column({ type: "int", default: 0 })
   isActiveted: number;

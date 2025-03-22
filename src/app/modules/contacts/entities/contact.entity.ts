@@ -41,6 +41,7 @@ export class Contact {
   @ManyToOne(() => Company, { nullable: true })
   @JoinColumn()
   company: Company;
+
   @Column({ type: "int", nullable: true })
   stateId: number;
   @ManyToOne(() => States, { nullable: true })
@@ -60,7 +61,7 @@ export class Contact {
   @ManyToOne(() => City, { nullable: true })
   @JoinColumn()
   city: City;
-  
+
   @Column({ type: "int", nullable: true })
   contactTypeId: number;
 
@@ -68,8 +69,18 @@ export class Contact {
   @JoinColumn()
   contactType: DContactType;
 
+  @Column({ type: "int", nullable: true })
+  referedById: number;
+
+  @ManyToOne(() => Contact, { nullable: true })
+  @JoinColumn()
+  referedBy: Contact;
+
   @CreateDateColumn({ type: "date", nullable: true })
   birthDate: string;
+
+  @CreateDateColumn({ type: "date", nullable: true })
+  anniverseryDate: string;
 
   @CreateDateColumn({ type: "varchar", nullable: false })
   mobile: string;

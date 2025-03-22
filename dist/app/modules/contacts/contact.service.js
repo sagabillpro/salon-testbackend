@@ -54,6 +54,7 @@ var contact_repo_1 = __importDefault(require("./contact.repo"));
 var get_object_code_util_1 = require("../../utils/get-object-code.util");
 var dbconfig_1 = require("../../config/dbconfig");
 var entities_1 = require("../general-data/entities");
+var company_coupons_service_1 = __importDefault(require("../send-coupouns/company-coupons.service"));
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -95,11 +96,11 @@ var findById = function (id, filter) { return __awaiter(void 0, void 0, void 0, 
 }); };
 //3. create single record
 var create = function (data) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, countryRepo, country, repo, respo, error_3;
+    var dataSource, countryRepo, country, referedBy, repo, respo, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 5, , 6]);
+                _a.trys.push([0, 8, , 9]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
                 dataSource = _a.sent();
@@ -117,18 +118,33 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                         statusCode: 404,
                     };
                 }
-                return [4 /*yield*/, (0, contact_repo_1.default)()];
+                if (!data.referedById) return [3 /*break*/, 5];
+                return [4 /*yield*/, findById(data.referedById, {})];
             case 3:
+                referedBy = _a.sent();
+                if (!referedBy) {
+                    throw {
+                        message: "Record not found with id: " + data.referedById,
+                        statusCode: 404,
+                    };
+                }
+                return [4 /*yield*/, company_coupons_service_1.default.sendReferalCode(referedBy)];
+            case 4:
+                _a.sent();
+                _a.label = 5;
+            case 5: return [4 /*yield*/, (0, contact_repo_1.default)()];
+            case 6:
                 repo = _a.sent();
                 return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(26, data)];
-            case 4:
+            case 7:
                 data = _a.sent();
                 respo = repo.create(__assign(__assign({}, data), { country: country }));
                 return [2 /*return*/, respo];
-            case 5:
+            case 8:
                 error_3 = _a.sent();
+                console.log(error_3);
                 throw error_3;
-            case 6: return [2 /*return*/];
+            case 9: return [2 /*return*/];
         }
     });
 }); };
