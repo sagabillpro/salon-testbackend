@@ -9,16 +9,17 @@ import authenticateToken from "../../middlewares/authenticate.middleware";
 import { AuthenticatedRequest } from "../../types";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { ValidateCouponSchema } from "../../schema/validateCoupons.schema";
+import getQuerySecure from "../../utils/get-query-secure.util";
 const router = Router();
 
 router.get(
   "/",
-  // authenticateToken,
+  authenticateToken,
   validateFilter(CompanyCoupouns),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const result = await CompanyCoupounsService.find(
-        await getQuery(req, CompanyCoupouns)
+        await getQuerySecure(req, CompanyCoupouns)
       );
       res.send(result);
     } catch (error) {

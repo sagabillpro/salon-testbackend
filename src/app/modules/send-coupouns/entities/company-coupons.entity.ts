@@ -40,7 +40,7 @@ export class CompanyCoupouns {
   @Column({ type: "int", nullable: true })
   coupounTypeId: number;
 
-  @ManyToOne(() => DCoupounType, { nullable: false })
+  @ManyToOne(() => DCoupounType, { nullable: true })
   @JoinColumn()
   coupounType: DCoupounType;
 
