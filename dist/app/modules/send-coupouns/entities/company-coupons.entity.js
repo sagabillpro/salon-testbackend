@@ -54,7 +54,7 @@ var CompanyCoupouns = /** @class */ (function () {
         __metadata("design:type", Number)
     ], CompanyCoupouns.prototype, "coupounTypeId", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return entities_1.DCoupounType; }, { nullable: false }),
+        (0, typeorm_1.ManyToOne)(function () { return entities_1.DCoupounType; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", entities_1.DCoupounType)
     ], CompanyCoupouns.prototype, "coupounType", void 0);
