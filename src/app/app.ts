@@ -7,10 +7,10 @@ import { registerRoutes } from "./routes/routes";
 import { DataSource } from "typeorm";
 import { errorHandler } from "./middlewares/errorHandler.middleware";
 import { handler } from "./config/dbconfig";
-
+import CompanyCoupounsService from "./modules/send-coupouns/company-coupons.service";
 let dataSource: DataSource;
 let httpServer: http.Server; // Keep reference to the server
-
+import cron from "node-cron";
 export const startServer = async () => {
   try {
     const app = express();
@@ -78,11 +78,21 @@ export const startServer = async () => {
         </html>
       `);
     });
-    
-    
+
     // Register routes
     registerRoutes(app);
     app.use(errorHandler);
+
+    // Schedule the job at 3 PM every day
+    cron.schedule(
+      "30 20 * * *",
+      async () => {
+        console.log("🎉 Running Birthday Cron Job at 3 PM");
+        await CompanyCoupounsService.birthdayScheduler(); // Your function to fetch customers and send emails
+        await CompanyCoupounsService.anniverseryScheduler();
+      },
+      { timezone: "Asia/Kolkata" }
+    );
 
     httpServer = http.createServer(app); // Store server instance
     httpServer.listen(App_Port || 3000, () => {

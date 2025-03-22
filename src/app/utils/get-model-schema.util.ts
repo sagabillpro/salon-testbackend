@@ -5,6 +5,7 @@ import addFormats from "ajv-formats";
 import { EntityTarget } from "typeorm";
 import { typeOrmToAjvTypesMapping } from "../mappings";
 import { handler } from "../config/dbconfig";
+import { AuthenticatedRequest } from "../types";
 const ajv = new Ajv({ allErrors: true });
 addFormats(ajv);
 
@@ -86,11 +87,25 @@ export const getModelSchema = async <T extends EntityTarget<T>>(
 
 /** this function can validate req body agains the schema*/
 export const validateRequestBody = <T extends EntityTarget<T>>(model: T) => {
-  return async (req: Request, res: Response, next: NextFunction) => {
+  return async (
+    req: AuthenticatedRequest,
+    res: Response,
+    next: NextFunction
+  ) => {
     try {
+      const user: any = req.user;
       //1. get the datasource object
       const appDataSource = await handler();
       const entityMetadata = appDataSource.getMetadata(model);
+      const modelProperties = entityMetadata.ownColumns.map((column) => {
+        return column?.propertyName;
+      });
+      if (modelProperties.includes("companyId")) {
+        req.body = {
+          ...req.body,
+          companyId: user?.companyId,
+        };
+      }
       const schemaObject = await getModelSchema(model);
       //2. add tabs scheama
       // Map through the relations to retrieve the class names

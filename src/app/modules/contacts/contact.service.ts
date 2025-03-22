@@ -5,6 +5,8 @@ import { Contact } from "./entities/contact.entity";
 import { generateCode } from "../../utils/get-object-code.util";
 import { handler } from "../../config/dbconfig";
 import { City, Country, States } from "../general-data/entities";
+import { sendReferalEmail } from "../../services/send-referal-code.service";
+import CompanyCoupounsService from "../send-coupouns/company-coupons.service";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Contact>) => {
@@ -37,14 +39,26 @@ const create = async (data: Contact) => {
 
     const country = await countryRepo.findOne({
       where: {
-        id: data.country.id,
+        id: data.countryId,
       },
     });
     if (!country) {
       throw {
-        message: "Record not found with id: " + data.country.id,
+        message: "Record not found with id: " + data.countryId,
         statusCode: 404,
       };
+    }
+
+    //find a contact with the refered by id recoved from data and if not fond thrw the error
+    if (data.referedById) {
+      const referedBy = await findById(data.referedById, {});
+      if (!referedBy) {
+        throw {
+          message: "Record not found with id: " + data.referedById,
+          statusCode: 404,
+        };
+      }
+      await CompanyCoupounsService.sendReferalCode(referedBy);
     }
 
     const repo = await repository();
@@ -55,6 +69,7 @@ const create = async (data: Contact) => {
     });
     return respo;
   } catch (error) {
+    console.log(error);
     throw error;
   }
 };
@@ -66,18 +81,18 @@ const updateById = async (id: number, data: Contact) => {
     const countryRepo = dataSource.getRepository(Country);
     const country = await countryRepo.findOne({
       where: {
-        id: data.country.id,
+        id: data.countryId,
       },
     });
     if (!country) {
       throw {
-        message: "Record not found with id: " + data.country.id,
+        message: "Record not found with id: " + data.countryId,
         statusCode: 404,
       };
     }
 
     const repo = await repository();
-  //  data = await generateCode(14, data);
+    //  data = await generateCode(14, data);
     const respo = repo.updateById(id, {
       ...data,
       country: country,

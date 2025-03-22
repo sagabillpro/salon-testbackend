@@ -12,6 +12,7 @@ import {
   DDateRangeType,
   DIndustryType,
   DTransactionStatus,
+  DCoupounType,
 } from "../entities";
 
 export const routeToEntityMap: {
@@ -29,4 +30,5 @@ export const routeToEntityMap: {
   "/date-range-types": DDateRangeType,
   "/industry-types": DIndustryType,
   "/transaction-status": DTransactionStatus,
+  "/coupons-types": DCoupounType,
 };

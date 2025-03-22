@@ -18,7 +18,6 @@ import { DItemType } from "../../modules/general-data/entities";
 import { ItemAvailable } from "../../modules/sale-items/entities/item-stocks.entity";
 import { Users } from "../../modules/auth/entities/user.entity";
 
-
 @Entity("services_history")
 export class ServicesHistory {
   @PrimaryGeneratedColumn({ type: "int" })
@@ -27,12 +26,12 @@ export class ServicesHistory {
   @Column({ type: "int", nullable: false })
   recordId: number;
 
-  @Column({ type: "varchar", length: 255, nullable: true, unique: true })
+  @Column({ type: "varchar", length: 255, nullable: true })
   code: string;
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
-  
+
   @Column({ type: "int", nullable: true })
   companyId: number;
 
@@ -46,7 +45,7 @@ export class ServicesHistory {
   @ManyToOne(() => Taxes, { nullable: true })
   @JoinColumn()
   tax: Taxes;
-  
+
   @Column({ type: "int", nullable: true })
   itemTypeId: number;
 
@@ -54,17 +53,14 @@ export class ServicesHistory {
   @JoinColumn()
   itemType: DItemType;
 
-  @Column({ type: "int", nullable: true })
+  @Column({ type: "int", nullable: true, unique: false })
   inStockId: number;
 
-  @OneToOne(() => ItemAvailable, { nullable: true })
-  @JoinColumn()
-  inStock: ItemAvailable;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   taxAmount: number;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   amount: number;
 
   @Column({ type: "int", default: 0 })
@@ -82,13 +78,7 @@ export class ServicesHistory {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @Column({
-    type: "decimal",
-    precision: 5,
-    scale: 2,
-    default: 0,
-    nullable: true,
-  })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   discount: number;
 
   @Column({ type: "varchar", length: 100, nullable: true })
@@ -106,7 +96,7 @@ export class ServicesHistory {
   @Column({ type: "boolean", default: false, nullable: true })
   isFeatured: boolean;
 
-  @Column({ type: "varchar", length: 100, unique: true, nullable: true })
+  @Column({ type: "varchar", length: 100, nullable: true })
   sku: string;
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
@@ -120,7 +110,6 @@ export class ServicesHistory {
     nullable: true,
   })
   rating: number;
-
 
   @ManyToOne(() => Users)
   @JoinColumn()

@@ -24,6 +24,7 @@ import roleRoutes from "../modules/roles/role.routes";
 import usermenufeaturemapRoute from "../modules/features/usermenufeaturemap.route";
 import historyRoute from "../history/history.route";
 import stockAdjustmentHeadersRoutes from "../modules/stock-adjustment/stock-adjustment-headers.routes";
+import companyCouponsRoutes from "../modules/send-coupouns/company-coupons.routes";
 
 export const routes: Routes = [
   itemRoute,
@@ -50,5 +51,6 @@ export const routes: Routes = [
   roleRoutes,
   usermenufeaturemapRoute,
   historyRoute,
-  stockAdjustmentHeadersRoutes
+  stockAdjustmentHeadersRoutes,
+  companyCouponsRoutes
 ];

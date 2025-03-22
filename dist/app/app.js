@@ -45,8 +45,10 @@ var http_1 = __importDefault(require("http"));
 var routes_1 = require("./routes/routes");
 var errorHandler_middleware_1 = require("./middlewares/errorHandler.middleware");
 var dbconfig_1 = require("./config/dbconfig");
+var company_coupons_service_1 = __importDefault(require("./modules/send-coupouns/company-coupons.service"));
 var dataSource;
 var httpServer; // Keep reference to the server
+var node_cron_1 = __importDefault(require("node-cron"));
 var startServer = function () { return __awaiter(void 0, void 0, void 0, function () {
     var app, App_Port_1, error_1;
     return __generator(this, function (_a) {
@@ -64,6 +66,22 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                 // Register routes
                 (0, routes_1.registerRoutes)(app);
                 app.use(errorHandler_middleware_1.errorHandler);
+                // Schedule the job at 3 PM every day
+                node_cron_1.default.schedule("30 20 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        switch (_a.label) {
+                            case 0:
+                                console.log("🎉 Running Birthday Cron Job at 3 PM");
+                                return [4 /*yield*/, company_coupons_service_1.default.birthdayScheduler()];
+                            case 1:
+                                _a.sent(); // Your function to fetch customers and send emails
+                                return [4 /*yield*/, company_coupons_service_1.default.anniverseryScheduler()];
+                            case 2:
+                                _a.sent();
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }, { timezone: "Asia/Kolkata" });
                 httpServer = http_1.default.createServer(app); // Store server instance
                 httpServer.listen(App_Port_1 || 3000, function () {
                     console.log("HTTP SERVER STARTED ON PORT: ".concat(App_Port_1 || 3000));

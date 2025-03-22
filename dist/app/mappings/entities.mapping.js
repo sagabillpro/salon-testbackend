@@ -30,6 +30,8 @@ var role_entity_1 = require("../modules/roles/entities/role.entity");
 var history_entities_1 = require("../history/history-entities");
 var stock_adjustment_headers_entity_1 = require("../modules/stock-adjustment/entities/stock-adjustment-headers.entity");
 var stock_adjustment_lines_entity_1 = require("../modules/stock-adjustment/entities/stock-adjustment-lines.entity");
+var company_coupons_entity_1 = require("../modules/send-coupouns/entities/company-coupons.entity");
+var coupons_list_entity_1 = require("../modules/send-coupouns/entities/coupons-list.entity");
 exports.entities = [
     items_entity_1.Item,
     item_images_entity_1.ItemImage,
@@ -73,7 +75,10 @@ exports.entities = [
     history_entities_1.UsersHistory,
     history_entities_1.ServicesHistory,
     stock_adjustment_headers_entity_1.StockAdjustmentHeaders,
-    stock_adjustment_lines_entity_1.StockAdjustmentLines
+    stock_adjustment_lines_entity_1.StockAdjustmentLines,
+    entities_1.DCoupounType,
+    company_coupons_entity_1.CompanyCoupouns,
+    coupons_list_entity_1.CoupounsList
     // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];
 //# sourceMappingURL=entities.mapping.js.map

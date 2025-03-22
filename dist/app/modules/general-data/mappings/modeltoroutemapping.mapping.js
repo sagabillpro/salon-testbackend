@@ -15,5 +15,6 @@ exports.routeToEntityMap = {
     "/date-range-types": entities_1.DDateRangeType,
     "/industry-types": entities_1.DIndustryType,
     "/transaction-status": entities_1.DTransactionStatus,
+    "/coupons-types": entities_1.DCoupounType,
 };
 //# sourceMappingURL=modeltoroutemapping.mapping.js.map

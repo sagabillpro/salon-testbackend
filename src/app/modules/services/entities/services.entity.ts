@@ -58,10 +58,10 @@ export class Services {
   @JoinColumn()
   inStock: ItemAvailable;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   taxAmount: number;
 
-  @Column({ type: "int", nullable: false })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   amount: number;
 
   @Column({ type: "int", default: 0 })
@@ -79,13 +79,8 @@ export class Services {
   @Column({ type: "text", nullable: true })
   description: string;
 
-  @Column({
-    type: "decimal",
-    precision: 5,
-    scale: 2,
-    default: 0,
-    nullable: true,
-  })
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
+
   discount: number;
 
   @Column({ type: "varchar", length: 100, nullable: true })

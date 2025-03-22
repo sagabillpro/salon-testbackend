@@ -126,15 +126,22 @@ exports.getModelSchema = getModelSchema;
 /** this function can validate req body agains the schema*/
 var validateRequestBody = function (model) {
     return function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-        var appDataSource, entityMetadata, schemaObject, relations, _i, relations_1, relation, relativeModelSchema, relativeModelSchema, relativeModelSchema, validate, valid, error_1;
+        var user, appDataSource, entityMetadata, modelProperties, schemaObject, relations, _i, relations_1, relation, relativeModelSchema, relativeModelSchema, relativeModelSchema, validate, valid, error_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     _a.trys.push([0, 11, , 12]);
+                    user = req.user;
                     return [4 /*yield*/, (0, dbconfig_1.handler)()];
                 case 1:
                     appDataSource = _a.sent();
                     entityMetadata = appDataSource.getMetadata(model);
+                    modelProperties = entityMetadata.ownColumns.map(function (column) {
+                        return column === null || column === void 0 ? void 0 : column.propertyName;
+                    });
+                    if (modelProperties.includes("companyId")) {
+                        req.body = __assign(__assign({}, req.body), { companyId: user === null || user === void 0 ? void 0 : user.companyId });
+                    }
                     return [4 /*yield*/, (0, exports.getModelSchema)(model)];
                 case 2:
                     schemaObject = _a.sent();

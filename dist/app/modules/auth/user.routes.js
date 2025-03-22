@@ -258,11 +258,12 @@ router.post("/logout", authenticate_middleware_1.default, (0, validate_req_body_
         }
     });
 }); });
-router.get("/me/data", function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/me/data", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var userData;
     return __generator(this, function (_a) {
         try {
-            userData = user_service_1.default.decodedToken(req, res, next);
+            userData = req === null || req === void 0 ? void 0 : req.user;
+            // const userData = userService.decodedToken(req, res, next);
             res.send(userData);
         }
         catch (error) {

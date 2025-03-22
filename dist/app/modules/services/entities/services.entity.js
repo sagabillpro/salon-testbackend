@@ -68,11 +68,11 @@ var Services = /** @class */ (function () {
         __metadata("design:type", item_stocks_entity_1.ItemAvailable)
     ], Services.prototype, "inStock", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], Services.prototype, "taxAmount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], Services.prototype, "amount", void 0);
     __decorate([
@@ -96,13 +96,7 @@ var Services = /** @class */ (function () {
         __metadata("design:type", String)
     ], Services.prototype, "description", void 0);
     __decorate([
-        (0, typeorm_1.Column)({
-            type: "decimal",
-            precision: 5,
-            scale: 2,
-            default: 0,
-            nullable: true,
-        }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], Services.prototype, "discount", void 0);
     __decorate([

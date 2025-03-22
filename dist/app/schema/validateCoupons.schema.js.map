@@ -1,0 +1,1 @@
+{"version":3,"file":"validateCoupons.schema.js","sourceRoot":"","sources":["../../../src/app/schema/validateCoupons.schema.ts"],"names":[],"mappings":";;;AAEa,QAAA,oBAAoB,GAG5B;IACH,IAAI,EAAE,QAAQ;IACd,UAAU,EAAE;QACV,UAAU,EAAE;YACV,IAAI,EAAE,QAAQ;SACf;QACD,IAAI,EAAE;YACJ,IAAI,EAAE,QAAQ;SACf;KACF;IACD,QAAQ,EAAE,CAAC,MAAM,EAAE,YAAY,CAAC;IAChC,oBAAoB,EAAE,KAAK;CAC5B,CAAC"}

@@ -51,19 +51,19 @@ var PurchaseLines = /** @class */ (function () {
         __metadata("design:type", taxes_entity_1.Taxes)
     ], PurchaseLines.prototype, "tax", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "rate", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "costPrice", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "decimal", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "unitPrice", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "quantity", void 0);
     __decorate([
@@ -71,11 +71,11 @@ var PurchaseLines = /** @class */ (function () {
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "amount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "discountAmount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "taxAmount", void 0);
     __decorate([

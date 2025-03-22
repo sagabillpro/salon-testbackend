@@ -25,7 +25,7 @@ var UsersHistory = /** @class */ (function () {
         __metadata("design:type", Number)
     ], UsersHistory.prototype, "recordId", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, unique: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: true, }),
         __metadata("design:type", String)
     ], UsersHistory.prototype, "code", void 0);
     __decorate([
@@ -33,7 +33,7 @@ var UsersHistory = /** @class */ (function () {
         __metadata("design:type", String)
     ], UsersHistory.prototype, "name", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false, unique: true }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 255, nullable: false, }),
         __metadata("design:type", String)
     ], UsersHistory.prototype, "userName", void 0);
     __decorate([
