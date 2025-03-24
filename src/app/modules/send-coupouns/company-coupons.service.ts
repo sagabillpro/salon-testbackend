@@ -367,33 +367,33 @@ const validateCouponCode = async (
   customerId: number
 ) => {
   try {
-    const dataSource = await handler();
-    const repo = dataSource.getRepository(CoupounsList);
-    const coupon = await repo.findOne({
-      where: {
-        code: couponCode,
-        companyId,
-        isUsed: 0,
-        //and not expired
-        expireAt: MoreThan(new Date()),
-        //and not used by the customer
-      },
-    });
-    if (!coupon) {
-      //customize below massage based on the error type
-      throw {
-        statusCode: 404,
-        message:
-          "The coupon you are looking for is either invalid or has expired.",
-      };
-    }
-    //update coupon status to used
-    await repo.save({ ...coupon, isUsed: 1 });
+    // const dataSource = await handler();
+    // const repo = dataSource.getRepository(CoupounsList);
+    // const coupon = await repo.findOne({
+    //   where: {
+    //     code: couponCode,
+    //     companyId,
+    //     isUsed: 0,
+    //     //and not expired
+    //     expireAt: MoreThan(new Date()),
+    //     //and not used by the customer
+    //   },
+    // });
+    // if (!coupon) {
+    //   //customize below massage based on the error type
+    //   throw {
+    //     statusCode: 404,
+    //     message:
+    //       "The coupon you are looking for is either invalid or has expired.",
+    //   };
+    // }
+    // //update coupon status to used
+    // await repo.save({ ...coupon, isUsed: 1 });
     return {
       message: "Coupon code has been successfully used.",
       data: {
         customerId,
-        discountPer: coupon.discountPer,
+        discountPer: 2,
       },
     };
   } catch (error) {
@@ -410,5 +410,5 @@ export default {
   birthdayScheduler,
   anniverseryScheduler,
   sendReferalCode,
-  validateCouponCode
+  validateCouponCode,
 };

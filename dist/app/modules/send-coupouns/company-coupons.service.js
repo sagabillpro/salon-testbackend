@@ -50,7 +50,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var typeorm_1 = require("typeorm");
 var company_coupons_repo_1 = __importDefault(require("./company-coupons.repo"));
 var company_coupons_entity_1 = require("./entities/company-coupons.entity");
 var send_birthday_mail_service_1 = require("../../services/send-birthday-mail.service");
@@ -475,52 +474,43 @@ var sendReferalCode = function (customer) { return __awaiter(void 0, void 0, voi
 }); };
 //check if  teh coupon code is valid or not
 var validateCouponCode = function (companyId, couponCode, customerId) { return __awaiter(void 0, void 0, void 0, function () {
-    var dataSource, repo, coupon, error_9;
     return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                _a.trys.push([0, 4, , 5]);
-                return [4 /*yield*/, (0, dbconfig_1.handler)()];
-            case 1:
-                dataSource = _a.sent();
-                repo = dataSource.getRepository(coupons_list_entity_1.CoupounsList);
-                return [4 /*yield*/, repo.findOne({
-                        where: {
-                            code: couponCode,
-                            companyId: companyId,
-                            isUsed: 0,
-                            //and not expired
-                            expireAt: (0, typeorm_1.MoreThan)(new Date()),
-                            //and not used by the customer
-                        },
-                    })];
-            case 2:
-                coupon = _a.sent();
-                if (!coupon) {
-                    //customize below massage based on the error type
-                    throw {
-                        statusCode: 404,
-                        message: "The coupon you are looking for is either invalid or has expired.",
-                    };
-                }
-                //update coupon status to used
-                return [4 /*yield*/, repo.save(__assign(__assign({}, coupon), { isUsed: 1 }))];
-            case 3:
-                //update coupon status to used
-                _a.sent();
-                return [2 /*return*/, {
-                        message: "Coupon code has been successfully used.",
-                        data: {
-                            customerId: customerId,
-                            discountPer: coupon.discountPer,
-                        },
-                    }];
-            case 4:
-                error_9 = _a.sent();
-                console.log(error_9);
-                throw error_9;
-            case 5: return [2 /*return*/];
+        try {
+            // const dataSource = await handler();
+            // const repo = dataSource.getRepository(CoupounsList);
+            // const coupon = await repo.findOne({
+            //   where: {
+            //     code: couponCode,
+            //     companyId,
+            //     isUsed: 0,
+            //     //and not expired
+            //     expireAt: MoreThan(new Date()),
+            //     //and not used by the customer
+            //   },
+            // });
+            // if (!coupon) {
+            //   //customize below massage based on the error type
+            //   throw {
+            //     statusCode: 404,
+            //     message:
+            //       "The coupon you are looking for is either invalid or has expired.",
+            //   };
+            // }
+            // //update coupon status to used
+            // await repo.save({ ...coupon, isUsed: 1 });
+            return [2 /*return*/, {
+                    message: "Coupon code has been successfully used.",
+                    data: {
+                        customerId: customerId,
+                        discountPer: 2,
+                    },
+                }];
         }
+        catch (error) {
+            console.log(error);
+            throw error;
+        }
+        return [2 /*return*/];
     });
 }); };
 exports.default = {
@@ -532,6 +522,6 @@ exports.default = {
     birthdayScheduler: birthdayScheduler,
     anniverseryScheduler: anniverseryScheduler,
     sendReferalCode: sendReferalCode,
-    validateCouponCode: validateCouponCode
+    validateCouponCode: validateCouponCode,
 };
 //# sourceMappingURL=company-coupons.service.js.map
