@@ -276,6 +276,13 @@ const login = async (data: {
     },
     relations: {
       userType: true,
+      company: true,
+    },
+    select: {
+      company: {
+        name: true,
+        id: true,
+      },
     },
   });
   if (foundUser) {
@@ -286,7 +293,8 @@ const login = async (data: {
       //a. create refresh token and store in db
       const accessToken = generateAccessToken({
         userId: foundUser.id,
-        companyId:foundUser.companyId,
+        companyId: foundUser.companyId,
+        companyName: foundUser.company.name,
         userName: foundUser.userName,
         email: foundUser.email,
         userType: foundUser.userType,
@@ -294,7 +302,9 @@ const login = async (data: {
       //b. create accestoken
       const refreshTokenToken = generateRefreshToken({
         userId: foundUser.id,
-        companyId:foundUser.companyId,
+        companyId: foundUser.companyId,
+        companyName: foundUser.company.name,
+
         userName: foundUser.userName,
         email: foundUser.email,
         userType: foundUser.userType,
@@ -375,6 +385,7 @@ const generateNewAccessToken = async (data: { token: string }) => {
     const userData: {
       userId: number;
       companyId: number;
+      companyName: string;
       userName: string;
       email: string;
       userType: {
@@ -395,7 +406,8 @@ const generateNewAccessToken = async (data: { token: string }) => {
       if (foundSession) {
         const accessToken = generateAccessToken({
           userId: userData.userId,
-          companyId:userData.companyId,
+          companyId: userData.companyId,
+          companyName: userData.companyName,
           userName: userData.userName,
           email: userData.email,
           userType: userData.userType,

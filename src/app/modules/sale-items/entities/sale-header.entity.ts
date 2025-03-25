@@ -88,6 +88,10 @@ export class SaleHeaders {
   
   @Column({ type: "int", nullable: true })
   companyId: number;
+  
+  @Column({ type: "int", nullable: true })
+  couponId: number;
+
 
   @ManyToOne(() => Company, { nullable: true })
   @JoinColumn()

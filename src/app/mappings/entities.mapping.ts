@@ -44,6 +44,7 @@ import { StockAdjustmentHeaders } from "../modules/stock-adjustment/entities/sto
 import { StockAdjustmentLines } from "../modules/stock-adjustment/entities/stock-adjustment-lines.entity";
 import { CompanyCoupouns } from "../modules/send-coupouns/entities/company-coupons.entity";
 import { CoupounsList } from "../modules/send-coupouns/entities/coupons-list.entity";
+import { UOM } from "../modules/uom/entities/uom.entity";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -93,6 +94,7 @@ export const entities:
   StockAdjustmentLines,
   DCoupounType,
   CompanyCoupouns,
-  CoupounsList
+  CoupounsList,
+  UOM
  // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];

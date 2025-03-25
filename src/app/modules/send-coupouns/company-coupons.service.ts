@@ -394,6 +394,7 @@ const validateCouponCode = async (
       data: {
         customerId,
         discountPer: 2,
+        couponId:2
       },
     };
   } catch (error) {

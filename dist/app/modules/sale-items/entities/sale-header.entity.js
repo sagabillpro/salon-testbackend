@@ -97,6 +97,10 @@ var SaleHeaders = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "companyId", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "couponId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", company_entity_1.Company)

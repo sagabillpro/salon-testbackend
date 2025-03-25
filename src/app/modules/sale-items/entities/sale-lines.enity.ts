@@ -12,6 +12,7 @@ import {
 import { SaleHeaders } from "./sale-header.entity";
 import { Services } from "../../services/entities/services.entity";
 import { Taxes } from "../../taxes/entities/taxes.entity";
+import { UOM } from "../../uom/entities/uom.entity";
 
 @Entity("sale_lines")
 //@Unique(["recordId", "id"])
@@ -41,6 +42,13 @@ export class SaleLines {
   @ManyToOne(() => Taxes, { nullable: true })
   @JoinColumn()
   tax: Taxes;
+  
+  @Column({ type: "int", nullable: true })
+  uomId: number;
+
+  @ManyToOne(() => UOM, { nullable: true })
+  @JoinColumn()
+  uom: UOM;
 
   @Column({ type: "int", nullable: false })
   quantity: number;

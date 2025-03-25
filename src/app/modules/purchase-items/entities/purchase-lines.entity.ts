@@ -11,6 +11,7 @@ import {
 import { Services } from "../../services/entities/services.entity";
 import { Taxes } from "../../taxes/entities/taxes.entity";
 import { PurchaseHeaders } from "./purchase-headers.entity";
+import { UOM } from "../../uom/entities/uom.entity";
 
 @Entity("purchase_lines")
 export class PurchaseLines {
@@ -51,7 +52,12 @@ export class PurchaseLines {
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   quantity: number;
+  @Column({ type: "int", nullable: true })
+  uomId: number;
 
+  @ManyToOne(() => UOM, { nullable: true })
+  @JoinColumn()
+  uom: UOM;
   @Column({ type: "int", nullable: false })
   amount: number;
 

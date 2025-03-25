@@ -503,6 +503,7 @@ var validateCouponCode = function (companyId, couponCode, customerId) { return _
                     data: {
                         customerId: customerId,
                         discountPer: 2,
+                        couponId: 2
                     },
                 }];
         }

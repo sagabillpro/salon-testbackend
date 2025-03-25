@@ -14,6 +14,7 @@ var typeorm_1 = require("typeorm");
 var services_entity_1 = require("../../services/entities/services.entity");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var purchase_headers_entity_1 = require("./purchase-headers.entity");
+var uom_entity_1 = require("../../uom/entities/uom.entity");
 var PurchaseLines = /** @class */ (function () {
     function PurchaseLines() {
     }
@@ -66,6 +67,15 @@ var PurchaseLines = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "quantity", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseLines.prototype, "uomId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return uom_entity_1.UOM; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", uom_entity_1.UOM)
+    ], PurchaseLines.prototype, "uom", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)

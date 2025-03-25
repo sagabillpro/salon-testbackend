@@ -107,6 +107,16 @@ exports.PurchaseHeadersSchema = {
                     costPrice: {
                         type: "number", // Changed to number for decimals
                     },
+                    uom: {
+                        type: "object",
+                        properties: {
+                            id: { type: "integer" },
+                            name: { type: "string" },
+                        },
+                        required: ["id", "name"],
+                        additionalProperties: false,
+                    },
+                    uomId: { type: "number" },
                     discountAmount: {
                         type: "number", // Changed to number for decimals
                     },

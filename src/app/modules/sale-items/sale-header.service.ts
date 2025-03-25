@@ -695,6 +695,7 @@ import contactService from "../contacts/contact.service";
 import companyService from "../company/company.service";
 import { dataSource } from "../../app";
 import { Company } from "../company/entities/company.entity";
+import { CoupounsList } from "../send-coupouns/entities/coupons-list.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -822,6 +823,14 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
   try {
     const dataSource = await handler();
     const companyRepo = dataSource.getRepository(Company);
+    const couponListRepo = dataSource.getRepository(CoupounsList);
+    let foundCoupons: any = new CoupounsList();
+    if (data.couponId) {
+      foundCoupons =
+        (await couponListRepo.findOneBy({
+          id: data.couponId,
+        })) || null;
+    }
     const itemLines = data.saleLines.filter((line) => !line.isService);
     const company = await companyRepo.findOne({
       where: {
@@ -1079,6 +1088,20 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         console.log("check 9");
         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
+        //set last visited date 
+        await transactionalEntityManager.save(Customer, {
+          ...customer,
+          lastVisitedDate: new Date().toISOString(),
+        });
+
+        if (foundCoupons) {
+          await transactionalEntityManager.save(CoupounsList, {
+            ...foundCoupons,
+            isUsed: 1,
+          });
+        }
+
+        foundCoupons;
         const headerEntry = transactionalEntityManager.create(
           SaleHeaders,
           data
