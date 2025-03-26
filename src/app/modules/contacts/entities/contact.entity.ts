@@ -82,10 +82,10 @@ export class Contact {
   @CreateDateColumn({ type: "date", nullable: true })
   anniverseryDate: string;
 
-  @CreateDateColumn({ type: "varchar", nullable: false })
+  @Column({ type: "varchar", nullable: false })
   mobile: string;
 
-  @CreateDateColumn({ type: "varchar", nullable: true })
+  @Column({ type: "varchar", nullable: true })
   email: string;
 
   @Column({ type: "varchar", nullable: true })

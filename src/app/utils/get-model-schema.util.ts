@@ -100,7 +100,7 @@ export const validateRequestBody = <T extends EntityTarget<T>>(model: T) => {
       const modelProperties = entityMetadata.ownColumns.map((column) => {
         return column?.propertyName;
       });
-      if (modelProperties.includes("companyId")) {
+      if (modelProperties.includes("companyId") && !req.body["companyId"]) {
         req.body = {
           ...req.body,
           companyId: user?.companyId,
