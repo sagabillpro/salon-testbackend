@@ -96,7 +96,7 @@ router.post(
   validateBodyManual(SaleHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await saleHeaderService.createBulk(req.body);
+      const result = await saleHeaderService.createBulk(req, req.body);
       res.send(result);
     } catch (error) {
       next(error);

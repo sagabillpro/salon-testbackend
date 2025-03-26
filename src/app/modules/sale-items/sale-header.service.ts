@@ -696,6 +696,8 @@ import companyService from "../company/company.service";
 import { dataSource } from "../../app";
 import { Company } from "../company/entities/company.entity";
 import { CoupounsList } from "../send-coupouns/entities/coupons-list.entity";
+import { Request } from "express";
+import { AuthenticatedRequest } from "../../types";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -818,7 +820,12 @@ const deleteById = async (id: number) => {
   }
 };
 //3. create single record
-const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
+const createBulk = async (
+  req: AuthenticatedRequest,
+  data: SaleHeaders,
+  isService: boolean = false
+) => {
+  const user: any = req.user;
   console.log("insde thsi .....");
   try {
     const dataSource = await handler();
@@ -834,7 +841,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
     const itemLines = data.saleLines.filter((line) => !line.isService);
     const company = await companyRepo.findOne({
       where: {
-        id: 40,
+        id: user.companyId,
       },
       select: {
         id: true,
@@ -1088,7 +1095,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         console.log("check 9");
         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
-        //set last visited date 
+        //set last visited date
         await transactionalEntityManager.save(Customer, {
           ...customer,
           lastVisitedDate: new Date().toISOString(),

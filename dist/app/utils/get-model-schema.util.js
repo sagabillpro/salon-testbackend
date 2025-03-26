@@ -139,7 +139,7 @@ var validateRequestBody = function (model) {
                     modelProperties = entityMetadata.ownColumns.map(function (column) {
                         return column === null || column === void 0 ? void 0 : column.propertyName;
                     });
-                    if (modelProperties.includes("companyId")) {
+                    if (modelProperties.includes("companyId") && !req.body["companyId"]) {
                         req.body = __assign(__assign({}, req.body), { companyId: user === null || user === void 0 ? void 0 : user.companyId });
                     }
                     return [4 /*yield*/, (0, exports.getModelSchema)(model)];
