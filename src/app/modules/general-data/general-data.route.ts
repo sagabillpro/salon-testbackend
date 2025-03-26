@@ -324,7 +324,7 @@ router.get(
 //get object for user menus and screens
 router.get(
   "/get-user-features",
-  
+
   authenticateToken,
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
@@ -408,7 +408,7 @@ router.get(
 );
 router.get(
   "/menus-new",
-  
+
   authenticateToken,
   async (req: AuthenticatedRequest, res: Response) => {
     try {
