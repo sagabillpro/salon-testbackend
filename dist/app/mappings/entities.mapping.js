@@ -33,6 +33,9 @@ var stock_adjustment_lines_entity_1 = require("../modules/stock-adjustment/entit
 var company_coupons_entity_1 = require("../modules/send-coupouns/entities/company-coupons.entity");
 var coupons_list_entity_1 = require("../modules/send-coupouns/entities/coupons-list.entity");
 var uom_entity_1 = require("../modules/uom/entities/uom.entity");
+var tax_groups_entity_1 = require("../modules/taxes/entities/tax-groups.entity");
+var taxes_new_entity_1 = require("../modules/taxes/entities/taxes-new.entity");
+var tax_group_compnents_entity_1 = require("../modules/taxes/entities/tax-group-compnents.entity");
 exports.entities = [
     items_entity_1.Item,
     item_images_entity_1.ItemImage,
@@ -80,7 +83,10 @@ exports.entities = [
     entities_1.DCoupounType,
     company_coupons_entity_1.CompanyCoupouns,
     coupons_list_entity_1.CoupounsList,
-    uom_entity_1.UOM
+    uom_entity_1.UOM,
+    tax_groups_entity_1.TaxGroup,
+    taxes_new_entity_1.TaxNew,
+    tax_group_compnents_entity_1.TaxGroupComponent
     // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];
 //# sourceMappingURL=entities.mapping.js.map

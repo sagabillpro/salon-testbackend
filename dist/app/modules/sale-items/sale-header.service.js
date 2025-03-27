@@ -872,18 +872,19 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 //3. create single record
-var createBulk = function (data_1) {
+var createBulk = function (req_1, data_1) {
     var args_1 = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args_1[_i - 1] = arguments[_i];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args_1[_i - 2] = arguments[_i];
     }
-    return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isService) {
-        var dataSource_2, companyRepo, couponListRepo, foundCoupons_1, itemLines, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer_1, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
+    return __awaiter(void 0, __spreadArray([req_1, data_1], args_1, true), void 0, function (req, data, isService) {
+        var user, dataSource_2, companyRepo, couponListRepo, foundCoupons_1, itemLines, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer_1, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
         var _a, _b;
         if (isService === void 0) { isService = false; }
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
+                    user = req.user;
                     console.log("insde thsi .....");
                     _c.label = 1;
                 case 1:
@@ -906,7 +907,7 @@ var createBulk = function (data_1) {
                     itemLines = data.saleLines.filter(function (line) { return !line.isService; });
                     return [4 /*yield*/, companyRepo.findOne({
                             where: {
-                                id: 40,
+                                id: user.companyId,
                             },
                             select: {
                                 id: true,
@@ -1127,10 +1128,10 @@ var createBulk = function (data_1) {
                                         return [4 /*yield*/, transactionalEntityManager.save(item_stocks_entity_1.ItemAvailable, itemsAvailable_1)];
                                     case 2:
                                         _a.sent();
-                                        //set last visited date 
+                                        //set last visited date
                                         return [4 /*yield*/, transactionalEntityManager.save(customer_entity_1.Customer, __assign(__assign({}, customer_1), { lastVisitedDate: new Date().toISOString() }))];
                                     case 3:
-                                        //set last visited date 
+                                        //set last visited date
                                         _a.sent();
                                         if (!foundCoupons_1) return [3 /*break*/, 5];
                                         return [4 /*yield*/, transactionalEntityManager.save(coupons_list_entity_1.CoupounsList, __assign(__assign({}, foundCoupons_1), { isUsed: 1 }))];
