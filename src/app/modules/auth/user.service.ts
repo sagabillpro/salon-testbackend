@@ -282,6 +282,9 @@ const login = async (data: {
       company: {
         name: true,
         id: true,
+        upiId: true,
+        stateId: true,
+        taxId: true,
       },
     },
   });
@@ -295,7 +298,11 @@ const login = async (data: {
         userId: foundUser.id,
         companyId: foundUser.companyId,
         companyName: foundUser.company.name,
+        upiId: foundUser.company.upiId,
+        stateId: foundUser.company.stateId,
+        taxId: foundUser.company.taxId,
         userName: foundUser.userName,
+
         email: foundUser.email,
         userType: foundUser.userType,
       });
@@ -304,7 +311,9 @@ const login = async (data: {
         userId: foundUser.id,
         companyId: foundUser.companyId,
         companyName: foundUser.company.name,
-
+        upiId: foundUser.company.upiId,
+        stateId: foundUser.company.stateId,
+        taxId: foundUser.company.taxId,
         userName: foundUser.userName,
         email: foundUser.email,
         userType: foundUser.userType,
@@ -386,6 +395,9 @@ const generateNewAccessToken = async (data: { token: string }) => {
       userId: number;
       companyId: number;
       companyName: string;
+      upiId: string;
+      stateId: number;
+      taxId: number;
       userName: string;
       email: string;
       userType: {
@@ -407,6 +419,9 @@ const generateNewAccessToken = async (data: { token: string }) => {
         const accessToken = generateAccessToken({
           userId: userData.userId,
           companyId: userData.companyId,
+          upiId: userData.upiId,
+          stateId: userData.stateId,
+          taxId: userData.taxId,
           companyName: userData.companyName,
           userName: userData.userName,
           email: userData.email,

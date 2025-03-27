@@ -9,6 +9,9 @@ export function generateAccessToken(payload: {
   userId: number;
   companyId: number;
   companyName: string;
+  upiId:string,
+  stateId:number,
+  taxId:number
   userName: string;
   email: string;
   userType: {
@@ -27,7 +30,9 @@ export function generateRefreshToken(payload: {
   userId: number;
   companyId: number;
   companyName: string;
-
+  upiId:string,
+  stateId:number,
+  taxId:number
   email: string;
   userType: {
     id: number;
