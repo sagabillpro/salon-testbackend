@@ -20,7 +20,7 @@ export class UserSessions {
   @JoinColumn()
   user: Users;
 
-  @Column({ type: "varchar", length: 500, nullable: false })
+  @Column({ type: "varchar", length: 1000, nullable: true })
   token: string;
   
   @Column({ type: "int", default: 0 })
