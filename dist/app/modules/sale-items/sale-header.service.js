@@ -885,7 +885,7 @@ var createBulk = function (req_1, data_1) {
             switch (_c.label) {
                 case 0:
                     user = req.user;
-                    console.log("insde thsi .....");
+                    data = __assign(__assign({}, data), { companyId: user.companyId });
                     _c.label = 1;
                 case 1:
                     _c.trys.push([1, 13, , 14]);

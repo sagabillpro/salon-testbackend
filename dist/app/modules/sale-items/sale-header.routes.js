@@ -159,11 +159,12 @@ router.delete("/:id", authenticate_middleware_1.default, function (req, res, nex
     });
 }); });
 router.post("/bulk", authenticate_middleware_1.default, (0, validate_req_body_util_1.validateBodyManual)(sale_header_schema_1.SaleHeadersSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, error_6;
+    var user, result, error_6;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
+                user = req.user;
                 return [4 /*yield*/, sale_header_service_1.default.createBulk(req, req.body)];
             case 1:
                 result = _a.sent();

@@ -826,7 +826,7 @@ const createBulk = async (
   isService: boolean = false
 ) => {
   const user: any = req.user;
-  console.log("insde thsi .....");
+  data = { ...data, companyId: user.companyId };
   try {
     const dataSource = await handler();
     const companyRepo = dataSource.getRepository(Company);
