@@ -39,6 +39,15 @@ exports.PurchaseHeadersSchema = {
         saleInvoiceNumber: {
             type: "string",
         },
+        supplier: {
+            type: "object",
+            properties: {
+                id: { type: "integer" },
+                name: { type: "string" },
+            },
+            required: ["id", "name"],
+            additionalProperties: false,
+        },
         supplierId: {
             type: "integer",
         },
@@ -153,7 +162,7 @@ exports.PurchaseHeadersSchema = {
         "grandTotal",
         "createdDate",
         "modifiedDate",
-        "supplierId",
+        "supplier",
         "userId",
         "paymentTypeId",
         "purchaseLines",

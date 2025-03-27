@@ -952,7 +952,7 @@ var createBulk = function (req_1, data_1) {
                     itemIds_1 = [];
                     errors_1 = [];
                     itemToQauntityMap_1 = {};
-                    return [4 /*yield*/, contact_service_1.default.findById(data.customerId)];
+                    return [4 /*yield*/, contact_service_1.default.findById(data.customer.id)];
                 case 7:
                     customer_1 = _c.sent();
                     customerDetails = {

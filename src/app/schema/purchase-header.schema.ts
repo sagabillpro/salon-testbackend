@@ -36,6 +36,15 @@ export const PurchaseHeadersSchema: any = {
     saleInvoiceNumber: {
       type: "string",
     },
+    supplier: {
+      type: "object",
+      properties: {
+        id: { type: "integer" },
+        name: { type: "string" },
+      },
+      required: ["id", "name"],
+      additionalProperties: false,
+    },
     supplierId: {
       type: "integer",
     },
@@ -151,7 +160,7 @@ export const PurchaseHeadersSchema: any = {
     "grandTotal",
     "createdDate",
     "modifiedDate",
-    "supplierId",
+    "supplier",
     "userId",
     "paymentTypeId",
     "purchaseLines",

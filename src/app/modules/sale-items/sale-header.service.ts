@@ -907,7 +907,7 @@ const createBulk = async (
       };
     } = {};
     //get customer data custo
-    let customer = await contactService.findById(data.customerId);
+    let customer = await contactService.findById(data.customer.id);
 
     const customerDetails = {
       clientName: customer.name,
