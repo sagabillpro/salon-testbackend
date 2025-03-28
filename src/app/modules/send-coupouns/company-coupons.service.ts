@@ -16,6 +16,7 @@ import { handler } from "../../config/dbconfig";
 import { Contact } from "../contacts/entities/contact.entity";
 import { sendAnniverseryEmail } from "../../services/send-anniversery-mail.service";
 import { CoupounsList } from "./entities/coupons-list.entity";
+import { generateCode } from "../../utils/get-object-code.util";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<CompanyCoupouns>) => {
@@ -44,7 +45,7 @@ const findById = async (
 const create = async (data: CompanyCoupouns) => {
   try {
     const repo = await repository();
-    // data = await generateCode(26, data);
+    data = await generateCode(31, data);
     const respo = repo.create({
       ...data,
     });

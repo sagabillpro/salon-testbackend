@@ -977,7 +977,6 @@ var createBulk = function (req_1, data_1) {
                     });
                     console.log("check 1");
                     itemLines.forEach(function (value) {
-                        var _a, _b;
                         // invoiceItems.push({
                         //   name: value.service.name,
                         //   quantity: value.quantity,
@@ -986,14 +985,14 @@ var createBulk = function (req_1, data_1) {
                         //   tax: value.taxAmount,
                         //   taxName: value.tax.name,
                         // });
-                        newInvoiceItems_1.push({
-                            description: (_a = value === null || value === void 0 ? void 0 : value.service) === null || _a === void 0 ? void 0 : _a.name,
-                            quantity: value === null || value === void 0 ? void 0 : value.quantity,
-                            unitCost: value.rate,
-                            taxPercentage: (_b = value === null || value === void 0 ? void 0 : value.tax) === null || _b === void 0 ? void 0 : _b.name,
-                            taxAmount: value.taxAmount,
-                            lineTotal: Number(value.amount),
-                        });
+                        // newInvoiceItems.push({
+                        //   description: value?.service?.name,
+                        //   quantity: value?.quantity,
+                        //   unitCost: value.rate,
+                        //   taxPercentage: value?.tax?.name,
+                        //   taxAmount: value.taxAmount,
+                        //   lineTotal: Number(value.amount),
+                        // });
                         itemIds_1.push(value.service.id);
                     });
                     console.log("check 2");
