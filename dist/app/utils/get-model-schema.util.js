@@ -127,14 +127,15 @@ exports.getModelSchema = getModelSchema;
 var validateRequestBody = function (model) {
     return function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
         var user, appDataSource, entityMetadata, modelProperties, schemaObject, relations, _i, relations_1, relation, relativeModelSchema, relativeModelSchema, relativeModelSchema, validate, valid, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
+        var _a;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
                 case 0:
-                    _a.trys.push([0, 11, , 12]);
+                    _b.trys.push([0, 11, , 12]);
                     user = req.user;
                     return [4 /*yield*/, (0, dbconfig_1.handler)()];
                 case 1:
-                    appDataSource = _a.sent();
+                    appDataSource = _b.sent();
                     entityMetadata = appDataSource.getMetadata(model);
                     modelProperties = entityMetadata.ownColumns.map(function (column) {
                         return column === null || column === void 0 ? void 0 : column.propertyName;
@@ -142,9 +143,15 @@ var validateRequestBody = function (model) {
                     if (modelProperties.includes("companyId") && !req.body["companyId"]) {
                         req.body = __assign(__assign({}, req.body), { companyId: user === null || user === void 0 ? void 0 : user.companyId });
                     }
+                    //add created by and modified by if present in modelProperties and skip created by in id present in req.body
+                    //add created by and modified by if present in modelProperties and skip created by in id present in req.body
+                    if (modelProperties.includes("createdById") &&
+                        modelProperties.includes("modifiedById")) {
+                        req.body = __assign(__assign(__assign({}, req.body), (((_a = req.body) === null || _a === void 0 ? void 0 : _a.id) ? {} : { createdById: user === null || user === void 0 ? void 0 : user.userId })), { modifiedBy: user === null || user === void 0 ? void 0 : user.userId });
+                    }
                     return [4 /*yield*/, (0, exports.getModelSchema)(model)];
                 case 2:
-                    schemaObject = _a.sent();
+                    schemaObject = _b.sent();
                     relations = entityMetadata.relations.map(function (relation) {
                         return {
                             propertyName: relation.propertyName,
@@ -154,14 +161,14 @@ var validateRequestBody = function (model) {
                         };
                     });
                     _i = 0, relations_1 = relations;
-                    _a.label = 3;
+                    _b.label = 3;
                 case 3:
                     if (!(_i < relations_1.length)) return [3 /*break*/, 10];
                     relation = relations_1[_i];
                     if (!(relation.relationType === "one-to-many")) return [3 /*break*/, 5];
                     return [4 /*yield*/, (0, exports.getModelSchema)(relation.className)];
                 case 4:
-                    relativeModelSchema = _a.sent();
+                    relativeModelSchema = _b.sent();
                     schemaObject["properties"][relation.propertyName] = {
                         type: "array",
                         //b. assign to properties
@@ -169,12 +176,12 @@ var validateRequestBody = function (model) {
                     };
                     //b. make it required
                     schemaObject.required.push(relation.propertyName);
-                    _a.label = 5;
+                    _b.label = 5;
                 case 5:
                     if (!(relation.relationType === "many-to-one")) return [3 /*break*/, 7];
                     return [4 /*yield*/, (0, exports.getModelSchema)(relation.className)];
                 case 6:
-                    relativeModelSchema = _a.sent();
+                    relativeModelSchema = _b.sent();
                     // set only id as required
                     relativeModelSchema.required = ["id"];
                     schemaObject["properties"][relation.propertyName] =
@@ -184,12 +191,12 @@ var validateRequestBody = function (model) {
                         !schemaObject.required.includes(relation.propertyName)) {
                         schemaObject.required.push(relation.propertyName);
                     }
-                    _a.label = 7;
+                    _b.label = 7;
                 case 7:
                     if (!(relation.relationType === "one-to-one")) return [3 /*break*/, 9];
                     return [4 /*yield*/, (0, exports.getModelSchema)(relation.className)];
                 case 8:
-                    relativeModelSchema = _a.sent();
+                    relativeModelSchema = _b.sent();
                     // set only id as required
                     relativeModelSchema.required = ["id"];
                     schemaObject["properties"][relation.propertyName] =
@@ -199,7 +206,7 @@ var validateRequestBody = function (model) {
                         !schemaObject.required.includes(relation.propertyName)) {
                         schemaObject.required.push(relation.propertyName);
                     }
-                    _a.label = 9;
+                    _b.label = 9;
                 case 9:
                     _i++;
                     return [3 /*break*/, 3];
@@ -212,7 +219,7 @@ var validateRequestBody = function (model) {
                     next();
                     return [3 /*break*/, 12];
                 case 11:
-                    error_1 = _a.sent();
+                    error_1 = _b.sent();
                     console.log(error_1);
                     res.status(422).json(error_1);
                     return [3 /*break*/, 12];

@@ -94,6 +94,24 @@ var Users = /** @class */ (function () {
         (0, typeorm_1.VersionColumn)({ nullable: true }),
         __metadata("design:type", Number)
     ], Users.prototype, "version", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Users.prototype, "modifiedById", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", Users)
+    ], Users.prototype, "createdBy", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", Users)
+    ], Users.prototype, "modifiedBy", void 0);
     Users = __decorate([
         (0, typeorm_1.Entity)("users")
     ], Users);

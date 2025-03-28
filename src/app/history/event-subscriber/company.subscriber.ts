@@ -21,6 +21,10 @@ export class CompanySubscriber implements EntitySubscriberInterface<Company> {
    * @param event - The update event triggered by TypeORM.
    */
   async beforeUpdate(event: UpdateEvent<Company>): Promise<void> {
+    //add modified by code by fetingg user details from req.user
+    // const user = req.user;
+    // history.createdBy = user.id; // add modified by id here
+    console.log(event.databaseEntity.modifiedById);
     // Ensure we have the entity data. If it is not loaded, skip history recording.
     if (event.entity) {
       const history = new CompanyHistory();
@@ -34,7 +38,7 @@ export class CompanySubscriber implements EntitySubscriberInterface<Company> {
       history.createdById = event.entity.createdById;
       history.email = event.entity.email;
       history.industryType = event.entity.industryType;
-      history.modifiedById = event.entity.modifiedById;
+      history.modifiedById = event.databaseEntity.modifiedById;
       history.phoneNumber = event.entity.phoneNumber;
       history.postalCode = event.entity.postalCode;
       history.registrationNumber = event.entity.registrationNumber;

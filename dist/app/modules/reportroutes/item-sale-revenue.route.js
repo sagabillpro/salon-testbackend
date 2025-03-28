@@ -48,13 +48,17 @@ var sale_lines_enity_1 = require("../sale-items/entities/sale-lines.enity");
 var sale_header_entity_1 = require("../sale-items/entities/sale-header.entity");
 var services_entity_1 = require("../services/entities/services.entity");
 var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
+var exceljs_1 = __importDefault(require("exceljs"));
+var get_report_headers_util_1 = require("../../utils/get-report-headers.util");
+var stream_1 = require("stream");
 var router = (0, express_1.Router)();
 router.get("/", authenticate_middleware_1.default, (0, validateFilterManual_util_1.validateFilterManual)(report_schema_1.ReportSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var query, dataSource, data, error_1;
+    var user, query, dataSource, data, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 3, , 4]);
+                user = req === null || req === void 0 ? void 0 : req.user;
                 query = req.query.filter ? JSON.parse("".concat(req.query.filter)) : {};
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
@@ -72,11 +76,12 @@ router.get("/", authenticate_middleware_1.default, (0, validateFilterManual_util
                     ])
                         .innerJoin(sale_header_entity_1.SaleHeaders, "sh", "sl.txnHeaderId = sh.id")
                         .innerJoin(services_entity_1.Services, "sc", "sl.serviceId = sc.id")
-                        .where("sh.isService = :isService", { isService: 0 })
+                        .where("sc.isService = :isService", { isService: 0 })
                         .andWhere("sh.txnDate BETWEEN :start AND :end", {
                         start: query.where.startDate,
                         end: query.where.endDate,
                     })
+                        .andWhere("sh.companyId = :companyId", { companyId: user.companyId })
                         .groupBy("sc.name")
                         .getRawMany()];
             case 2:
@@ -88,6 +93,61 @@ router.get("/", authenticate_middleware_1.default, (0, validateFilterManual_util
                 next(error_1);
                 return [3 /*break*/, 4];
             case 4: return [2 /*return*/];
+        }
+    });
+}); });
+router.get("/download", (0, validateFilterManual_util_1.validateFilterManual)(report_schema_1.ReportSchema), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var user, query, dataSource, result, workbook, worksheet, stream, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 4, , 5]);
+                user = req === null || req === void 0 ? void 0 : req.user;
+                query = req.query.filter ? JSON.parse("".concat(req.query.filter)) : {};
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _a.sent();
+                return [4 /*yield*/, dataSource
+                        .getRepository(sale_lines_enity_1.SaleLines) // Replace 'sale_lines' with your actual SaleLines entity name
+                        .createQueryBuilder("sl")
+                        .select([
+                        'sc.name AS "name"', // Service name
+                        'SUM(sl.quantity) AS "totalQuantity"', // Total quantity
+                        'SUM(sl.rate * sl.quantity) AS "totalSaleAmount"', // Total sale amount
+                        'SUM(sl.taxAmount) AS "totalTaxAmount"', // Total tax amount
+                        'SUM(sl.discountAmount) AS "totalDiscountAmount"', // Total discount amount
+                        'SUM(sl.amount) AS "grandTotal"', // Grand total
+                    ])
+                        .innerJoin(sale_header_entity_1.SaleHeaders, "sh", "sl.txnHeaderId = sh.id")
+                        .innerJoin(services_entity_1.Services, "sc", "sl.serviceId = sc.id")
+                        .where("sc.isService = :isService", { isService: 0 })
+                        .andWhere("sh.txnDate BETWEEN :start AND :end", {
+                        start: query.where.startDate,
+                        end: query.where.endDate,
+                    })
+                        .andWhere("sh.companyId = :companyId", { companyId: user.companyId })
+                        .groupBy("sc.name")
+                        .getRawMany()];
+            case 2:
+                result = _a.sent();
+                workbook = new exceljs_1.default.Workbook();
+                worksheet = workbook.addWorksheet("Report");
+                worksheet = (0, get_report_headers_util_1.getWorksheetColumnsFromSchema)(14, worksheet, result);
+                // 5. Stream the Excel file as a response
+                res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+                res.setHeader("Content-Disposition", "attachment; filename=sale-report".concat(Date.now(), ".xlsx"));
+                stream = new stream_1.PassThrough();
+                return [4 /*yield*/, workbook.xlsx.write(stream)];
+            case 3:
+                _a.sent();
+                // 7. Pipe the stream directly to the response
+                stream.pipe(res);
+                return [3 /*break*/, 5];
+            case 4:
+                error_2 = _a.sent();
+                next(error_2);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
         }
     });
 }); });

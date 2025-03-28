@@ -158,6 +158,14 @@ var Services = /** @class */ (function () {
         __metadata("design:type", user_entity_1.Users)
     ], Services.prototype, "modifiedBy", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "modifiedById", void 0);
+    __decorate([
         (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
         ,
         __metadata("design:type", Date)

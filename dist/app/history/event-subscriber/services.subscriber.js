@@ -96,10 +96,9 @@ var ServicesSubscriber = /** @class */ (function () {
                         history_1.sku = event.entity.sku;
                         history_1.costPrice = event.entity.costPrice;
                         history_1.rating = event.entity.rating;
-                        history_1.createdBy = event.entity.createdBy;
-                        history_1.modifiedBy = event.entity.modifiedBy;
                         history_1.deletedAt = event.entity.deletedAt;
                         history_1.version = event.entity.version;
+                        history_1.modifiedById = event.databaseEntity.modifiedById;
                         // Insert the history record into the database.
                         // Copy any additional fields from the Company entity as needed.
                         // Use event.manager to insert the history record within the same transaction.

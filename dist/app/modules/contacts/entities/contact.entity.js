@@ -128,6 +128,14 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Contact.prototype, "version", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "modifiedById", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)

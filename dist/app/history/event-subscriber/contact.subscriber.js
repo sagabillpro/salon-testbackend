@@ -83,8 +83,7 @@ var ContactSubscriber = /** @class */ (function () {
                         history_1.createdDate = event.entity.createdDate;
                         history_1.modifiedDate = event.entity.modifiedDate;
                         history_1.version = event.entity.version;
-                        history_1.createdBy = event.entity.createdBy;
-                        history_1.modifiedBy = event.entity.modifiedBy;
+                        history_1.modifiedById = event.databaseEntity.modifiedById;
                         // Copy any additional fields from the Company entity as needed.
                         // Use event.manager to insert the history record within the same transaction.
                         // This ensures that the history record will only be created if the update succeeds.

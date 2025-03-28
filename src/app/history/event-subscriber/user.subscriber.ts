@@ -26,7 +26,7 @@ export class UsersSubscriber implements EntitySubscriberInterface<Users> {
     // Ensure we have the entity data. If it is not loaded, skip history recording.
     if (event.entity) {
       let history = new UsersHistory();
-      history.recordId=event.entity.id;
+      history.recordId = event.entity.id;
       history.code = event.entity.code;
       history.name = event.entity.name;
       history.userName = event.entity.userName;
@@ -39,9 +39,7 @@ export class UsersSubscriber implements EntitySubscriberInterface<Users> {
       history.isInactive = event.entity.isInactive;
       history.createdDate = event.entity.createdDate;
       history.modifiedDate = event.entity.modifiedDate;
-
-    
-      
+      history.modifiedById = event.databaseEntity.modifiedById;
 
       // Insert the history record into the database.
 

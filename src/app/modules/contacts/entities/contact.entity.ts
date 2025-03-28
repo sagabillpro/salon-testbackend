@@ -108,7 +108,11 @@ export class Contact {
 
   @VersionColumn({ nullable: true })
   version: number;
+  @Column({ type: "int", nullable: true })
+  createdById: number;
 
+  @Column({ type: "int", nullable: true })
+  modifiedById: number;
   @ManyToOne(() => Users)
   @JoinColumn()
   createdBy: Users;

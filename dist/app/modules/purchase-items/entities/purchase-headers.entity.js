@@ -130,6 +130,14 @@ var PurchaseHeaders = /** @class */ (function () {
         __metadata("design:type", user_entity_1.Users)
     ], PurchaseHeaders.prototype, "modifiedBy", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], PurchaseHeaders.prototype, "modifiedById", void 0);
+    __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
     ], PurchaseHeaders.prototype, "isInactive", void 0);
