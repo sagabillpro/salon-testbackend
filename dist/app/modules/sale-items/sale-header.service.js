@@ -695,7 +695,6 @@ var inventory_lines_entity_1 = require("./entities/inventory-lines.entity");
 var send_invoice_mail_service_1 = __importDefault(require("../../services/send-invoice-mail.service"));
 var item_stocks_entity_1 = require("./entities/item-stocks.entity");
 var item_stock_track_entity_1 = require("../purchase-items/entities/item-stock-track.entity");
-var customer_entity_1 = require("../customer/entities/customer.entity");
 var contact_entity_1 = require("../contacts/entities/contact.entity");
 var contact_service_1 = __importDefault(require("../contacts/contact.service"));
 var company_entity_1 = require("../company/entities/company.entity");
@@ -1129,7 +1128,7 @@ var createBulk = function (req_1, data_1) {
                                     case 2:
                                         _a.sent();
                                         //set last visited date
-                                        return [4 /*yield*/, transactionalEntityManager.save(customer_entity_1.Customer, __assign(__assign({}, customer_1), { lastVisitedDate: new Date().toISOString() }))];
+                                        return [4 /*yield*/, transactionalEntityManager.save(contact_entity_1.Contact, __assign(__assign({}, customer_1), { lastVisitedDate: new Date().toISOString() }))];
                                     case 3:
                                         //set last visited date
                                         _a.sent();
@@ -1221,7 +1220,7 @@ var saleInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, f
                 companyRepo = dataSource_3.getRepository(company_entity_1.Company);
                 return [4 /*yield*/, companyRepo.findOne({
                         where: {
-                            id: 40,
+                            id: data.companyId,
                         },
                         select: {
                             id: true,

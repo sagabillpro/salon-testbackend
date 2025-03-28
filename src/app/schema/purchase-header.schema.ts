@@ -40,9 +40,9 @@ export const PurchaseHeadersSchema: any = {
       type: "object",
       properties: {
         id: { type: "integer" },
-        name: { type: "string" },
+      //  name: { type: "string" },
       },
-      required: ["id", "name"],
+     // required: ["id", "name"],
       additionalProperties: false,
     },
     supplierId: {

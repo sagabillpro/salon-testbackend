@@ -147,7 +147,7 @@ var validateRequestBody = function (model) {
                     //add created by and modified by if present in modelProperties and skip created by in id present in req.body
                     if (modelProperties.includes("createdById") &&
                         modelProperties.includes("modifiedById")) {
-                        req.body = __assign(__assign(__assign({}, req.body), (((_a = req.body) === null || _a === void 0 ? void 0 : _a.id) ? {} : { createdById: user === null || user === void 0 ? void 0 : user.userId })), { modifiedBy: user === null || user === void 0 ? void 0 : user.userId });
+                        req.body = __assign(__assign(__assign({}, req.body), (((_a = req.body) === null || _a === void 0 ? void 0 : _a.id) ? {} : { createdById: user === null || user === void 0 ? void 0 : user.userId })), { modifiedById: user === null || user === void 0 ? void 0 : user.userId });
                     }
                     return [4 /*yield*/, (0, exports.getModelSchema)(model)];
                 case 2:

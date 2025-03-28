@@ -939,14 +939,14 @@ const createBulk = async (
       //   tax: value.taxAmount,
       //   taxName: value.tax.name,
       // });
-      newInvoiceItems.push({
-        description: value?.service?.name,
-        quantity: value?.quantity,
-        unitCost: value.rate,
-        taxPercentage: value?.tax?.name,
-        taxAmount: value.taxAmount,
-        lineTotal: Number(value.amount),
-      });
+      // newInvoiceItems.push({
+      //   description: value?.service?.name,
+      //   quantity: value?.quantity,
+      //   unitCost: value.rate,
+      //   taxPercentage: value?.tax?.name,
+      //   taxAmount: value.taxAmount,
+      //   lineTotal: Number(value.amount),
+      // });
       itemIds.push(value.service.id);
     });
     console.log("check 2");
@@ -1096,7 +1096,7 @@ const createBulk = async (
         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
         //set last visited date
-        await transactionalEntityManager.save(Customer, {
+        await transactionalEntityManager.save(Contact, {
           ...customer,
           lastVisitedDate: new Date().toISOString(),
         });
@@ -1169,7 +1169,8 @@ const saleInvoiceData = async (id: number) => {
     const companyRepo = dataSource.getRepository(Company);
     const company = await companyRepo.findOne({
       where: {
-        id: 40,
+        id: data.companyId,
+
       },
       select: {
         id: true,

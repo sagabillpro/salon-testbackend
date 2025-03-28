@@ -115,7 +115,7 @@ export const validateRequestBody = <T extends EntityTarget<T>>(model: T) => {
         req.body = {
           ...req.body,
           ...(req.body?.id ? {} : { createdById: user?.userId }),
-          modifiedBy: user?.userId,
+          modifiedById: user?.userId,
         };
       }
       const schemaObject = await getModelSchema(model);
