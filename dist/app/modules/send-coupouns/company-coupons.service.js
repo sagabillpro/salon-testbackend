@@ -398,14 +398,14 @@ var anniverseryScheduler = function () { return __awaiter(void 0, void 0, void 0
 //1. find multiple records
 var sendReferalCode = function (customer) { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, repo, couponsList, coupouns, couponListRepo, code, applicableCpns, error_8;
-    var _a, _b, _c;
-    return __generator(this, function (_d) {
-        switch (_d.label) {
+    var _a, _b, _c, _d;
+    return __generator(this, function (_e) {
+        switch (_e.label) {
             case 0:
-                _d.trys.push([0, 6, , 7]);
+                _e.trys.push([0, 6, , 7]);
                 return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
-                dataSource = _d.sent();
+                dataSource = _e.sent();
                 repo = dataSource.getRepository(company_coupons_entity_1.CompanyCoupouns);
                 couponsList = [];
                 return [4 /*yield*/, repo.findOne({
@@ -429,7 +429,7 @@ var sendReferalCode = function (customer) { return __awaiter(void 0, void 0, voi
                         },
                     })];
             case 2:
-                coupouns = _d.sent();
+                coupouns = _e.sent();
                 if (!coupouns) {
                     return [2 /*return*/];
                 }
@@ -442,34 +442,34 @@ var sendReferalCode = function (customer) { return __awaiter(void 0, void 0, voi
                             email: customer.email,
                         },
                         company: {
-                            tagLine: customer.company.tagLine,
-                            logo: (_a = customer === null || customer === void 0 ? void 0 : customer.company) === null || _a === void 0 ? void 0 : _a.logo,
-                            name: (_b = customer === null || customer === void 0 ? void 0 : customer.company) === null || _b === void 0 ? void 0 : _b.name,
-                            email: (_c = customer === null || customer === void 0 ? void 0 : customer.company) === null || _c === void 0 ? void 0 : _c.email,
+                            tagLine: (_a = customer === null || customer === void 0 ? void 0 : customer.company) === null || _a === void 0 ? void 0 : _a.tagLine,
+                            logo: (_b = customer === null || customer === void 0 ? void 0 : customer.company) === null || _b === void 0 ? void 0 : _b.logo,
+                            name: (_c = customer === null || customer === void 0 ? void 0 : customer.company) === null || _c === void 0 ? void 0 : _c.name,
+                            email: (_d = customer === null || customer === void 0 ? void 0 : customer.company) === null || _d === void 0 ? void 0 : _d.email,
                         },
                         expiresIn: coupouns === null || coupouns === void 0 ? void 0 : coupouns.expiresIn,
-                        message: coupouns.description,
+                        message: coupouns === null || coupouns === void 0 ? void 0 : coupouns.description,
                         couponCode: code,
                     })];
             case 3:
-                _d.sent();
+                _e.sent();
                 couponsList.push({
-                    discountPer: coupouns.discountPer,
+                    discountPer: coupouns === null || coupouns === void 0 ? void 0 : coupouns.discountPer,
                     code: code,
                     couponId: coupouns.id,
                     isUsed: 0,
-                    companyId: coupouns.companyId,
+                    companyId: coupouns === null || coupouns === void 0 ? void 0 : coupouns.companyId,
                     expireAt: new Date(new Date().getTime() + coupouns.expiresIn * 60 * 1000),
                 });
-                _d.label = 4;
+                _e.label = 4;
             case 4:
                 applicableCpns = couponListRepo.create(couponsList);
                 return [4 /*yield*/, couponListRepo.save(applicableCpns)];
             case 5:
-                _d.sent();
+                _e.sent();
                 return [2 /*return*/];
             case 6:
-                error_8 = _d.sent();
+                error_8 = _e.sent();
                 console.log(error_8);
                 throw error_8;
             case 7: return [2 /*return*/];
