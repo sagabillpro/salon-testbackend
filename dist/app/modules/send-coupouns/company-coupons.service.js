@@ -58,6 +58,7 @@ var dbconfig_1 = require("../../config/dbconfig");
 var contact_entity_1 = require("../contacts/entities/contact.entity");
 var send_anniversery_mail_service_1 = require("../../services/send-anniversery-mail.service");
 var coupons_list_entity_1 = require("./entities/coupons-list.entity");
+var get_object_code_util_1 = require("../../utils/get-object-code.util");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -103,16 +104,19 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
-                _a.trys.push([0, 2, , 3]);
+                _a.trys.push([0, 3, , 4]);
                 return [4 /*yield*/, (0, company_coupons_repo_1.default)()];
             case 1:
                 repo = _a.sent();
+                return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(31, data)];
+            case 2:
+                data = _a.sent();
                 respo = repo.create(__assign({}, data));
                 return [2 /*return*/, respo];
-            case 2:
+            case 3:
                 error_3 = _a.sent();
                 throw error_3;
-            case 3: return [2 /*return*/];
+            case 4: return [2 /*return*/];
         }
     });
 }); };

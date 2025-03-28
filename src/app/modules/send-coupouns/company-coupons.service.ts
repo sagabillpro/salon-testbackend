@@ -330,21 +330,21 @@ const sendReferalCode = async (customer: Contact) => {
           email: customer.email,
         },
         company: {
-          tagLine: customer.company.tagLine,
+          tagLine: customer?.company?.tagLine,
           logo: customer?.company?.logo,
           name: customer?.company?.name,
           email: customer?.company?.email,
         },
         expiresIn: coupouns?.expiresIn,
-        message: coupouns.description,
+        message: coupouns?.description,
         couponCode: code,
       });
       couponsList.push({
-        discountPer: coupouns.discountPer,
+        discountPer: coupouns?.discountPer,
         code: code,
         couponId: coupouns.id,
         isUsed: 0,
-        companyId: coupouns.companyId,
+        companyId: coupouns?.companyId,
         expireAt: new Date(
           new Date().getTime() + coupouns.expiresIn * 60 * 1000
         ),
