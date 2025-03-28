@@ -371,6 +371,16 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                         },
                         relations: {
                             userType: true,
+                            company: true,
+                        },
+                        select: {
+                            company: {
+                                name: true,
+                                id: true,
+                                upiId: true,
+                                stateId: true,
+                                taxId: true,
+                            },
                         },
                     })];
             case 3:
@@ -383,6 +393,10 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                 accessToken = (0, services_1.generateAccessToken)({
                     userId: foundUser.id,
                     companyId: foundUser.companyId,
+                    companyName: foundUser.company.name,
+                    upiId: foundUser.company.upiId,
+                    stateId: foundUser.company.stateId,
+                    taxId: foundUser.company.taxId,
                     userName: foundUser.userName,
                     email: foundUser.email,
                     userType: foundUser.userType,
@@ -390,6 +404,10 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                 refreshTokenToken = (0, services_1.generateRefreshToken)({
                     userId: foundUser.id,
                     companyId: foundUser.companyId,
+                    companyName: foundUser.company.name,
+                    upiId: foundUser.company.upiId,
+                    stateId: foundUser.company.stateId,
+                    taxId: foundUser.company.taxId,
                     userName: foundUser.userName,
                     email: foundUser.email,
                     userType: foundUser.userType,
@@ -488,6 +506,10 @@ var generateNewAccessToken = function (data) { return __awaiter(void 0, void 0, 
                     accessToken = (0, services_1.generateAccessToken)({
                         userId: userData.userId,
                         companyId: userData.companyId,
+                        upiId: userData.upiId,
+                        stateId: userData.stateId,
+                        taxId: userData.taxId,
+                        companyName: userData.companyName,
                         userName: userData.userName,
                         email: userData.email,
                         userType: userData.userType,

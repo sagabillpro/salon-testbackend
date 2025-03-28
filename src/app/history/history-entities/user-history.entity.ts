@@ -14,6 +14,7 @@ import {
 import { DUserType } from "../../modules/general-data/entities";
 import { Company } from "../../modules/company/entities/company.entity";
 import { UserMenusAndFeatures } from "../../modules/features/entities/usermenufeaturemap.entity";
+import { Users } from "../../modules/auth/entities/user.entity";
 
 
 @Entity("users_history")
@@ -68,7 +69,19 @@ export class UsersHistory {
 
   @UpdateDateColumn({ type: "varchar", nullable: false })
   modifiedDate: string;
+  @Column({ type: "int", nullable: true })
+  createdById: number;
 
+  @Column({ type: "int", nullable: true })
+  modifiedById: number;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  createdBy: Users;
+
+  @ManyToOne(() => Users)
+  @JoinColumn()
+  modifiedBy: Users;
 
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;

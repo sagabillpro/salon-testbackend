@@ -14,6 +14,7 @@ var typeorm_1 = require("typeorm");
 var sale_header_entity_1 = require("./sale-header.entity");
 var services_entity_1 = require("../../services/entities/services.entity");
 var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
+var uom_entity_1 = require("../../uom/entities/uom.entity");
 var SaleLines = /** @class */ (function () {
     //@Unique(["recordId", "id"])
     function SaleLines() {
@@ -51,6 +52,15 @@ var SaleLines = /** @class */ (function () {
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", taxes_entity_1.Taxes)
     ], SaleLines.prototype, "tax", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleLines.prototype, "uomId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return uom_entity_1.UOM; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", uom_entity_1.UOM)
+    ], SaleLines.prototype, "uom", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: false }),
         __metadata("design:type", Number)

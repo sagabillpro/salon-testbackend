@@ -83,6 +83,7 @@ var UsersSubscriber = /** @class */ (function () {
                         history_1.isInactive = event.entity.isInactive;
                         history_1.createdDate = event.entity.createdDate;
                         history_1.modifiedDate = event.entity.modifiedDate;
+                        history_1.modifiedById = event.databaseEntity.modifiedById;
                         // Insert the history record into the database.
                         // Copy any additional fields from the Company entity as needed.
                         // Use event.manager to insert the history record within the same transaction.

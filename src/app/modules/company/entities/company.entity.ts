@@ -51,8 +51,11 @@ export class Company {
   website: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
+  upiId: string;
+
+  @Column({ type: "varchar", length: 255, nullable: true })
   tagLine: string;
-  
+
   @Column({ type: "varchar", length: 255, nullable: true })
   addressLine1: string;
 

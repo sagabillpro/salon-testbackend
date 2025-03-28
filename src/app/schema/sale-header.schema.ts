@@ -5,15 +5,25 @@ export const SaleHeadersSchema: any = {
     code: { type: "string" },
     description: { type: "string" },
     txnDate: { type: "string" },
-    subTotal: { type: "number" },  // changed from integer
+    subTotal: { type: "number" }, // changed from integer
     grandTotal: { type: "number" }, // changed from integer
     totalDiscount: { type: "number" }, // changed from integer
     totalTax: { type: "number" }, // changed from integer
     isInactive: { type: "integer" },
     createdDate: { type: "string", format: "date-time" },
     modifiedDate: { type: "string", format: "date-time" },
+    customer: {
+      type: "object",
+      properties: {
+        id: { type: "integer" },
+        name: { type: "string" },
+      },
+      required: ["id", "name"],
+      additionalProperties: false,
+    },
     customerId: { type: "integer" },
     userId: { type: "integer" },
+    couponId: { type: "integer" },
     isService: { type: "integer" },
     paymentTypeId: { type: "integer" },
     saleLines: {
@@ -48,10 +58,21 @@ export const SaleHeadersSchema: any = {
             required: ["id", "name"],
             additionalProperties: false,
           },
+          uom: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              name: { type: "string" },
+            },
+            required: ["id", "name"],
+            additionalProperties: false,
+          },
           id: { type: "integer" },
           amount: { type: "number" }, // changed from integer
           unitPrice: { type: "number" },
+          uomId: { type: "number" },
           quantity: { type: "integer" },
+          isService: { type: "integer" },
           costPrice: { type: "integer" },
           discountAmount: { type: "number" }, // changed from integer
           taxAmount: { type: "number" }, // changed from integer
@@ -77,11 +98,11 @@ export const SaleHeadersSchema: any = {
     "grandTotal",
     "createdDate",
     "modifiedDate",
-    "customerId",
+    "customer",
     "userId",
     "paymentTypeId",
     "saleLines",
-    "isService"
+    "isService",
   ],
   additionalProperties: false,
 };

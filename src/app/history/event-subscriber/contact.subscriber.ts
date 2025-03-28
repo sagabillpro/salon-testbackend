@@ -39,8 +39,7 @@ export class ContactSubscriber implements EntitySubscriberInterface<Contact> {
       history.createdDate = event.entity.createdDate;
       history.modifiedDate = event.entity.modifiedDate;
       history.version = event.entity.version;
-      history.createdBy = event.entity.createdBy;
-      history.modifiedBy = event.entity.modifiedBy;
+      history.modifiedById = event.databaseEntity.modifiedById;
 
       // Copy any additional fields from the Company entity as needed.
 

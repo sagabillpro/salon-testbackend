@@ -15,8 +15,18 @@ exports.SaleHeadersSchema = {
         isInactive: { type: "integer" },
         createdDate: { type: "string", format: "date-time" },
         modifiedDate: { type: "string", format: "date-time" },
+        customer: {
+            type: "object",
+            properties: {
+                id: { type: "integer" },
+                name: { type: "string" },
+            },
+            required: ["id", "name"],
+            additionalProperties: false,
+        },
         customerId: { type: "integer" },
         userId: { type: "integer" },
+        couponId: { type: "integer" },
         isService: { type: "integer" },
         paymentTypeId: { type: "integer" },
         saleLines: {
@@ -51,10 +61,21 @@ exports.SaleHeadersSchema = {
                         required: ["id", "name"],
                         additionalProperties: false,
                     },
+                    uom: {
+                        type: "object",
+                        properties: {
+                            id: { type: "integer" },
+                            name: { type: "string" },
+                        },
+                        required: ["id", "name"],
+                        additionalProperties: false,
+                    },
                     id: { type: "integer" },
                     amount: { type: "number" }, // changed from integer
                     unitPrice: { type: "number" },
+                    uomId: { type: "number" },
                     quantity: { type: "integer" },
+                    isService: { type: "integer" },
                     costPrice: { type: "integer" },
                     discountAmount: { type: "number" }, // changed from integer
                     taxAmount: { type: "number" }, // changed from integer
@@ -80,11 +101,11 @@ exports.SaleHeadersSchema = {
         "grandTotal",
         "createdDate",
         "modifiedDate",
-        "customerId",
+        "customer",
         "userId",
         "paymentTypeId",
         "saleLines",
-        "isService"
+        "isService",
     ],
     additionalProperties: false,
 };

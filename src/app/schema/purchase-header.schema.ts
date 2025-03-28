@@ -36,6 +36,15 @@ export const PurchaseHeadersSchema: any = {
     saleInvoiceNumber: {
       type: "string",
     },
+    supplier: {
+      type: "object",
+      properties: {
+        id: { type: "integer" },
+        name: { type: "string" },
+      },
+      required: ["id", "name"],
+      additionalProperties: false,
+    },
     supplierId: {
       type: "integer",
     },
@@ -104,6 +113,17 @@ export const PurchaseHeadersSchema: any = {
           costPrice: {
             type: "number", // Changed to number for decimals
           },
+
+          uom: {
+            type: "object",
+            properties: {
+              id: { type: "integer" },
+              name: { type: "string" },
+            },
+            required: ["id", "name"],
+            additionalProperties: false,
+          },
+          uomId: { type: "number" },
           discountAmount: {
             type: "number", // Changed to number for decimals
           },
@@ -140,7 +160,7 @@ export const PurchaseHeadersSchema: any = {
     "grandTotal",
     "createdDate",
     "modifiedDate",
-    "supplierId",
+    "supplier",
     "userId",
     "paymentTypeId",
     "purchaseLines",

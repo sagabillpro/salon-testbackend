@@ -18,6 +18,7 @@ import { ItemAvailable } from "../../sale-items/entities/item-stocks.entity";
 import { Users } from "../../auth/entities/user.entity";
 import { handler } from "../../../config/dbconfig";
 import { Company } from "../../company/entities/company.entity";
+import { UOM } from "../../uom/entities/uom.entity";
 
 @Entity("services")
 export class Services {
@@ -92,6 +93,13 @@ export class Services {
   @Column({ type: "varchar", length: 100, nullable: true })
   brand: string;
 
+  @Column({ type: "int", nullable: true })
+  uomId: number;
+
+  @ManyToOne(() => UOM, { nullable: true })
+  @JoinColumn()
+  uom: UOM;
+  
   @Column("simple-array", { nullable: true })
   imageUrls: string[];
 
@@ -121,7 +129,11 @@ export class Services {
   @ManyToOne(() => Users)
   @JoinColumn()
   modifiedBy: Users;
+  @Column({ type: "int", nullable: true })
+  createdById: number;
 
+  @Column({ type: "int", nullable: true })
+  modifiedById: number;
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 

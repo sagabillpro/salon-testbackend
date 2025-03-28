@@ -46,10 +46,18 @@ var SaleHeaders = /** @class */ (function () {
         __metadata("design:type", contact_entity_1.Contact)
     ], SaleHeaders.prototype, "customer", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "userId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
     ], SaleHeaders.prototype, "user", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "paymentTypeId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return entities_1.DPaymentType; }),
         (0, typeorm_1.JoinColumn)(),
@@ -97,6 +105,10 @@ var SaleHeaders = /** @class */ (function () {
         __metadata("design:type", Number)
     ], SaleHeaders.prototype, "companyId", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "couponId", void 0);
+    __decorate([
         (0, typeorm_1.ManyToOne)(function () { return company_entity_1.Company; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", company_entity_1.Company)
@@ -125,6 +137,14 @@ var SaleHeaders = /** @class */ (function () {
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
     ], SaleHeaders.prototype, "modifiedBy", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], SaleHeaders.prototype, "modifiedById", void 0);
     __decorate([
         (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
         ,

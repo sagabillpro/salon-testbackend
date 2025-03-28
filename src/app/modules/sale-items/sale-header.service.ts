@@ -695,6 +695,9 @@ import contactService from "../contacts/contact.service";
 import companyService from "../company/company.service";
 import { dataSource } from "../../app";
 import { Company } from "../company/entities/company.entity";
+import { CoupounsList } from "../send-coupouns/entities/coupons-list.entity";
+import { Request } from "express";
+import { AuthenticatedRequest } from "../../types";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -817,15 +820,28 @@ const deleteById = async (id: number) => {
   }
 };
 //3. create single record
-const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
-  console.log("insde thsi .....");
+const createBulk = async (
+  req: AuthenticatedRequest,
+  data: SaleHeaders,
+  isService: boolean = false
+) => {
+  const user: any = req.user;
+  data = { ...data, companyId: user.companyId };
   try {
     const dataSource = await handler();
     const companyRepo = dataSource.getRepository(Company);
+    const couponListRepo = dataSource.getRepository(CoupounsList);
+    let foundCoupons: any = new CoupounsList();
+    if (data.couponId) {
+      foundCoupons =
+        (await couponListRepo.findOneBy({
+          id: data.couponId,
+        })) || null;
+    }
     const itemLines = data.saleLines.filter((line) => !line.isService);
     const company = await companyRepo.findOne({
       where: {
-        id: 40,
+        id: user.companyId,
       },
       select: {
         id: true,
@@ -891,7 +907,7 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
       };
     } = {};
     //get customer data custo
-    let customer = await contactService.findById(data.customerId);
+    let customer = await contactService.findById(data.customer.id);
 
     const customerDetails = {
       clientName: customer.name,
@@ -1079,6 +1095,20 @@ const createBulk = async (data: SaleHeaders, isService: boolean = false) => {
         console.log("check 9");
         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
+        //set last visited date
+        await transactionalEntityManager.save(Customer, {
+          ...customer,
+          lastVisitedDate: new Date().toISOString(),
+        });
+
+        if (foundCoupons) {
+          await transactionalEntityManager.save(CoupounsList, {
+            ...foundCoupons,
+            isUsed: 1,
+          });
+        }
+
+        foundCoupons;
         const headerEntry = transactionalEntityManager.create(
           SaleHeaders,
           data

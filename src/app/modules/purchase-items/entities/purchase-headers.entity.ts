@@ -116,7 +116,12 @@ export class PurchaseHeaders {
   @ManyToOne(() => Users)
   @JoinColumn()
   modifiedBy: Users;
+  @Column({ type: "int", nullable: true })
+  createdById: number;
 
+  @Column({ type: "int", nullable: true })
+  modifiedById: number;
+  
   @Column({ type: "int", default: 0 })
   isInactive: number;
 

@@ -48,11 +48,15 @@ export class SaleHeaders {
  @ManyToOne(() => Contact, { nullable: true })
   @JoinColumn()
   customer: Contact;
-
+  @Column({ type: "int", nullable: true })
+  userId: number;
   @ManyToOne(() => Users)
   @JoinColumn()
   user: Users;
 
+  @Column({ type: "int", nullable: true })
+  paymentTypeId: number;
+  
   @ManyToOne(() => DPaymentType)
   @JoinColumn()
   paymentType: DPaymentType;
@@ -89,6 +93,10 @@ export class SaleHeaders {
   @Column({ type: "int", nullable: true })
   companyId: number;
 
+  @Column({ type: "int", nullable: true })
+  couponId: number;
+
+
   @ManyToOne(() => Company, { nullable: true })
   @JoinColumn()
   company: Company;
@@ -113,7 +121,11 @@ export class SaleHeaders {
   @ManyToOne(() => Users)
   @JoinColumn()
   modifiedBy: Users;
+  @Column({ type: "int", nullable: true })
+  createdById: number;
 
+  @Column({ type: "int", nullable: true })
+  modifiedById: number;
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 

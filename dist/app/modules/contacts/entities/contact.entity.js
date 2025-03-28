@@ -92,11 +92,11 @@ var Contact = /** @class */ (function () {
         __metadata("design:type", String)
     ], Contact.prototype, "anniverseryDate", void 0);
     __decorate([
-        (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: false }),
+        (0, typeorm_1.Column)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], Contact.prototype, "mobile", void 0);
     __decorate([
-        (0, typeorm_1.CreateDateColumn)({ type: "varchar", nullable: true }),
+        (0, typeorm_1.Column)({ type: "varchar", nullable: true }),
         __metadata("design:type", String)
     ], Contact.prototype, "email", void 0);
     __decorate([
@@ -127,6 +127,14 @@ var Contact = /** @class */ (function () {
         (0, typeorm_1.VersionColumn)({ nullable: true }),
         __metadata("design:type", Number)
     ], Contact.prototype, "version", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Contact.prototype, "modifiedById", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
         (0, typeorm_1.JoinColumn)(),

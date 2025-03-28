@@ -46,11 +46,12 @@ var sale_header_entity_1 = require("../sale-items/entities/sale-header.entity");
 var authenticate_middleware_1 = __importDefault(require("../../middlewares/authenticate.middleware"));
 var router = (0, express_1.Router)();
 router.get("/", authenticate_middleware_1.default, function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
-    var result, now, colorArrayArtist_1, colorArrayItem_1, colorArrayService, startOfMonth, dataSource, artist, item, service, error_1;
+    var user, result, now, colorArrayArtist_1, colorArrayItem_1, colorArrayService, startOfMonth, dataSource, artist, item, service, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 5, , 6]);
+                user = req === null || req === void 0 ? void 0 : req.user;
                 result = {
                     topArtist: [],
                     topItems: [],
@@ -92,6 +93,7 @@ router.get("/", authenticate_middleware_1.default, function (req, res, next) { r
                         start: startOfMonth,
                         end: now,
                     })
+                        .andWhere("sale.companyId = :companyId", { companyId: user.companyId })
                         .groupBy("user.id")
                         .orderBy("count", "DESC")
                         .limit(5)
@@ -108,7 +110,8 @@ router.get("/", authenticate_middleware_1.default, function (req, res, next) { r
                         start: startOfMonth,
                         end: now,
                     })
-                        .andWhere("sale.isService = :isService", { isService: 0 })
+                        .andWhere("service.isService = :isService", { isService: 0 })
+                        .andWhere("sale.companyId = :companyId", { companyId: user.companyId })
                         .addGroupBy("service.name")
                         .orderBy("count", "DESC")
                         .limit(5)
@@ -125,7 +128,8 @@ router.get("/", authenticate_middleware_1.default, function (req, res, next) { r
                         start: startOfMonth,
                         end: now,
                     })
-                        .andWhere("sale.isService = :isService", { isService: 1 })
+                        .andWhere("service.isService = :isService", { isService: 1 })
+                        .andWhere("sale.companyId = :companyId", { companyId: user.companyId })
                         .addGroupBy("service.name")
                         .orderBy("count", "DESC")
                         .limit(5)

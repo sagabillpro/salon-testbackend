@@ -13,6 +13,7 @@ exports.UsersHistory = void 0;
 var typeorm_1 = require("typeorm");
 var entities_1 = require("../../modules/general-data/entities");
 var company_entity_1 = require("../../modules/company/entities/company.entity");
+var user_entity_1 = require("../../modules/auth/entities/user.entity");
 var UsersHistory = /** @class */ (function () {
     function UsersHistory() {
     }
@@ -82,6 +83,24 @@ var UsersHistory = /** @class */ (function () {
         (0, typeorm_1.UpdateDateColumn)({ type: "varchar", nullable: false }),
         __metadata("design:type", String)
     ], UsersHistory.prototype, "modifiedDate", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], UsersHistory.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], UsersHistory.prototype, "modifiedById", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], UsersHistory.prototype, "createdBy", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return user_entity_1.Users; }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", user_entity_1.Users)
+    ], UsersHistory.prototype, "modifiedBy", void 0);
     __decorate([
         (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
         ,

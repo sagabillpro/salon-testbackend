@@ -16,6 +16,7 @@ var entities_1 = require("../../general-data/entities");
 var item_stocks_entity_1 = require("../../sale-items/entities/item-stocks.entity");
 var user_entity_1 = require("../../auth/entities/user.entity");
 var company_entity_1 = require("../../company/entities/company.entity");
+var uom_entity_1 = require("../../uom/entities/uom.entity");
 var Services = /** @class */ (function () {
     function Services() {
     }
@@ -112,6 +113,15 @@ var Services = /** @class */ (function () {
         __metadata("design:type", String)
     ], Services.prototype, "brand", void 0);
     __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "uomId", void 0);
+    __decorate([
+        (0, typeorm_1.ManyToOne)(function () { return uom_entity_1.UOM; }, { nullable: true }),
+        (0, typeorm_1.JoinColumn)(),
+        __metadata("design:type", uom_entity_1.UOM)
+    ], Services.prototype, "uom", void 0);
+    __decorate([
         (0, typeorm_1.Column)("simple-array", { nullable: true }),
         __metadata("design:type", Array)
     ], Services.prototype, "imageUrls", void 0);
@@ -147,6 +157,14 @@ var Services = /** @class */ (function () {
         (0, typeorm_1.JoinColumn)(),
         __metadata("design:type", user_entity_1.Users)
     ], Services.prototype, "modifiedBy", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "createdById", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        __metadata("design:type", Number)
+    ], Services.prototype, "modifiedById", void 0);
     __decorate([
         (0, typeorm_1.DeleteDateColumn)() // 👈 Automatically set when deleted
         ,

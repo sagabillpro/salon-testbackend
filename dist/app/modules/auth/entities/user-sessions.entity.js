@@ -25,7 +25,7 @@ var UserSessions = /** @class */ (function () {
         __metadata("design:type", user_entity_1.Users)
     ], UserSessions.prototype, "user", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "varchar", length: 500, nullable: false }),
+        (0, typeorm_1.Column)({ type: "varchar", length: 1000, nullable: true }),
         __metadata("design:type", String)
     ], UserSessions.prototype, "token", void 0);
     __decorate([

@@ -118,7 +118,12 @@ export class ServicesHistory {
   @ManyToOne(() => Users)
   @JoinColumn()
   modifiedBy: Users;
+  @Column({ type: "int", nullable: true })
+  createdById: number;
 
+  @Column({ type: "int", nullable: true })
+  modifiedById: number;
+  
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 

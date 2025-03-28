@@ -65,6 +65,7 @@ export class StockAdjustmentHeaders {
   @ManyToOne(() => Users)
   @JoinColumn()
   modifiedBy: Users;
+  
   @Column({ type: "int", nullable: true })
   companyId: number;
 

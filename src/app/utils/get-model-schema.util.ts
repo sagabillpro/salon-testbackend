@@ -100,10 +100,22 @@ export const validateRequestBody = <T extends EntityTarget<T>>(model: T) => {
       const modelProperties = entityMetadata.ownColumns.map((column) => {
         return column?.propertyName;
       });
-      if (modelProperties.includes("companyId")) {
+      if (modelProperties.includes("companyId") && !req.body["companyId"]) {
         req.body = {
           ...req.body,
           companyId: user?.companyId,
+        };
+      }
+      //add created by and modified by if present in modelProperties and skip created by in id present in req.body
+      //add created by and modified by if present in modelProperties and skip created by in id present in req.body
+      if (
+        modelProperties.includes("createdById") &&
+        modelProperties.includes("modifiedById")
+      ) {
+        req.body = {
+          ...req.body,
+          ...(req.body?.id ? {} : { createdById: user?.userId }),
+          modifiedBy: user?.userId,
         };
       }
       const schemaObject = await getModelSchema(model);

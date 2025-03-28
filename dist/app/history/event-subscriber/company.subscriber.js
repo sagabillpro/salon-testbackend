@@ -66,6 +66,10 @@ var CompanySubscriber = /** @class */ (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
+                        //add modified by code by fetingg user details from req.user
+                        // const user = req.user;
+                        // history.createdBy = user.id; // add modified by id here
+                        console.log(event.databaseEntity.modifiedById);
                         if (!event.entity) return [3 /*break*/, 2];
                         history_1 = new history_entities_1.CompanyHistory();
                         history_1.recordId = event.entity.id;
@@ -78,7 +82,7 @@ var CompanySubscriber = /** @class */ (function () {
                         history_1.createdById = event.entity.createdById;
                         history_1.email = event.entity.email;
                         history_1.industryType = event.entity.industryType;
-                        history_1.modifiedById = event.entity.modifiedById;
+                        history_1.modifiedById = event.databaseEntity.modifiedById;
                         history_1.phoneNumber = event.entity.phoneNumber;
                         history_1.postalCode = event.entity.postalCode;
                         history_1.registrationNumber = event.entity.registrationNumber;

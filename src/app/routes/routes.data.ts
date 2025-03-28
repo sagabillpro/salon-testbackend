@@ -25,6 +25,8 @@ import usermenufeaturemapRoute from "../modules/features/usermenufeaturemap.rout
 import historyRoute from "../history/history.route";
 import stockAdjustmentHeadersRoutes from "../modules/stock-adjustment/stock-adjustment-headers.routes";
 import companyCouponsRoutes from "../modules/send-coupouns/company-coupons.routes";
+import uomService from "../modules/uom/uom.service";
+import uomRoutes from "../modules/uom/uom.routes";
 
 export const routes: Routes = [
   itemRoute,
@@ -52,5 +54,6 @@ export const routes: Routes = [
   usermenufeaturemapRoute,
   historyRoute,
   stockAdjustmentHeadersRoutes,
-  companyCouponsRoutes
+  companyCouponsRoutes,
+  uomRoutes,
 ];

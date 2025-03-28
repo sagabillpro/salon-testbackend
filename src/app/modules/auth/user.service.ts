@@ -276,6 +276,16 @@ const login = async (data: {
     },
     relations: {
       userType: true,
+      company: true,
+    },
+    select: {
+      company: {
+        name: true,
+        id: true,
+        upiId: true,
+        stateId: true,
+        taxId: true,
+      },
     },
   });
   if (foundUser) {
@@ -286,15 +296,24 @@ const login = async (data: {
       //a. create refresh token and store in db
       const accessToken = generateAccessToken({
         userId: foundUser.id,
-        companyId:foundUser.companyId,
+        companyId: foundUser.companyId,
+        companyName: foundUser.company.name,
+        upiId: foundUser.company.upiId,
+        stateId: foundUser.company.stateId,
+        taxId: foundUser.company.taxId,
         userName: foundUser.userName,
+
         email: foundUser.email,
         userType: foundUser.userType,
       });
       //b. create accestoken
       const refreshTokenToken = generateRefreshToken({
         userId: foundUser.id,
-        companyId:foundUser.companyId,
+        companyId: foundUser.companyId,
+        companyName: foundUser.company.name,
+        upiId: foundUser.company.upiId,
+        stateId: foundUser.company.stateId,
+        taxId: foundUser.company.taxId,
         userName: foundUser.userName,
         email: foundUser.email,
         userType: foundUser.userType,
@@ -375,6 +394,10 @@ const generateNewAccessToken = async (data: { token: string }) => {
     const userData: {
       userId: number;
       companyId: number;
+      companyName: string;
+      upiId: string;
+      stateId: number;
+      taxId: number;
       userName: string;
       email: string;
       userType: {
@@ -395,7 +418,11 @@ const generateNewAccessToken = async (data: { token: string }) => {
       if (foundSession) {
         const accessToken = generateAccessToken({
           userId: userData.userId,
-          companyId:userData.companyId,
+          companyId: userData.companyId,
+          upiId: userData.upiId,
+          stateId: userData.stateId,
+          taxId: userData.taxId,
+          companyName: userData.companyName,
           userName: userData.userName,
           email: userData.email,
           userType: userData.userType,

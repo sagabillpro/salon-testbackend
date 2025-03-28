@@ -44,6 +44,10 @@ import { StockAdjustmentHeaders } from "../modules/stock-adjustment/entities/sto
 import { StockAdjustmentLines } from "../modules/stock-adjustment/entities/stock-adjustment-lines.entity";
 import { CompanyCoupouns } from "../modules/send-coupouns/entities/company-coupons.entity";
 import { CoupounsList } from "../modules/send-coupouns/entities/coupons-list.entity";
+import { UOM } from "../modules/uom/entities/uom.entity";
+import { TaxGroup } from "../modules/taxes/entities/tax-groups.entity";
+import { TaxNew } from "../modules/taxes/entities/taxes-new.entity";
+import { TaxGroupComponent } from "../modules/taxes/entities/tax-group-compnents.entity";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -93,6 +97,10 @@ export const entities:
   StockAdjustmentLines,
   DCoupounType,
   CompanyCoupouns,
-  CoupounsList
+  CoupounsList,
+  UOM,
+  TaxGroup,
+  TaxNew,
+  TaxGroupComponent
  // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];

@@ -695,9 +695,11 @@ var inventory_lines_entity_1 = require("./entities/inventory-lines.entity");
 var send_invoice_mail_service_1 = __importDefault(require("../../services/send-invoice-mail.service"));
 var item_stocks_entity_1 = require("./entities/item-stocks.entity");
 var item_stock_track_entity_1 = require("../purchase-items/entities/item-stock-track.entity");
+var customer_entity_1 = require("../customer/entities/customer.entity");
 var contact_entity_1 = require("../contacts/entities/contact.entity");
 var contact_service_1 = __importDefault(require("../contacts/contact.service"));
 var company_entity_1 = require("../company/entities/company.entity");
+var coupons_list_entity_1 = require("../send-coupouns/entities/coupons-list.entity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -870,30 +872,42 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
     });
 }); };
 //3. create single record
-var createBulk = function (data_1) {
+var createBulk = function (req_1, data_1) {
     var args_1 = [];
-    for (var _i = 1; _i < arguments.length; _i++) {
-        args_1[_i - 1] = arguments[_i];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        args_1[_i - 2] = arguments[_i];
     }
-    return __awaiter(void 0, __spreadArray([data_1], args_1, true), void 0, function (data, isService) {
-        var dataSource_2, companyRepo, itemLines, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
+    return __awaiter(void 0, __spreadArray([req_1, data_1], args_1, true), void 0, function (req, data, isService) {
+        var user, dataSource_2, companyRepo, couponListRepo, foundCoupons_1, itemLines, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer_1, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
         var _a, _b;
         if (isService === void 0) { isService = false; }
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
-                    console.log("insde thsi .....");
+                    user = req.user;
+                    data = __assign(__assign({}, data), { companyId: user.companyId });
                     _c.label = 1;
                 case 1:
-                    _c.trys.push([1, 11, , 12]);
+                    _c.trys.push([1, 13, , 14]);
                     return [4 /*yield*/, (0, dbconfig_1.handler)()];
                 case 2:
                     dataSource_2 = _c.sent();
                     companyRepo = dataSource_2.getRepository(company_entity_1.Company);
+                    couponListRepo = dataSource_2.getRepository(coupons_list_entity_1.CoupounsList);
+                    foundCoupons_1 = new coupons_list_entity_1.CoupounsList();
+                    if (!data.couponId) return [3 /*break*/, 4];
+                    return [4 /*yield*/, couponListRepo.findOneBy({
+                            id: data.couponId,
+                        })];
+                case 3:
+                    foundCoupons_1 =
+                        (_c.sent()) || null;
+                    _c.label = 4;
+                case 4:
                     itemLines = data.saleLines.filter(function (line) { return !line.isService; });
                     return [4 /*yield*/, companyRepo.findOne({
                             where: {
-                                id: 40,
+                                id: user.companyId,
                             },
                             select: {
                                 id: true,
@@ -905,7 +919,7 @@ var createBulk = function (data_1) {
                                 logo: true,
                             },
                         })];
-                case 3:
+                case 5:
                     company = _c.sent();
                     if (!company) {
                         throw { message: "Record not found with id: ", statusCode: 404 };
@@ -921,7 +935,7 @@ var createBulk = function (data_1) {
                     itemAvailableRepo = dataSource_2.getRepository(item_stocks_entity_1.ItemAvailable);
                     itemStockTrack = dataSource_2.getRepository(item_stock_track_entity_1.ItemsStockTrack);
                     return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(19, data)];
-                case 4:
+                case 6:
                     data = _c.sent();
                     result_1 = new sale_header_entity_1.SaleHeaders();
                     invoiceDetails = {
@@ -938,18 +952,18 @@ var createBulk = function (data_1) {
                     itemIds_1 = [];
                     errors_1 = [];
                     itemToQauntityMap_1 = {};
-                    return [4 /*yield*/, contact_service_1.default.findById(data.customerId)];
-                case 5:
-                    customer = _c.sent();
+                    return [4 /*yield*/, contact_service_1.default.findById(data.customer.id)];
+                case 7:
+                    customer_1 = _c.sent();
                     customerDetails = {
-                        clientName: customer.name,
+                        clientName: customer_1.name,
                         //add address onlater on
-                        clientAddress: customer.address,
-                        clientCity: (_a = customer === null || customer === void 0 ? void 0 : customer.city) === null || _a === void 0 ? void 0 : _a.name,
-                        clientState: (_b = customer === null || customer === void 0 ? void 0 : customer.state) === null || _b === void 0 ? void 0 : _b.name,
+                        clientAddress: customer_1.address,
+                        clientCity: (_a = customer_1 === null || customer_1 === void 0 ? void 0 : customer_1.city) === null || _a === void 0 ? void 0 : _a.name,
+                        clientState: (_b = customer_1 === null || customer_1 === void 0 ? void 0 : customer_1.state) === null || _b === void 0 ? void 0 : _b.name,
                         //add zop code in customer
-                        clientZip: customer.zipCode,
-                        clientEmail: customer.email,
+                        clientZip: customer_1.zipCode,
+                        clientEmail: customer_1.email,
                     };
                     data.saleLines.forEach(function (value) {
                         var _a, _b;
@@ -1002,7 +1016,7 @@ var createBulk = function (data_1) {
                                 },
                             },
                         })];
-                case 6:
+                case 8:
                     itemsAvailable_1 = _c.sent();
                     //add data to map
                     console.log("check 3");
@@ -1047,7 +1061,7 @@ var createBulk = function (data_1) {
                                 service: true,
                             },
                         })];
-                case 7:
+                case 9:
                     stockTrack_1 = _c.sent();
                     console.log("check 6");
                     stockTrack_1.forEach(function (val, index) {
@@ -1114,20 +1128,32 @@ var createBulk = function (data_1) {
                                         return [4 /*yield*/, transactionalEntityManager.save(item_stocks_entity_1.ItemAvailable, itemsAvailable_1)];
                                     case 2:
                                         _a.sent();
+                                        //set last visited date
+                                        return [4 /*yield*/, transactionalEntityManager.save(customer_entity_1.Customer, __assign(__assign({}, customer_1), { lastVisitedDate: new Date().toISOString() }))];
+                                    case 3:
+                                        //set last visited date
+                                        _a.sent();
+                                        if (!foundCoupons_1) return [3 /*break*/, 5];
+                                        return [4 /*yield*/, transactionalEntityManager.save(coupons_list_entity_1.CoupounsList, __assign(__assign({}, foundCoupons_1), { isUsed: 1 }))];
+                                    case 4:
+                                        _a.sent();
+                                        _a.label = 5;
+                                    case 5:
+                                        foundCoupons_1;
                                         headerEntry = transactionalEntityManager.create(sale_header_entity_1.SaleHeaders, data);
                                         return [4 /*yield*/, transactionalEntityManager.save(sale_header_entity_1.SaleHeaders, headerEntry)];
-                                    case 3:
+                                    case 6:
                                         headerEntryResult = _a.sent();
                                         result_1 = headerEntryResult;
                                         return [2 /*return*/];
                                 }
                             });
                         }); })];
-                case 8:
+                case 10:
                     //3. start transaction
                     _c.sent();
                     console.log("check 10");
-                    if (!customer.email) return [3 /*break*/, 10];
+                    if (!customer_1.email) return [3 /*break*/, 12];
                     // await invoiceMailer({
                     //   customer: customer.name,
                     //   txnDate: new Date(data.txnDate).toLocaleDateString(),
@@ -1141,7 +1167,7 @@ var createBulk = function (data_1) {
                     //   itemData: invoiceItems,
                     // });
                     return [4 /*yield*/, (0, send_invoice_mail_service_1.default)(__assign(__assign(__assign(__assign({}, companyDetails), invoiceDetails), customerDetails), { items: newInvoiceItems_1 }))];
-                case 9:
+                case 11:
                     // await invoiceMailer({
                     //   customer: customer.name,
                     //   txnDate: new Date(data.txnDate).toLocaleDateString(),
@@ -1155,13 +1181,13 @@ var createBulk = function (data_1) {
                     //   itemData: invoiceItems,
                     // });
                     _c.sent();
-                    _c.label = 10;
-                case 10: return [2 /*return*/, result_1];
-                case 11:
+                    _c.label = 12;
+                case 12: return [2 /*return*/, result_1];
+                case 13:
                     error_6 = _c.sent();
                     console.log(error_6);
                     throw error_6;
-                case 12: return [2 /*return*/];
+                case 14: return [2 /*return*/];
             }
         });
     });

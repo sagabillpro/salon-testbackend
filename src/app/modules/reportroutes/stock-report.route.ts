@@ -8,6 +8,7 @@ import { PassThrough } from "stream";
 import { getWorksheetColumnsFromSchema } from "../../utils/get-report-headers.util";
 import ExcelJS from "exceljs";
 import authenticateToken from "../../middlewares/authenticate.middleware";
+import getQuerySecure from "../../utils/get-query-secure.util";
 const router = Router();
 
 router.get(
@@ -18,7 +19,7 @@ router.get(
     try {
       const dataSource = await handler();
       const repo = dataSource.getRepository(ItemsStockTrack);
-      const result = await repo.find(await getQuery(req, ItemsStockTrack));
+      const result = await repo.find(await getQuerySecure(req, ItemsStockTrack));
       res.send(result);
     } catch (error) {
       next(error);
@@ -33,7 +34,7 @@ router.get(
     try {
       const dataSource = await handler();
       const repo = dataSource.getRepository(ItemsStockTrack);
-      const result = await repo.find(await getQuery(req, ItemsStockTrack));
+      const result = await repo.find(await getQuerySecure(req, ItemsStockTrack));
       // 2. Create a new Excel workbook and worksheet
       const workbook = new ExcelJS.Workbook();
       let worksheet = workbook.addWorksheet("Report");
@@ -51,6 +52,7 @@ router.get(
       // 6. Use stream for better performance with large datasets
       const stream = new PassThrough();
       await workbook.xlsx.write(stream);
+
 
       // 7. Pipe the stream directly to the response
       stream.pipe(res);

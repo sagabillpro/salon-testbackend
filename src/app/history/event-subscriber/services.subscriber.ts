@@ -52,10 +52,9 @@ export class ServicesSubscriber implements EntitySubscriberInterface<Services> {
       history.sku = event.entity.sku;
       history.costPrice = event.entity.costPrice;
       history.rating = event.entity.rating;
-      history.createdBy = event.entity.createdBy;
-      history.modifiedBy = event.entity.modifiedBy;
       history.deletedAt = event.entity.deletedAt;
       history.version = event.entity.version;
+      history.modifiedById = event.databaseEntity.modifiedById;
 
       // Insert the history record into the database.
 
