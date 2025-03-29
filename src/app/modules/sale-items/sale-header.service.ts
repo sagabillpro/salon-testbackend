@@ -698,6 +698,7 @@ import { Company } from "../company/entities/company.entity";
 import { CoupounsList } from "../send-coupouns/entities/coupons-list.entity";
 import { Request } from "express";
 import { AuthenticatedRequest } from "../../types";
+import { CustomerVisit } from "./entities/customer-visits.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -831,12 +832,24 @@ const createBulk = async (
     const dataSource = await handler();
     const companyRepo = dataSource.getRepository(Company);
     const couponListRepo = dataSource.getRepository(CoupounsList);
+    const customerVisitsRepo = dataSource.getRepository(CustomerVisit);
+    const customerVist = new CustomerVisit();
     let foundCoupons: any = new CoupounsList();
     if (data.couponId) {
-      foundCoupons =
-        (await couponListRepo.findOneBy({
-          id: data.couponId,
-        })) || null;
+      foundCoupons = await couponListRepo.findOneBy({
+        id: data.couponId,
+      });
+      if (!foundCoupons) {
+        throw { message: "Coupon not found with id: ", statusCode: 404 };
+      }
+    }
+    if (data.paymentTypeId) {
+      foundCoupons = await couponListRepo.findOneBy({
+        id: data.couponId,
+      });
+      if (!foundCoupons) {
+        throw { message: "Coupon not found with id: ", statusCode: 404 };
+      }
     }
     const itemLines = data.saleLines.filter((line) => !line.isService);
     const company = await companyRepo.findOne({
@@ -1170,7 +1183,6 @@ const saleInvoiceData = async (id: number) => {
     const company = await companyRepo.findOne({
       where: {
         id: data.companyId,
-
       },
       select: {
         id: true,

@@ -48,6 +48,7 @@ import { UOM } from "../modules/uom/entities/uom.entity";
 import { TaxGroup } from "../modules/taxes/entities/tax-groups.entity";
 import { TaxNew } from "../modules/taxes/entities/taxes-new.entity";
 import { TaxGroupComponent } from "../modules/taxes/entities/tax-group-compnents.entity";
+import { CustomerVisit } from "../modules/sale-items/entities/customer-visits.entity";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -101,6 +102,7 @@ export const entities:
   UOM,
   TaxGroup,
   TaxNew,
-  TaxGroupComponent
+  TaxGroupComponent,
+  CustomerVisit
  // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];

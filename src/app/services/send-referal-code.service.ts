@@ -41,7 +41,7 @@ export async function sendReferalEmail({
   const mailOptions = {
     from: `"${company.name}" <${company.email}>`,
     to: customer.email,
-    subject: `A Special Gift for You form ${company.name}! Your Referral Coupon Inside 🎁!`,
+    subject: `A Special Gift for You from  ${company.name}! Your Referral Coupon Inside 🎁!`,
     html: htmlContent,
   };
 

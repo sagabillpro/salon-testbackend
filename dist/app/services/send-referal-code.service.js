@@ -94,7 +94,7 @@ function sendReferalEmail(_a) {
                     mailOptions = {
                         from: "\"".concat(company.name, "\" <").concat(company.email, ">"),
                         to: customer.email,
-                        subject: "\uD83C\uDF89 Happy Birthday from ".concat(company.name, "!"),
+                        subject: "A Special Gift for You from  ".concat(company.name, "! Your Referral Coupon Inside \uD83C\uDF81!"),
                         html: htmlContent,
                     };
                     return [2 /*return*/, smtpconfig_1.transporter.sendMail(mailOptions)];

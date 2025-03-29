@@ -699,6 +699,7 @@ var contact_entity_1 = require("../contacts/entities/contact.entity");
 var contact_service_1 = __importDefault(require("../contacts/contact.service"));
 var company_entity_1 = require("../company/entities/company.entity");
 var coupons_list_entity_1 = require("../send-coupouns/entities/coupons-list.entity");
+var customer_visits_entity_1 = require("./entities/customer-visits.entity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -877,7 +878,7 @@ var createBulk = function (req_1, data_1) {
         args_1[_i - 2] = arguments[_i];
     }
     return __awaiter(void 0, __spreadArray([req_1, data_1], args_1, true), void 0, function (req, data, isService) {
-        var user, dataSource_2, companyRepo, couponListRepo, foundCoupons_1, itemLines, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer_1, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
+        var user, dataSource_2, companyRepo, couponListRepo, customerVisitsRepo, customerVist, foundCoupons_1, itemLines, company, companyDetails, itemAvailableRepo, itemStockTrack, result_1, invoiceDetails, newInvoiceItems_1, inventory_2, itemIds_1, errors_1, itemToQauntityMap_1, customer_1, customerDetails, itemsAvailable_1, stockMap_1, stockTrack_1, error_6;
         var _a, _b;
         if (isService === void 0) { isService = false; }
         return __generator(this, function (_c) {
@@ -887,22 +888,37 @@ var createBulk = function (req_1, data_1) {
                     data = __assign(__assign({}, data), { companyId: user.companyId });
                     _c.label = 1;
                 case 1:
-                    _c.trys.push([1, 13, , 14]);
+                    _c.trys.push([1, 15, , 16]);
                     return [4 /*yield*/, (0, dbconfig_1.handler)()];
                 case 2:
                     dataSource_2 = _c.sent();
                     companyRepo = dataSource_2.getRepository(company_entity_1.Company);
                     couponListRepo = dataSource_2.getRepository(coupons_list_entity_1.CoupounsList);
+                    customerVisitsRepo = dataSource_2.getRepository(customer_visits_entity_1.CustomerVisit);
+                    customerVist = new customer_visits_entity_1.CustomerVisit();
                     foundCoupons_1 = new coupons_list_entity_1.CoupounsList();
                     if (!data.couponId) return [3 /*break*/, 4];
                     return [4 /*yield*/, couponListRepo.findOneBy({
                             id: data.couponId,
                         })];
                 case 3:
-                    foundCoupons_1 =
-                        (_c.sent()) || null;
+                    foundCoupons_1 = _c.sent();
+                    if (!foundCoupons_1) {
+                        throw { message: "Coupon not found with id: ", statusCode: 404 };
+                    }
                     _c.label = 4;
                 case 4:
+                    if (!data.paymentTypeId) return [3 /*break*/, 6];
+                    return [4 /*yield*/, couponListRepo.findOneBy({
+                            id: data.couponId,
+                        })];
+                case 5:
+                    foundCoupons_1 = _c.sent();
+                    if (!foundCoupons_1) {
+                        throw { message: "Coupon not found with id: ", statusCode: 404 };
+                    }
+                    _c.label = 6;
+                case 6:
                     itemLines = data.saleLines.filter(function (line) { return !line.isService; });
                     return [4 /*yield*/, companyRepo.findOne({
                             where: {
@@ -918,7 +934,7 @@ var createBulk = function (req_1, data_1) {
                                 logo: true,
                             },
                         })];
-                case 5:
+                case 7:
                     company = _c.sent();
                     if (!company) {
                         throw { message: "Record not found with id: ", statusCode: 404 };
@@ -934,7 +950,7 @@ var createBulk = function (req_1, data_1) {
                     itemAvailableRepo = dataSource_2.getRepository(item_stocks_entity_1.ItemAvailable);
                     itemStockTrack = dataSource_2.getRepository(item_stock_track_entity_1.ItemsStockTrack);
                     return [4 /*yield*/, (0, get_object_code_util_1.generateCode)(19, data)];
-                case 6:
+                case 8:
                     data = _c.sent();
                     result_1 = new sale_header_entity_1.SaleHeaders();
                     invoiceDetails = {
@@ -952,7 +968,7 @@ var createBulk = function (req_1, data_1) {
                     errors_1 = [];
                     itemToQauntityMap_1 = {};
                     return [4 /*yield*/, contact_service_1.default.findById(data.customer.id)];
-                case 7:
+                case 9:
                     customer_1 = _c.sent();
                     customerDetails = {
                         clientName: customer_1.name,
@@ -1014,7 +1030,7 @@ var createBulk = function (req_1, data_1) {
                                 },
                             },
                         })];
-                case 8:
+                case 10:
                     itemsAvailable_1 = _c.sent();
                     //add data to map
                     console.log("check 3");
@@ -1059,7 +1075,7 @@ var createBulk = function (req_1, data_1) {
                                 service: true,
                             },
                         })];
-                case 9:
+                case 11:
                     stockTrack_1 = _c.sent();
                     console.log("check 6");
                     stockTrack_1.forEach(function (val, index) {
@@ -1147,11 +1163,11 @@ var createBulk = function (req_1, data_1) {
                                 }
                             });
                         }); })];
-                case 10:
+                case 12:
                     //3. start transaction
                     _c.sent();
                     console.log("check 10");
-                    if (!customer_1.email) return [3 /*break*/, 12];
+                    if (!customer_1.email) return [3 /*break*/, 14];
                     // await invoiceMailer({
                     //   customer: customer.name,
                     //   txnDate: new Date(data.txnDate).toLocaleDateString(),
@@ -1165,7 +1181,7 @@ var createBulk = function (req_1, data_1) {
                     //   itemData: invoiceItems,
                     // });
                     return [4 /*yield*/, (0, send_invoice_mail_service_1.default)(__assign(__assign(__assign(__assign({}, companyDetails), invoiceDetails), customerDetails), { items: newInvoiceItems_1 }))];
-                case 11:
+                case 13:
                     // await invoiceMailer({
                     //   customer: customer.name,
                     //   txnDate: new Date(data.txnDate).toLocaleDateString(),
@@ -1179,13 +1195,13 @@ var createBulk = function (req_1, data_1) {
                     //   itemData: invoiceItems,
                     // });
                     _c.sent();
-                    _c.label = 12;
-                case 12: return [2 /*return*/, result_1];
-                case 13:
+                    _c.label = 14;
+                case 14: return [2 /*return*/, result_1];
+                case 15:
                     error_6 = _c.sent();
                     console.log(error_6);
                     throw error_6;
-                case 14: return [2 /*return*/];
+                case 16: return [2 /*return*/];
             }
         });
     });

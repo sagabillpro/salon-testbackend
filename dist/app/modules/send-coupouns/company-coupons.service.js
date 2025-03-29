@@ -50,6 +50,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var typeorm_1 = require("typeorm");
 var company_coupons_repo_1 = __importDefault(require("./company-coupons.repo"));
 var company_coupons_entity_1 = require("./entities/company-coupons.entity");
 var send_birthday_mail_service_1 = require("../../services/send-birthday-mail.service");
@@ -480,44 +481,50 @@ var sendReferalCode = function (customer, referredPersonName) { return __awaiter
 }); };
 //check if  teh coupon code is valid or not
 var validateCouponCode = function (companyId, couponCode, customerId) { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, repo, coupon, error_9;
     return __generator(this, function (_a) {
-        try {
-            // const dataSource = await handler();
-            // const repo = dataSource.getRepository(CoupounsList);
-            // const coupon = await repo.findOne({
-            //   where: {
-            //     code: couponCode,
-            //     companyId,
-            //     isUsed: 0,
-            //     //and not expired
-            //     expireAt: MoreThan(new Date()),
-            //     //and not used by the customer
-            //   },
-            // });
-            // if (!coupon) {
-            //   //customize below massage based on the error type
-            //   throw {
-            //     statusCode: 404,
-            //     message:
-            //       "The coupon you are looking for is either invalid or has expired.",
-            //   };
-            // }
-            // //update coupon status to used
-            // await repo.save({ ...coupon, isUsed: 1 });
-            return [2 /*return*/, {
-                    message: "Coupon code has been successfully used.",
-                    data: {
-                        customerId: customerId,
-                        discountPer: 2,
-                        couponId: 2
-                    },
-                }];
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 3, , 4]);
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _a.sent();
+                repo = dataSource.getRepository(coupons_list_entity_1.CoupounsList);
+                return [4 /*yield*/, repo.findOne({
+                        where: {
+                            code: couponCode,
+                            companyId: companyId,
+                            isUsed: 0,
+                            //and not expired
+                            expireAt: (0, typeorm_1.MoreThan)(new Date()),
+                            //and not used by the customer
+                        },
+                    })];
+            case 2:
+                coupon = _a.sent();
+                if (!coupon) {
+                    //customize below massage based on the error type
+                    throw {
+                        statusCode: 404,
+                        message: "The coupon you are looking for is either invalid or has expired.",
+                    };
+                }
+                // //update coupon status to used
+                // await repo.save({ ...coupon, isUsed: 1 });
+                return [2 /*return*/, {
+                        message: "Coupon code has been successfully used.",
+                        data: {
+                            customerId: customerId,
+                            discountPer: coupon.discountPer,
+                            couponId: coupon.id
+                        },
+                    }];
+            case 3:
+                error_9 = _a.sent();
+                console.log(error_9);
+                throw error_9;
+            case 4: return [2 /*return*/];
         }
-        catch (error) {
-            console.log(error);
-            throw error;
-        }
-        return [2 /*return*/];
     });
 }); };
 exports.default = {

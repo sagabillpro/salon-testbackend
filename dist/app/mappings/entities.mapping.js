@@ -36,6 +36,7 @@ var uom_entity_1 = require("../modules/uom/entities/uom.entity");
 var tax_groups_entity_1 = require("../modules/taxes/entities/tax-groups.entity");
 var taxes_new_entity_1 = require("../modules/taxes/entities/taxes-new.entity");
 var tax_group_compnents_entity_1 = require("../modules/taxes/entities/tax-group-compnents.entity");
+var customer_visits_entity_1 = require("../modules/sale-items/entities/customer-visits.entity");
 exports.entities = [
     items_entity_1.Item,
     item_images_entity_1.ItemImage,
@@ -86,7 +87,8 @@ exports.entities = [
     uom_entity_1.UOM,
     tax_groups_entity_1.TaxGroup,
     taxes_new_entity_1.TaxNew,
-    tax_group_compnents_entity_1.TaxGroupComponent
+    tax_group_compnents_entity_1.TaxGroupComponent,
+    customer_visits_entity_1.CustomerVisit
     // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];
 //# sourceMappingURL=entities.mapping.js.map
