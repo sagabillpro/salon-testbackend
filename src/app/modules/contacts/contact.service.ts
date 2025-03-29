@@ -58,7 +58,7 @@ const create = async (data: Contact) => {
           statusCode: 404,
         };
       }
-      await CompanyCoupounsService.sendReferalCode(referedBy);
+      await CompanyCoupounsService.sendReferalCode(referedBy,data.name);
     }
 
     const repo = await repository();

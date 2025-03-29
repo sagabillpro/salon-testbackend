@@ -291,7 +291,7 @@ const anniverseryScheduler = async () => {
 };
 
 //1. find multiple records
-const sendReferalCode = async (customer: Contact) => {
+const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
   try {
     const dataSource = await handler();
 
@@ -326,6 +326,7 @@ const sendReferalCode = async (customer: Contact) => {
     const code = generateCouponCode(5);
     if (customer.email) {
       await sendReferalEmail({
+        referredPersonName,
         customer: {
           name: customer.name,
           email: customer.email,

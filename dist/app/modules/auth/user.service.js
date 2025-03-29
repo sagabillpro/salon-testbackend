@@ -356,15 +356,16 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
 //6. user login
 var login = function (data) { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, userSessionRepo, repo, foundUser, verfied, accessToken, refreshTokenToken, currentDate, userSession;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
+    var _a;
+    return __generator(this, function (_b) {
+        switch (_b.label) {
             case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];
             case 1:
-                dataSource = _a.sent();
+                dataSource = _b.sent();
                 userSessionRepo = dataSource.getRepository(user_sessions_entity_1.UserSessions);
                 return [4 /*yield*/, (0, user_repo_1.default)()];
             case 2:
-                repo = _a.sent();
+                repo = _b.sent();
                 return [4 /*yield*/, repo.findOne({
                         where: {
                             userName: data.userName,
@@ -389,14 +390,17 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                         },
                     })];
             case 3:
-                foundUser = _a.sent();
+                foundUser = _b.sent();
                 if (!foundUser) return [3 /*break*/, 8];
                 if (foundUser.isInactive) {
-                    throw { message: "Invalid password !", statusCode: 401 };
+                    throw { message: "Your account has been deactivated by the admin. Please contact support for assistance.", statusCode: 401 };
+                }
+                if ((_a = foundUser === null || foundUser === void 0 ? void 0 : foundUser.company) === null || _a === void 0 ? void 0 : _a.isInactive) {
+                    throw { message: "Your company has been deactivated by the admin. Please contact support for assistance.", statusCode: 401 };
                 }
                 return [4 /*yield*/, (0, services_1.comparePassword)(data.password, foundUser === null || foundUser === void 0 ? void 0 : foundUser.password)];
             case 4:
-                verfied = _a.sent();
+                verfied = _b.sent();
                 if (!verfied) return [3 /*break*/, 6];
                 accessToken = (0, services_1.generateAccessToken)({
                     userId: foundUser.id,
@@ -430,7 +434,7 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                 });
                 return [4 /*yield*/, userSessionRepo.save(userSession)];
             case 5:
-                _a.sent();
+                _b.sent();
                 //4. send accessToken and refreshToken in response
                 return [2 /*return*/, {
                         refreshTokenToken: refreshTokenToken,
