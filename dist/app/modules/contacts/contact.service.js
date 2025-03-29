@@ -119,7 +119,20 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                     };
                 }
                 if (!data.referedById) return [3 /*break*/, 5];
-                return [4 /*yield*/, findById(data.referedById, {})];
+                return [4 /*yield*/, findById(data.referedById, {
+                        relations: {
+                            company: true,
+                        },
+                        select: {
+                            company: {
+                                id: true,
+                                name: true,
+                                logo: true,
+                                email: true,
+                                tagLine: true,
+                            },
+                        },
+                    })];
             case 3:
                 referedBy = _a.sent();
                 if (!referedBy) {

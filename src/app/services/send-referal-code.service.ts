@@ -29,7 +29,7 @@ export async function sendReferalEmail({
   );
   const htmlContent = await ejs.renderFile(templatePath, {
     customerName: customer.name,
-    referredPersonName:referredPersonName,
+    referredPersonName: referredPersonName,
     companyLogo: company.logo,
     companyName: company.name,
     companyTagline: company.tagLine,
@@ -41,7 +41,7 @@ export async function sendReferalEmail({
   const mailOptions = {
     from: `"${company.name}" <${company.email}>`,
     to: customer.email,
-    subject: `🎉 Happy Birthday from ${company.name}!`,
+    subject: `A Special Gift for You form ${company.name}! Your Referral Coupon Inside 🎁!`,
     html: htmlContent,
   };
 
