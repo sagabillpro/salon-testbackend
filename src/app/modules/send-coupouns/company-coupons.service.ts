@@ -17,6 +17,7 @@ import { Contact } from "../contacts/entities/contact.entity";
 import { sendAnniverseryEmail } from "../../services/send-anniversery-mail.service";
 import { CoupounsList } from "./entities/coupons-list.entity";
 import { generateCode } from "../../utils/get-object-code.util";
+import { sendReferalEmail } from "../../services/send-referal-code.service";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<CompanyCoupouns>) => {
@@ -324,7 +325,7 @@ const sendReferalCode = async (customer: Contact) => {
 
     const code = generateCouponCode(5);
     if (customer.email) {
-      await sendAnniverseryEmail({
+      await sendReferalEmail({
         customer: {
           name: customer.name,
           email: customer.email,

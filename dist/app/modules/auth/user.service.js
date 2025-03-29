@@ -368,6 +368,10 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                 return [4 /*yield*/, repo.findOne({
                         where: {
                             userName: data.userName,
+                            isInactive: 0,
+                            company: {
+                                isInactive: 0,
+                            },
                         },
                         relations: {
                             userType: true,
@@ -380,12 +384,16 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                                 upiId: true,
                                 stateId: true,
                                 taxId: true,
+                                isInactive: true,
                             },
                         },
                     })];
             case 3:
                 foundUser = _a.sent();
                 if (!foundUser) return [3 /*break*/, 8];
+                if (foundUser.isInactive) {
+                    throw { message: "Invalid password !", statusCode: 401 };
+                }
                 return [4 /*yield*/, (0, services_1.comparePassword)(data.password, foundUser === null || foundUser === void 0 ? void 0 : foundUser.password)];
             case 4:
                 verfied = _a.sent();

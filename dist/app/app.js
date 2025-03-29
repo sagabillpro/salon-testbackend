@@ -67,7 +67,7 @@ var startServer = function () { return __awaiter(void 0, void 0, void 0, functio
                 (0, routes_1.registerRoutes)(app);
                 app.use(errorHandler_middleware_1.errorHandler);
                 // Schedule the job at 3 PM every day
-                node_cron_1.default.schedule("30 20 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
+                node_cron_1.default.schedule("00 01 * * *", function () { return __awaiter(void 0, void 0, void 0, function () {
                     return __generator(this, function (_a) {
                         switch (_a.label) {
                             case 0:

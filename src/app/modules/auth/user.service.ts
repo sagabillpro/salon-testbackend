@@ -273,6 +273,10 @@ const login = async (data: {
   const foundUser = await repo.findOne({
     where: {
       userName: data.userName,
+      isInactive: 0,
+      company: {
+        isInactive: 0,
+      },
     },
     relations: {
       userType: true,
@@ -285,10 +289,17 @@ const login = async (data: {
         upiId: true,
         stateId: true,
         taxId: true,
+        isInactive: true,
       },
     },
   });
   if (foundUser) {
+    if (foundUser.isInactive) {
+      throw { message: "Your account has been deactivated by the admin. Please contact support for assistance.", statusCode: 401 };
+    }
+    if (foundUser?.company?.isInactive) {
+      throw { message: "Your company has been deactivated by the admin. Please contact support for assistance.", statusCode: 401 };
+    }
     //2. check and compare password
     const verfied = await comparePassword(data.password, foundUser?.password);
     if (verfied) {

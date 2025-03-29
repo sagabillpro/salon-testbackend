@@ -59,6 +59,7 @@ var contact_entity_1 = require("../contacts/entities/contact.entity");
 var send_anniversery_mail_service_1 = require("../../services/send-anniversery-mail.service");
 var coupons_list_entity_1 = require("./entities/coupons-list.entity");
 var get_object_code_util_1 = require("../../utils/get-object-code.util");
+var send_referal_code_service_1 = require("../../services/send-referal-code.service");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -436,7 +437,7 @@ var sendReferalCode = function (customer) { return __awaiter(void 0, void 0, voi
                 couponListRepo = dataSource.getRepository(coupons_list_entity_1.CoupounsList);
                 code = (0, generate_coupons_code_util_1.generateCouponCode)(5);
                 if (!customer.email) return [3 /*break*/, 4];
-                return [4 /*yield*/, (0, send_anniversery_mail_service_1.sendAnniverseryEmail)({
+                return [4 /*yield*/, (0, send_referal_code_service_1.sendReferalEmail)({
                         customer: {
                             name: customer.name,
                             email: customer.email,
