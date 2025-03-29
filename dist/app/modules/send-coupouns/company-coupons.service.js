@@ -397,7 +397,7 @@ var anniverseryScheduler = function () { return __awaiter(void 0, void 0, void 0
     });
 }); };
 //1. find multiple records
-var sendReferalCode = function (customer) { return __awaiter(void 0, void 0, void 0, function () {
+var sendReferalCode = function (customer, referredPersonName) { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, repo, couponsList, coupouns, couponListRepo, code, applicableCpns, error_8;
     var _a, _b, _c, _d;
     return __generator(this, function (_e) {
@@ -438,6 +438,7 @@ var sendReferalCode = function (customer) { return __awaiter(void 0, void 0, voi
                 code = (0, generate_coupons_code_util_1.generateCouponCode)(5);
                 if (!customer.email) return [3 /*break*/, 4];
                 return [4 /*yield*/, (0, send_referal_code_service_1.sendReferalEmail)({
+                        referredPersonName: referredPersonName,
                         customer: {
                             name: customer.name,
                             email: customer.email,

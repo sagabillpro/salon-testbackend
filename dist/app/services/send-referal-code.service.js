@@ -69,7 +69,7 @@ var ejs = __importStar(require("ejs"));
 function sendReferalEmail(_a) {
     return __awaiter(this, arguments, void 0, function (_b) {
         var currentDate, templatePath, htmlContent, mailOptions;
-        var customer = _b.customer, company = _b.company, couponCode = _b.couponCode, expiresIn = _b.expiresIn, message = _b.message;
+        var customer = _b.customer, referredPersonName = _b.referredPersonName, company = _b.company, couponCode = _b.couponCode, expiresIn = _b.expiresIn, message = _b.message;
         return __generator(this, function (_c) {
             switch (_c.label) {
                 case 0:
@@ -80,6 +80,7 @@ function sendReferalEmail(_a) {
                     templatePath = path_1.default.join(__dirname, "../templates", "referal.template.ejs");
                     return [4 /*yield*/, ejs.renderFile(templatePath, {
                             customerName: customer.name,
+                            referredPersonName: referredPersonName,
                             companyLogo: company.logo,
                             companyName: company.name,
                             companyTagline: company.tagLine,

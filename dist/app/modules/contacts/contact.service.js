@@ -128,7 +128,7 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                         statusCode: 404,
                     };
                 }
-                return [4 /*yield*/, company_coupons_service_1.default.sendReferalCode(referedBy)];
+                return [4 /*yield*/, company_coupons_service_1.default.sendReferalCode(referedBy, data.name)];
             case 4:
                 _a.sent();
                 _a.label = 5;
