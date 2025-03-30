@@ -13,6 +13,7 @@ import { SaleHeaders } from "./sale-header.entity";
 import { Services } from "../../services/entities/services.entity";
 import { Taxes } from "../../taxes/entities/taxes.entity";
 import { UOM } from "../../uom/entities/uom.entity";
+import { TaxGroup } from "../../taxes/entities/tax-groups.entity";
 
 @Entity("sale_lines")
 //@Unique(["recordId", "id"])
@@ -37,12 +38,12 @@ export class SaleLines {
   service: Services;
 
   @Column({ type: "int", nullable: true })
-  taxId: number;
+  taxGroupId: number;
 
-  @ManyToOne(() => Taxes, { nullable: true })
+  @ManyToOne(() => TaxGroup, { nullable: true })
   @JoinColumn()
-  tax: Taxes;
-  
+  taxGroup: TaxGroup;
+
   @Column({ type: "int", nullable: true })
   uomId: number;
 
@@ -80,9 +81,13 @@ export class SaleLines {
   @Column({ type: "int", default: 0 })
   isInactive: number;
 
+  @Column({ type: "jsonb", nullable: true })
+  taxGroupComponents: any; 
+  
+  // JSONB column to store tax breakdown
   @Column({ type: "int", default: 0, nullable: false })
   isService: number;
-  
+
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 }

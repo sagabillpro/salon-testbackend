@@ -34,6 +34,33 @@ exports.SaleHeadersSchema = {
             items: {
                 type: "object",
                 properties: {
+                    taxGroupComponents: {
+                        type: "array",
+                        items: {
+                            type: "object",
+                            properties: {
+                                id: {
+                                    type: "integer",
+                                    minimum: 1,
+                                },
+                                name: {
+                                    type: "string",
+                                    minLength: 1,
+                                },
+                                percentage: {
+                                    type: "number",
+                                    minimum: 0,
+                                    maximum: 100,
+                                },
+                                taxAmount: {
+                                    type: "number",
+                                    minimum: 0,
+                                },
+                            },
+                            required: ["id", "name", "percentage", "taxAmount"],
+                            additionalProperties: false,
+                        },
+                    },
                     txnHeader: {
                         type: "object",
                         properties: {
@@ -51,12 +78,12 @@ exports.SaleHeadersSchema = {
                         required: ["id", "name"],
                         additionalProperties: false,
                     },
-                    tax: {
+                    taxGroup: {
                         type: "object",
                         properties: {
                             id: { type: "integer" },
                             name: { type: "string" },
-                            percentage: { type: "number" }, // changed from integer if decimals are possible
+                            rate: { type: "number" }, // changed from integer if decimals are possible
                         },
                         required: ["id", "name"],
                         additionalProperties: false,
@@ -84,11 +111,12 @@ exports.SaleHeadersSchema = {
                     modifiedDate: { type: "string", format: "date-time" },
                 },
                 required: [
+                    "taxGroupComponents",
                     "service",
                     "amount",
                     "createdDate",
                     "modifiedDate",
-                    "tax",
+                    "taxGroup",
                     "quantity",
                     "rate",
                 ],

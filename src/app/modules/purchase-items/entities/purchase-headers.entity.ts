@@ -79,17 +79,18 @@ export class PurchaseHeaders {
   @JoinColumn()
   transactionStatus: DTransactionStatus;
 
-  @Column({ type: "int", nullable: true })
-  subTotal: number;
-
-  @Column({ type: "int", nullable: true })
-  grandTotal: number;
-
-  @Column({ type: "int", nullable: true })
-  totalDiscount: number;
-
-  @Column({ type: "int", nullable: true })
-  totalTax: number;
+   // Changed from integer to decimal (precision 10, scale 2)
+   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
+   subTotal: number;
+ 
+   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
+   grandTotal: number;
+ 
+   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
+   totalDiscount: number;
+ 
+   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
+   totalTax: number;
 
   @CreateDateColumn({ type: "varchar", nullable: false })
   createdDate: string;
@@ -121,7 +122,7 @@ export class PurchaseHeaders {
 
   @Column({ type: "int", nullable: true })
   modifiedById: number;
-  
+
   @Column({ type: "int", default: 0 })
   isInactive: number;
 

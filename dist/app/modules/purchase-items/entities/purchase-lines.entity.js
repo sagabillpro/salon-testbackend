@@ -12,9 +12,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PurchaseLines = void 0;
 var typeorm_1 = require("typeorm");
 var services_entity_1 = require("../../services/entities/services.entity");
-var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var purchase_headers_entity_1 = require("./purchase-headers.entity");
 var uom_entity_1 = require("../../uom/entities/uom.entity");
+var tax_groups_entity_1 = require("../../taxes/entities/tax-groups.entity");
 var PurchaseLines = /** @class */ (function () {
     function PurchaseLines() {
     }
@@ -45,12 +45,16 @@ var PurchaseLines = /** @class */ (function () {
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
-    ], PurchaseLines.prototype, "taxId", void 0);
+    ], PurchaseLines.prototype, "taxGroupId", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
+        (0, typeorm_1.ManyToOne)(function () { return tax_groups_entity_1.TaxGroup; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", taxes_entity_1.Taxes)
-    ], PurchaseLines.prototype, "tax", void 0);
+        __metadata("design:type", tax_groups_entity_1.TaxGroup)
+    ], PurchaseLines.prototype, "taxGroup", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "jsonb", nullable: true }),
+        __metadata("design:type", Object)
+    ], PurchaseLines.prototype, "taxGroupComponents", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
@@ -77,7 +81,7 @@ var PurchaseLines = /** @class */ (function () {
         __metadata("design:type", uom_entity_1.UOM)
     ], PurchaseLines.prototype, "uom", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: false }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseLines.prototype, "amount", void 0);
     __decorate([

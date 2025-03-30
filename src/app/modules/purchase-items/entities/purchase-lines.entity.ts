@@ -12,6 +12,8 @@ import { Services } from "../../services/entities/services.entity";
 import { Taxes } from "../../taxes/entities/taxes.entity";
 import { PurchaseHeaders } from "./purchase-headers.entity";
 import { UOM } from "../../uom/entities/uom.entity";
+import { TaxNew } from "../../taxes/entities/taxes-new.entity";
+import { TaxGroup } from "../../taxes/entities/tax-groups.entity";
 
 @Entity("purchase_lines")
 export class PurchaseLines {
@@ -35,11 +37,14 @@ export class PurchaseLines {
   service: Services;
 
   @Column({ type: "int", nullable: true })
-  taxId: number;
+  taxGroupId: number;
 
-  @ManyToOne(() => Taxes, { nullable: true })
+  @ManyToOne(() => TaxGroup, { nullable: true })
   @JoinColumn()
-  tax: Taxes;
+  taxGroup: TaxGroup;
+
+  @Column({ type: "jsonb", nullable: true })
+  taxGroupComponents: any; 
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   rate: number;
@@ -58,7 +63,8 @@ export class PurchaseLines {
   @ManyToOne(() => UOM, { nullable: true })
   @JoinColumn()
   uom: UOM;
-  @Column({ type: "int", nullable: false })
+
+  @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
   amount: number;
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })

@@ -180,7 +180,7 @@ router.post("/apply/coupon", authenticate_middleware_1.default, (0, validate_req
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 user = req.user;
-                return [4 /*yield*/, company_coupons_service_1.default.validateCouponCode(user.companyId, req.body.couponCode, req.body.customerId)];
+                return [4 /*yield*/, company_coupons_service_1.default.validateCouponCode(user.companyId, req.body.code, req.body.customerId)];
             case 1:
                 result = _a.sent();
                 res.send(result);

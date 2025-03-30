@@ -82,19 +82,19 @@ var PurchaseHeaders = /** @class */ (function () {
         __metadata("design:type", entities_1.DTransactionStatus)
     ], PurchaseHeaders.prototype, "transactionStatus", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseHeaders.prototype, "subTotal", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseHeaders.prototype, "grandTotal", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseHeaders.prototype, "totalDiscount", void 0);
     __decorate([
-        (0, typeorm_1.Column)({ type: "int", nullable: true }),
+        (0, typeorm_1.Column)({ type: "decimal", precision: 10, scale: 2, nullable: true }),
         __metadata("design:type", Number)
     ], PurchaseHeaders.prototype, "totalTax", void 0);
     __decorate([

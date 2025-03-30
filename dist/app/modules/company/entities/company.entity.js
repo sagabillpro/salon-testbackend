@@ -14,7 +14,7 @@ var typeorm_1 = require("typeorm");
 var entities_1 = require("../../general-data/entities");
 var branches_entity_1 = require("../../branches/entities/branches.entity");
 var user_entity_1 = require("../../auth/entities/user.entity");
-var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
+var taxes_new_entity_1 = require("../../taxes/entities/taxes-new.entity");
 var Company = /** @class */ (function () {
     function Company() {
     }
@@ -119,9 +119,9 @@ var Company = /** @class */ (function () {
         __metadata("design:type", Number)
     ], Company.prototype, "isInactive", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
+        (0, typeorm_1.ManyToOne)(function () { return taxes_new_entity_1.TaxNew; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", taxes_entity_1.Taxes)
+        __metadata("design:type", taxes_new_entity_1.TaxNew)
     ], Company.prototype, "tax", void 0);
     __decorate([
         (0, typeorm_1.OneToMany)(function () { return branches_entity_1.Branch; }, function (line) { return line.company; }, {

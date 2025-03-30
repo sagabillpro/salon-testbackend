@@ -391,6 +391,7 @@ var login = function (data) { return __awaiter(void 0, void 0, void 0, function 
                     })];
             case 3:
                 foundUser = _b.sent();
+                console.log(foundUser);
                 if (!foundUser) return [3 /*break*/, 8];
                 if (foundUser.isInactive) {
                     throw { message: "Your account has been deactivated by the admin. Please contact support for assistance.", statusCode: 401 };

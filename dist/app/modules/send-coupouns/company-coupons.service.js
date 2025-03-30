@@ -462,7 +462,7 @@ var sendReferalCode = function (customer, referredPersonName) { return __awaiter
                     couponId: coupouns.id,
                     isUsed: 0,
                     companyId: coupouns === null || coupouns === void 0 ? void 0 : coupouns.companyId,
-                    expireAt: new Date(new Date().getTime() + coupouns.expiresIn * 60 * 1000),
+                    expireAt: new Date(Date.now() + coupouns.expiresIn * 60 * 1000)
                 });
                 _e.label = 4;
             case 4:

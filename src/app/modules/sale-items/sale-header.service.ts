@@ -745,7 +745,7 @@ const create = async (data: SaleHeaders, isService: boolean = false) => {
           unitPrice: value.rate,
           total: Number(value.amount),
           tax: value.taxAmount,
-          taxName: value.tax.name,
+          taxName: value.taxGroup.name,
         });
       });
     }
@@ -937,7 +937,7 @@ const createBulk = async (
         description: value?.service?.name,
         quantity: value?.quantity,
         unitCost: value.rate,
-        taxPercentage: value?.tax?.name,
+        taxPercentage: value?.taxGroup?.name,
         taxAmount: value.taxAmount,
         lineTotal: Number(value.amount),
       });
@@ -1168,7 +1168,7 @@ const saleInvoiceData = async (id: number) => {
       relations: {
         saleLines: {
           service: true,
-          tax: true,
+          taxGroup: true,
         },
         customer: {
           state: true,
@@ -1202,7 +1202,7 @@ const saleInvoiceData = async (id: number) => {
       description: line?.service?.name,
       quantity: line?.quantity,
       unitCost: line.rate,
-      taxPercentage: line?.tax?.name,
+      taxPercentage: line?.taxGroup?.name,
       taxAmount: line.taxAmount,
       lineTotal: Number(line.amount),
     }));

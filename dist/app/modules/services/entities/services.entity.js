@@ -11,12 +11,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Services = void 0;
 var typeorm_1 = require("typeorm");
-var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var entities_1 = require("../../general-data/entities");
 var item_stocks_entity_1 = require("../../sale-items/entities/item-stocks.entity");
 var user_entity_1 = require("../../auth/entities/user.entity");
 var company_entity_1 = require("../../company/entities/company.entity");
 var uom_entity_1 = require("../../uom/entities/uom.entity");
+var tax_groups_entity_1 = require("../../taxes/entities/tax-groups.entity");
 var Services = /** @class */ (function () {
     function Services() {
     }
@@ -44,12 +44,12 @@ var Services = /** @class */ (function () {
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
-    ], Services.prototype, "taxId", void 0);
+    ], Services.prototype, "taxGroupId", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
+        (0, typeorm_1.ManyToOne)(function () { return tax_groups_entity_1.TaxGroup; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", taxes_entity_1.Taxes)
-    ], Services.prototype, "tax", void 0);
+        __metadata("design:type", tax_groups_entity_1.TaxGroup)
+    ], Services.prototype, "taxGroup", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)

@@ -261,7 +261,7 @@ const purchaseInvoiceData = async (id: number) => {
       relations: {
         purchaseLines: {
           service: true,
-          tax: true,
+          taxGroup: true,
         },
         supplier: {
           state: true,
@@ -296,7 +296,7 @@ const purchaseInvoiceData = async (id: number) => {
       description: line?.service?.name,
       quantity: line?.quantity,
       unitCost: line.unitPrice,
-      taxPercentage: line?.tax?.name,
+      taxPercentage: line?.taxGroup?.name,
       taxAmount: line.taxAmount,
       lineTotal: Number(line.amount),
     }));

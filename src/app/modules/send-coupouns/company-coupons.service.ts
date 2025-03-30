@@ -347,9 +347,7 @@ const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
         couponId: coupouns.id,
         isUsed: 0,
         companyId: coupouns?.companyId,
-        expireAt: new Date(
-          new Date().getTime() + coupouns.expiresIn * 60 * 1000
-        ),
+        expireAt: new Date(Date.now() + coupouns.expiresIn * 60 * 1000)
       });
     }
     //create and save couponsList

@@ -366,7 +366,7 @@ var purchaseInvoiceData = function (id) { return __awaiter(void 0, void 0, void 
                         relations: {
                             purchaseLines: {
                                 service: true,
-                                tax: true,
+                                taxGroup: true,
                             },
                             supplier: {
                                 state: true,
@@ -406,7 +406,7 @@ var purchaseInvoiceData = function (id) { return __awaiter(void 0, void 0, void 
                         description: (_a = line === null || line === void 0 ? void 0 : line.service) === null || _a === void 0 ? void 0 : _a.name,
                         quantity: line === null || line === void 0 ? void 0 : line.quantity,
                         unitCost: line.unitPrice,
-                        taxPercentage: (_b = line === null || line === void 0 ? void 0 : line.tax) === null || _b === void 0 ? void 0 : _b.name,
+                        taxPercentage: (_b = line === null || line === void 0 ? void 0 : line.taxGroup) === null || _b === void 0 ? void 0 : _b.name,
                         taxAmount: line.taxAmount,
                         lineTotal: Number(line.amount),
                     });

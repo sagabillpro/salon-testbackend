@@ -770,7 +770,7 @@ var create = function (data_1) {
                                 unitPrice: value.rate,
                                 total: Number(value.amount),
                                 tax: value.taxAmount,
-                                taxName: value.tax.name,
+                                taxName: value.taxGroup.name,
                             });
                         });
                     }
@@ -986,7 +986,7 @@ var createBulk = function (req_1, data_1) {
                             description: (_a = value === null || value === void 0 ? void 0 : value.service) === null || _a === void 0 ? void 0 : _a.name,
                             quantity: value === null || value === void 0 ? void 0 : value.quantity,
                             unitCost: value.rate,
-                            taxPercentage: (_b = value === null || value === void 0 ? void 0 : value.tax) === null || _b === void 0 ? void 0 : _b.name,
+                            taxPercentage: (_b = value === null || value === void 0 ? void 0 : value.taxGroup) === null || _b === void 0 ? void 0 : _b.name,
                             taxAmount: value.taxAmount,
                             lineTotal: Number(value.amount),
                         });
@@ -1218,7 +1218,7 @@ var saleInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, f
                         relations: {
                             saleLines: {
                                 service: true,
-                                tax: true,
+                                taxGroup: true,
                             },
                             customer: {
                                 state: true,
@@ -1258,7 +1258,7 @@ var saleInvoiceData = function (id) { return __awaiter(void 0, void 0, void 0, f
                         description: (_a = line === null || line === void 0 ? void 0 : line.service) === null || _a === void 0 ? void 0 : _a.name,
                         quantity: line === null || line === void 0 ? void 0 : line.quantity,
                         unitCost: line.rate,
-                        taxPercentage: (_b = line === null || line === void 0 ? void 0 : line.tax) === null || _b === void 0 ? void 0 : _b.name,
+                        taxPercentage: (_b = line === null || line === void 0 ? void 0 : line.taxGroup) === null || _b === void 0 ? void 0 : _b.name,
                         taxAmount: line.taxAmount,
                         lineTotal: Number(line.amount),
                     });

@@ -13,8 +13,8 @@ exports.SaleLines = void 0;
 var typeorm_1 = require("typeorm");
 var sale_header_entity_1 = require("./sale-header.entity");
 var services_entity_1 = require("../../services/entities/services.entity");
-var taxes_entity_1 = require("../../taxes/entities/taxes.entity");
 var uom_entity_1 = require("../../uom/entities/uom.entity");
+var tax_groups_entity_1 = require("../../taxes/entities/tax-groups.entity");
 var SaleLines = /** @class */ (function () {
     //@Unique(["recordId", "id"])
     function SaleLines() {
@@ -46,12 +46,12 @@ var SaleLines = /** @class */ (function () {
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
-    ], SaleLines.prototype, "taxId", void 0);
+    ], SaleLines.prototype, "taxGroupId", void 0);
     __decorate([
-        (0, typeorm_1.ManyToOne)(function () { return taxes_entity_1.Taxes; }, { nullable: true }),
+        (0, typeorm_1.ManyToOne)(function () { return tax_groups_entity_1.TaxGroup; }, { nullable: true }),
         (0, typeorm_1.JoinColumn)(),
-        __metadata("design:type", taxes_entity_1.Taxes)
-    ], SaleLines.prototype, "tax", void 0);
+        __metadata("design:type", tax_groups_entity_1.TaxGroup)
+    ], SaleLines.prototype, "taxGroup", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", nullable: true }),
         __metadata("design:type", Number)
@@ -101,6 +101,10 @@ var SaleLines = /** @class */ (function () {
         (0, typeorm_1.Column)({ type: "int", default: 0 }),
         __metadata("design:type", Number)
     ], SaleLines.prototype, "isInactive", void 0);
+    __decorate([
+        (0, typeorm_1.Column)({ type: "jsonb", nullable: true }),
+        __metadata("design:type", Object)
+    ], SaleLines.prototype, "taxGroupComponents", void 0);
     __decorate([
         (0, typeorm_1.Column)({ type: "int", default: 0, nullable: false }),
         __metadata("design:type", Number)

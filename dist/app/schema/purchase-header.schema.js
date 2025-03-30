@@ -62,6 +62,33 @@ exports.PurchaseHeadersSchema = {
             items: {
                 type: "object",
                 properties: {
+                    taxGroupComponents: {
+                        type: "array",
+                        items: {
+                            type: "object",
+                            properties: {
+                                id: {
+                                    type: "integer",
+                                    minimum: 1,
+                                },
+                                name: {
+                                    type: "string",
+                                    minLength: 1,
+                                },
+                                percentage: {
+                                    type: "number",
+                                    minimum: 0,
+                                    maximum: 100,
+                                },
+                                taxAmount: {
+                                    type: "number",
+                                    minimum: 0,
+                                },
+                            },
+                            required: ["id", "name", "percentage", "taxAmount"],
+                            additionalProperties: false,
+                        },
+                    },
                     txnHeader: {
                         type: "object",
                         properties: {
@@ -85,7 +112,7 @@ exports.PurchaseHeadersSchema = {
                         required: ["id", "name"],
                         additionalProperties: false,
                     },
-                    tax: {
+                    taxGroup: {
                         type: "object",
                         properties: {
                             id: {
@@ -94,7 +121,7 @@ exports.PurchaseHeadersSchema = {
                             name: {
                                 type: "string",
                             },
-                            percentage: {
+                            rate: {
                                 type: "number", // Changed to number for decimals (if needed)
                             },
                         },
@@ -145,11 +172,12 @@ exports.PurchaseHeadersSchema = {
                     },
                 },
                 required: [
+                    "taxGroupComponents",
                     "service",
                     "amount",
                     "createdDate",
                     "modifiedDate",
-                    "tax",
+                    "taxGroup",
                     "quantity",
                     "rate",
                 ],
