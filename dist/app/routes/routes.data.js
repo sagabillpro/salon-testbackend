@@ -31,6 +31,7 @@ var history_route_1 = __importDefault(require("../history/history.route"));
 var stock_adjustment_headers_routes_1 = __importDefault(require("../modules/stock-adjustment/stock-adjustment-headers.routes"));
 var company_coupons_routes_1 = __importDefault(require("../modules/send-coupouns/company-coupons.routes"));
 var uom_routes_1 = __importDefault(require("../modules/uom/uom.routes"));
+var tax_report_route_1 = __importDefault(require("../modules/reportroutes/tax-report.route"));
 exports.routes = [
     items_routes_1.default,
     general_data_route_1.default,
@@ -59,5 +60,6 @@ exports.routes = [
     stock_adjustment_headers_routes_1.default,
     company_coupons_routes_1.default,
     uom_routes_1.default,
+    tax_report_route_1.default
 ];
 //# sourceMappingURL=routes.data.js.map

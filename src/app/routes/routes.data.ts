@@ -27,6 +27,7 @@ import stockAdjustmentHeadersRoutes from "../modules/stock-adjustment/stock-adju
 import companyCouponsRoutes from "../modules/send-coupouns/company-coupons.routes";
 import uomService from "../modules/uom/uom.service";
 import uomRoutes from "../modules/uom/uom.routes";
+import taxReportRoute from "../modules/reportroutes/tax-report.route";
 
 export const routes: Routes = [
   itemRoute,
@@ -56,4 +57,5 @@ export const routes: Routes = [
   stockAdjustmentHeadersRoutes,
   companyCouponsRoutes,
   uomRoutes,
+  taxReportRoute
 ];

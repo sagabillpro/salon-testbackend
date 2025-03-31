@@ -51,7 +51,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var get_object_code_util_1 = require("../../utils/get-object-code.util");
+var dbconfig_1 = require("../../config/dbconfig");
 var taxes_repo_1 = __importDefault(require("./taxes.repo"));
+var purchase_headers_entity_1 = require("../purchase-items/entities/purchase-headers.entity");
+var purchase_lines_entity_1 = require("../purchase-items/entities/purchase-lines.entity");
+var tax_groups_entity_1 = require("../taxes/entities/tax-groups.entity");
+var sale_lines_enity_1 = require("../sale-items/entities/sale-lines.enity");
+var sale_header_entity_1 = require("../sale-items/entities/sale-header.entity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -154,5 +160,122 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); };
-exports.default = { find: find, findById: findById, create: create, deleteById: deleteById, updateById: updateById };
+function getOutputGst(companyId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var dataSource, saleLinesLineRepo, outputGst;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];
+                case 1:
+                    dataSource = _a.sent();
+                    saleLinesLineRepo = dataSource.getRepository(sale_lines_enity_1.SaleLines);
+                    return [4 /*yield*/, saleLinesLineRepo
+                            .createQueryBuilder("sale_lines")
+                            .innerJoin(sale_header_entity_1.SaleHeaders, "sale_headers", "sale_lines.txnHeaderId = sale_headers.id")
+                            .innerJoin(tax_groups_entity_1.TaxGroup, "tax_groups", "sale_lines.taxGroupId = tax_groups.id")
+                            .from(function (qb) {
+                            return qb
+                                .select('jsonb_array_elements(sale_lines."taxGroupComponents")', "tax_info")
+                                .from(sale_lines_enity_1.SaleLines, "sale_lines");
+                        }, "tax_info")
+                            .select("tax_groups.name", "tax_group_name")
+                            .addSelect("tax_info->>'name'", "tax_name")
+                            .addSelect("SUM((tax_info->>'taxAmount')::numeric)", "total_tax")
+                            .where("sale_headers.companyId = :companyId", { companyId: companyId })
+                            .groupBy("tax_groups.name, tax_info->>'name'")
+                            .getRawMany()];
+                case 2:
+                    outputGst = _a.sent();
+                    return [2 /*return*/, outputGst];
+            }
+        });
+    });
+}
+function getInputGst(companyId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var dataSource, purchaseLineRepo, inputGst;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];
+                case 1:
+                    dataSource = _a.sent();
+                    purchaseLineRepo = dataSource.getRepository(purchase_lines_entity_1.PurchaseLines);
+                    return [4 /*yield*/, purchaseLineRepo
+                            .createQueryBuilder("purchase_lines")
+                            .innerJoin(purchase_headers_entity_1.PurchaseHeaders, "purchase_headers", "purchase_lines.txnHeaderId = purchase_headers.id")
+                            .innerJoin(tax_groups_entity_1.TaxGroup, "tax_groups", "purchase_lines.taxGroupId = tax_groups.id")
+                            .from(function (qb) {
+                            return qb
+                                .select('jsonb_array_elements(purchase_lines."taxGroupComponents")', "tax_info")
+                                .from(purchase_lines_entity_1.PurchaseLines, "purchase_lines");
+                        }, "tax_info")
+                            .select("tax_groups.name", "tax_group_name")
+                            .addSelect("tax_info->>'name'", "tax_name")
+                            .addSelect("SUM((tax_info->>'taxAmount')::numeric)", "total_tax")
+                            .where("purchase_headers.companyId = :companyId", { companyId: companyId })
+                            .groupBy("tax_groups.name, tax_info->>'name'")
+                            .getRawMany()];
+                case 2:
+                    inputGst = _a.sent();
+                    return [2 /*return*/, inputGst];
+            }
+        });
+    });
+}
+/**
+ * Function to calculate the final GST report.
+ * @param companyId - The company ID to fetch GST details.
+ * @returns Final GST data including net payable/refundable GST.
+ */
+function calculateGstReport(companyId) {
+    return __awaiter(this, void 0, void 0, function () {
+        var outputGst, inputGst, totalOutputGst, totalInputGst, outputSummary, inputSummary, netPayable, status;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getOutputGst(companyId)];
+                case 1:
+                    outputGst = _a.sent();
+                    return [4 /*yield*/, getInputGst(companyId)];
+                case 2:
+                    inputGst = _a.sent();
+                    totalOutputGst = 0;
+                    totalInputGst = 0;
+                    outputSummary = outputGst.reduce(function (acc, item) {
+                        totalOutputGst += Number(item.total_tax);
+                        var taxRate = item.tax_group_name;
+                        acc[taxRate] = acc[taxRate] || { cgst: 0, sgst: 0, igst: 0, total: 0 };
+                        acc[taxRate].total += Number(item.total_tax);
+                        return acc;
+                    }, {});
+                    inputSummary = inputGst.reduce(function (acc, item) {
+                        totalInputGst += Number(item.total_tax);
+                        var taxRate = item.tax_group_name;
+                        acc[taxRate] = acc[taxRate] || { cgst: 0, sgst: 0, igst: 0, total: 0 };
+                        acc[taxRate].total += Number(item.total_tax);
+                        return acc;
+                    }, {});
+                    netPayable = totalOutputGst - totalInputGst;
+                    status = netPayable >= 0 ? "Payable" : "Refundable";
+                    return [2 /*return*/, {
+                            outputGst: outputSummary,
+                            inputGst: inputSummary,
+                            totalOutputGst: totalOutputGst,
+                            totalInputGst: totalInputGst,
+                            netPayable: netPayable,
+                            status: status,
+                        }];
+            }
+        });
+    });
+}
+exports.default = {
+    find: find,
+    findById: findById,
+    create: create,
+    deleteById: deleteById,
+    updateById: updateById,
+    getOutputGst: getOutputGst,
+    getInputGst: getInputGst,
+    calculateGstReport: calculateGstReport,
+};
 //# sourceMappingURL=taxes.service.js.map

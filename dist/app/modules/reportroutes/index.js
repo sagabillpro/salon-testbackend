@@ -20,4 +20,5 @@ __exportStar(require("./profitloss.route"), exports);
 __exportStar(require("./sale-report.route"), exports);
 __exportStar(require("./service-revenue.route"), exports);
 __exportStar(require("./item-sale-revenue.route"), exports);
+__exportStar(require("./tax-report.route"), exports);
 //# sourceMappingURL=index.js.map
