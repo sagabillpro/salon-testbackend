@@ -112,7 +112,9 @@ router.get("/:id", authenticate_middleware_1.default, (0, validate_filter_util_1
         }
     });
 }); });
-router.put("/:id", authenticate_middleware_1.default, (0, get_model_schema_util_1.validateRequestBody)(company_entity_1.Company), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.put("/:id", authenticate_middleware_1.default, 
+//validateRequestBody(Company),
+function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var id, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
