@@ -47,6 +47,8 @@ var get_model_schema_util_1 = require("../../utils/get-model-schema.util");
 var taxes_service_1 = __importDefault(require("./taxes.service"));
 var taxes_entity_1 = require("./entities/taxes.entity");
 var router = (0, express_1.Router)();
+var dbconfig_1 = require("../../config/dbconfig");
+var tax_groups_entity_1 = require("./entities/tax-groups.entity");
 router.get("/", (0, validate_filter_util_1.validateFilter)(taxes_entity_1.Taxes), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var result, _a, _b, error_1;
     return __generator(this, function (_c) {
@@ -165,5 +167,30 @@ router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 
 //     return res.status(500).send(error.message);
 //   }
 // });
+router.get("/", (0, validate_filter_util_1.validateFilter)(taxes_entity_1.Taxes), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+    var dataSource, repo, result, _a, _b, error_6;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                _c.trys.push([0, 4, , 5]);
+                return [4 /*yield*/, (0, dbconfig_1.handler)()];
+            case 1:
+                dataSource = _c.sent();
+                repo = dataSource.getRepository(tax_groups_entity_1.TaxGroup);
+                _b = (_a = repo).find;
+                return [4 /*yield*/, (0, get_query_util_1.default)(req, taxes_entity_1.Taxes)];
+            case 2: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
+            case 3:
+                result = _c.sent();
+                res.send(result);
+                return [3 /*break*/, 5];
+            case 4:
+                error_6 = _c.sent();
+                next(error_6);
+                return [3 /*break*/, 5];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
 exports.default = new routes_types_1.Route("/taxes", router);
 //# sourceMappingURL=taxes.routes.js.map
