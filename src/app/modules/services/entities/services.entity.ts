@@ -31,7 +31,7 @@ export class Services {
 
   @Column({ type: "varchar", length: 255, nullable: false })
   name: string;
-  
+
   @Column({ type: "int", nullable: true })
   companyId: number;
 
@@ -43,9 +43,9 @@ export class Services {
   taxGroupId: number;
 
   @ManyToOne(() => TaxGroup, { nullable: true })
-  @JoinColumn()
+  @JoinColumn({ name: "taxGroupId" })
   taxGroup: TaxGroup;
-  
+
   @Column({ type: "int", nullable: true })
   itemTypeId: number;
 
@@ -82,7 +82,6 @@ export class Services {
   description: string;
 
   @Column({ type: "decimal", precision: 10, scale: 2, nullable: true })
-
   discount: number;
 
   @Column({ type: "varchar", length: 100, nullable: true })
@@ -100,7 +99,7 @@ export class Services {
   @ManyToOne(() => UOM, { nullable: true })
   @JoinColumn()
   uom: UOM;
-  
+
   @Column("simple-array", { nullable: true })
   imageUrls: string[];
 
@@ -121,7 +120,6 @@ export class Services {
     nullable: true,
   })
   rating: number;
-
 
   @ManyToOne(() => Users)
   @JoinColumn()

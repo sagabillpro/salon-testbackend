@@ -93,6 +93,7 @@ var getModelSchema = function (model) { return __awaiter(void 0, void 0, void 0,
                 //4. loop through properties
                 modelProperties.forEach(function (value) {
                     var _a, _b;
+                    console.log("value", value);
                     //1. get the type according to the name
                     if (mappings_1.typeOrmToAjvTypesMapping["".concat(value.type)]) {
                         schemaObject_1["properties"]["".concat(value.name)] = __assign({ type: (_a = mappings_1.typeOrmToAjvTypesMapping["".concat(value.type)]) === null || _a === void 0 ? void 0 : _a.type }, (((_b = mappings_1.typeOrmToAjvTypesMapping["".concat(value.type)]) === null || _b === void 0 ? void 0 : _b.format) ||

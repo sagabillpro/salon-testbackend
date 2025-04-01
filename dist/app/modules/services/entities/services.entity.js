@@ -47,7 +47,7 @@ var Services = /** @class */ (function () {
     ], Services.prototype, "taxGroupId", void 0);
     __decorate([
         (0, typeorm_1.ManyToOne)(function () { return tax_groups_entity_1.TaxGroup; }, { nullable: true }),
-        (0, typeorm_1.JoinColumn)(),
+        (0, typeorm_1.JoinColumn)({ name: "taxGroupId" }),
         __metadata("design:type", tax_groups_entity_1.TaxGroup)
     ], Services.prototype, "taxGroup", void 0);
     __decorate([
