@@ -55,6 +55,7 @@ export const getModelSchema = async <T extends EntityTarget<T>>(
     };
     //4. loop through properties
     modelProperties.forEach((value) => {
+      console.log("value",value);
       //1. get the type according to the name
       if (typeOrmToAjvTypesMapping[`${value.type}`]) {
         schemaObject["properties"][`${value.name}`] = {
