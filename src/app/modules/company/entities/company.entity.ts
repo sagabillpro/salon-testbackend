@@ -41,7 +41,7 @@ export class Company {
 
   @Column({ type: "int", nullable: false })
   taxId: number;
-
+  
   @Column({ type: "varchar", length: 150, nullable: false, unique: true })
   email: string;
 

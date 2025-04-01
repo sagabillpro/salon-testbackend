@@ -167,7 +167,7 @@ router.delete("/:id", function (req, res, next) { return __awaiter(void 0, void 
 //     return res.status(500).send(error.message);
 //   }
 // });
-router.get("/", (0, validate_filter_util_1.validateFilter)(taxes_entity_1.Taxes), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
+router.get("/tax-groups", (0, validate_filter_util_1.validateFilter)(tax_groups_entity_1.TaxGroup), function (req, res, next) { return __awaiter(void 0, void 0, void 0, function () {
     var dataSource, repo, result, _a, _b, error_6;
     return __generator(this, function (_c) {
         switch (_c.label) {
@@ -178,7 +178,7 @@ router.get("/", (0, validate_filter_util_1.validateFilter)(taxes_entity_1.Taxes)
                 dataSource = _c.sent();
                 repo = dataSource.getRepository(tax_groups_entity_1.TaxGroup);
                 _b = (_a = repo).find;
-                return [4 /*yield*/, (0, get_query_util_1.default)(req, taxes_entity_1.Taxes)];
+                return [4 /*yield*/, (0, get_query_util_1.default)(req, tax_groups_entity_1.TaxGroup)];
             case 2: return [4 /*yield*/, _b.apply(_a, [_c.sent()])];
             case 3:
                 result = _c.sent();

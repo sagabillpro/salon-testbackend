@@ -67,9 +67,9 @@ var get_object_code_util_1 = require("../../utils/get-object-code.util");
 var dbconfig_1 = require("../../config/dbconfig");
 var entities_1 = require("../general-data/entities");
 var branches_entity_1 = require("../branches/entities/branches.entity");
-var taxes_entity_1 = require("../taxes/entities/taxes.entity");
 var check_duplicate_util_1 = require("../../utils/check-duplicate.util");
 var upload_image_cloudinary_util_1 = require("../../utils/upload-image-cloudinary.util");
+var taxes_new_entity_1 = require("../taxes/entities/taxes-new.entity");
 //1. find multiple records
 var find = function (filter) { return __awaiter(void 0, void 0, void 0, function () {
     var repo, error_1;
@@ -153,7 +153,7 @@ var create = function (data) { return __awaiter(void 0, void 0, void 0, function
                         statusCode: 404,
                     };
                 }
-                taxRepo = dataSource.getRepository(taxes_entity_1.Taxes);
+                taxRepo = dataSource.getRepository(taxes_new_entity_1.TaxNew);
                 return [4 /*yield*/, taxRepo.findOne({
                         where: { id: data.taxId },
                     })];
