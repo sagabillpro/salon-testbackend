@@ -1,4 +1,4 @@
-import { FindManyOptions, FindOneOptions } from "typeorm";
+import { DataSource, FindManyOptions, FindOneOptions } from "typeorm";
 
 import { generateCode } from "../../utils/get-object-code.util";
 import { handler } from "../../config/dbconfig";
@@ -73,10 +73,10 @@ const deleteById = async (id: number) => {
 };
 
 async function getOutputGst(companyId: number) {
-  const dataSource = await handler();
-  const saleLinesLineRepo = dataSource.getRepository(SaleLines);
+  const dataSource: DataSource = await handler();
+  const saleLinesRepo = dataSource.getRepository(SaleLines);
 
-  const outputGst = await saleLinesLineRepo
+  const outputGst = await saleLinesRepo
     .createQueryBuilder("sale_lines")
     .innerJoin(
       SaleHeaders,
@@ -84,28 +84,29 @@ async function getOutputGst(companyId: number) {
       "sale_lines.txnHeaderId = sale_headers.id"
     )
     .innerJoin(TaxGroup, "tax_groups", "sale_lines.taxGroupId = tax_groups.id")
-    .from(
+    .leftJoin(
       (qb) =>
         qb
           .select(
-            'jsonb_array_elements(sale_lines."taxGroupComponents")',
+            `jsonb_array_elements(sale_lines."taxGroupComponents")`,
             "tax_info"
           )
           .from(SaleLines, "sale_lines"),
-      "tax_info"
+      "tax_info",
+      "true" // Dummy condition, required in TypeORM
     )
     .select("tax_groups.name", "tax_group_name")
     .addSelect("tax_info->>'name'", "tax_name")
     .addSelect("SUM((tax_info->>'taxAmount')::numeric)", "total_tax")
     .where("sale_headers.companyId = :companyId", { companyId })
-    .groupBy("tax_groups.name, tax_info->>'name'")
+    .groupBy("tax_groups.name, tax_name")
     .getRawMany();
 
   return outputGst;
 }
 
 async function getInputGst(companyId: number) {
-  const dataSource = await handler();
+  const dataSource: DataSource = await handler();
   const purchaseLineRepo = dataSource.getRepository(PurchaseLines);
 
   const inputGst = await purchaseLineRepo
@@ -120,21 +121,22 @@ async function getInputGst(companyId: number) {
       "tax_groups",
       "purchase_lines.taxGroupId = tax_groups.id"
     )
-    .from(
+    .leftJoin(
       (qb) =>
         qb
           .select(
-            'jsonb_array_elements(purchase_lines."taxGroupComponents")',
+            `jsonb_array_elements(purchase_lines."taxGroupComponents")`,
             "tax_info"
           )
           .from(PurchaseLines, "purchase_lines"),
-      "tax_info"
+      "tax_info",
+      "true" // Dummy condition, required in TypeORM
     )
     .select("tax_groups.name", "tax_group_name")
     .addSelect("tax_info->>'name'", "tax_name")
     .addSelect("SUM((tax_info->>'taxAmount')::numeric)", "total_tax")
     .where("purchase_headers.companyId = :companyId", { companyId })
-    .groupBy("tax_groups.name, tax_info->>'name'")
+    .groupBy("tax_groups.name, tax_name")
     .getRawMany();
 
   return inputGst;

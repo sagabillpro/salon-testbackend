@@ -162,27 +162,28 @@ var deleteById = function (id) { return __awaiter(void 0, void 0, void 0, functi
 }); };
 function getOutputGst(companyId) {
     return __awaiter(this, void 0, void 0, function () {
-        var dataSource, saleLinesLineRepo, outputGst;
+        var dataSource, saleLinesRepo, outputGst;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, (0, dbconfig_1.handler)()];
                 case 1:
                     dataSource = _a.sent();
-                    saleLinesLineRepo = dataSource.getRepository(sale_lines_enity_1.SaleLines);
-                    return [4 /*yield*/, saleLinesLineRepo
+                    saleLinesRepo = dataSource.getRepository(sale_lines_enity_1.SaleLines);
+                    return [4 /*yield*/, saleLinesRepo
                             .createQueryBuilder("sale_lines")
                             .innerJoin(sale_header_entity_1.SaleHeaders, "sale_headers", "sale_lines.txnHeaderId = sale_headers.id")
                             .innerJoin(tax_groups_entity_1.TaxGroup, "tax_groups", "sale_lines.taxGroupId = tax_groups.id")
-                            .from(function (qb) {
+                            .leftJoin(function (qb) {
                             return qb
-                                .select('jsonb_array_elements(sale_lines."taxGroupComponents")', "tax_info")
+                                .select("jsonb_array_elements(sale_lines.\"taxGroupComponents\")", "tax_info")
                                 .from(sale_lines_enity_1.SaleLines, "sale_lines");
-                        }, "tax_info")
+                        }, "tax_info", "true" // Dummy condition, required in TypeORM
+                        )
                             .select("tax_groups.name", "tax_group_name")
                             .addSelect("tax_info->>'name'", "tax_name")
                             .addSelect("SUM((tax_info->>'taxAmount')::numeric)", "total_tax")
                             .where("sale_headers.companyId = :companyId", { companyId: companyId })
-                            .groupBy("tax_groups.name, tax_info->>'name'")
+                            .groupBy("tax_groups.name, tax_name")
                             .getRawMany()];
                 case 2:
                     outputGst = _a.sent();
@@ -204,16 +205,17 @@ function getInputGst(companyId) {
                             .createQueryBuilder("purchase_lines")
                             .innerJoin(purchase_headers_entity_1.PurchaseHeaders, "purchase_headers", "purchase_lines.txnHeaderId = purchase_headers.id")
                             .innerJoin(tax_groups_entity_1.TaxGroup, "tax_groups", "purchase_lines.taxGroupId = tax_groups.id")
-                            .from(function (qb) {
+                            .leftJoin(function (qb) {
                             return qb
-                                .select('jsonb_array_elements(purchase_lines."taxGroupComponents")', "tax_info")
+                                .select("jsonb_array_elements(purchase_lines.\"taxGroupComponents\")", "tax_info")
                                 .from(purchase_lines_entity_1.PurchaseLines, "purchase_lines");
-                        }, "tax_info")
+                        }, "tax_info", "true" // Dummy condition, required in TypeORM
+                        )
                             .select("tax_groups.name", "tax_group_name")
                             .addSelect("tax_info->>'name'", "tax_name")
                             .addSelect("SUM((tax_info->>'taxAmount')::numeric)", "total_tax")
                             .where("purchase_headers.companyId = :companyId", { companyId: companyId })
-                            .groupBy("tax_groups.name, tax_info->>'name'")
+                            .groupBy("tax_groups.name, tax_name")
                             .getRawMany()];
                 case 2:
                     inputGst = _a.sent();

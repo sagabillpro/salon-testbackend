@@ -55,6 +55,9 @@ export class Company {
   upiId: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
+  gstInNo: string;
+  
+  @Column({ type: "varchar", length: 255, nullable: true })
   tagLine: string;
 
   @Column({ type: "varchar", length: 255, nullable: true })
