@@ -58,7 +58,7 @@ router.get(
 router.put(
   "/:id",
   authenticateToken,
-  validateRequestBody(Company),
+  //validateRequestBody(Company),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const id = Number(req.params.id);

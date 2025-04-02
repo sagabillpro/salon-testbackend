@@ -109,7 +109,7 @@ router.post(
       const user: any = req.user;
       const result = await CompanyCoupounsService.validateCouponCode(
         user.companyId,
-        req.body.couponCode,
+        req.body.code,
         req.body.customerId
       );
       res.send(result);

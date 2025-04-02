@@ -14,6 +14,8 @@ import {
   DTransactionStatus,
   DCoupounType,
 } from "../entities";
+import { TaxNew } from "../../taxes/entities/taxes-new.entity";
+import { TaxGroup } from "../../taxes/entities/tax-groups.entity";
 
 export const routeToEntityMap: {
   [key: string]: EntityTarget<any>;
@@ -31,4 +33,6 @@ export const routeToEntityMap: {
   "/industry-types": DIndustryType,
   "/transaction-status": DTransactionStatus,
   "/coupons-types": DCoupounType,
+  "/taxes-new": TaxNew,
+  "/tax-groups": TaxGroup,
 };

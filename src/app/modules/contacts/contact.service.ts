@@ -51,14 +51,27 @@ const create = async (data: Contact) => {
 
     //find a contact with the refered by id recoved from data and if not fond thrw the error
     if (data.referedById) {
-      const referedBy = await findById(data.referedById, {});
+      const referedBy = await findById(data.referedById, {
+        relations: {
+          company: true,
+        },
+        select: {
+          company: {
+            id: true,
+            name: true,
+            logo: true,
+            email: true,
+            tagLine: true,
+          },
+        },
+      });
       if (!referedBy) {
         throw {
           message: "Record not found with id: " + data.referedById,
           statusCode: 404,
         };
       }
-      await CompanyCoupounsService.sendReferalCode(referedBy);
+      await CompanyCoupounsService.sendReferalCode(referedBy, data.name);
     }
 
     const repo = await repository();

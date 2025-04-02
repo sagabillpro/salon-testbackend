@@ -11,6 +11,8 @@ import path from "path";
 const router = Router();
 import ejs from "ejs";
 import { PassThrough, pipeline } from "stream";
+import { handler } from "../../config/dbconfig";
+import { TaxGroup } from "./entities/tax-groups.entity";
 
 router.get(
   "/",
@@ -97,5 +99,18 @@ router.delete(
 //     return res.status(500).send(error.message);
 //   }
 // });
-
+router.get(
+  "/tax-groups",
+  validateFilter(TaxGroup),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const dataSource = await handler();
+      const repo = dataSource.getRepository(TaxGroup);
+      const result = await repo.find(await getQuery(req, TaxGroup));
+      res.send(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
 export default new Route("/taxes", router);

@@ -40,9 +40,9 @@ export const PurchaseHeadersSchema: any = {
       type: "object",
       properties: {
         id: { type: "integer" },
-        name: { type: "string" },
+      //  name: { type: "string" },
       },
-      required: ["id", "name"],
+     // required: ["id", "name"],
       additionalProperties: false,
     },
     supplierId: {
@@ -59,6 +59,33 @@ export const PurchaseHeadersSchema: any = {
       items: {
         type: "object",
         properties: {
+          taxGroupComponents: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                name: {
+                  type: "string",
+                  minLength: 1,
+                },
+                percentage: {
+                  type: "number",
+                  minimum: 0,
+                  maximum: 100,
+                },
+                taxAmount: {
+                  type: "number",
+                  minimum: 0,
+                },
+              },
+              required: ["id", "name", "percentage", "taxAmount"],
+              additionalProperties: false,
+            },
+          },
           txnHeader: {
             type: "object",
             properties: {
@@ -82,7 +109,7 @@ export const PurchaseHeadersSchema: any = {
             required: ["id", "name"],
             additionalProperties: false,
           },
-          tax: {
+          taxGroup: {
             type: "object",
             properties: {
               id: {
@@ -91,7 +118,7 @@ export const PurchaseHeadersSchema: any = {
               name: {
                 type: "string",
               },
-              percentage: {
+              rate: {
                 type: "number", // Changed to number for decimals (if needed)
               },
             },
@@ -143,11 +170,12 @@ export const PurchaseHeadersSchema: any = {
           },
         },
         required: [
+          "taxGroupComponents",
           "service",
           "amount",
           "createdDate",
           "modifiedDate",
-          "tax",
+          "taxGroup",
           "quantity",
           "rate",
         ],

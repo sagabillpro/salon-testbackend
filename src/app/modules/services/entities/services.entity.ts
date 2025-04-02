@@ -19,6 +19,7 @@ import { Users } from "../../auth/entities/user.entity";
 import { handler } from "../../../config/dbconfig";
 import { Company } from "../../company/entities/company.entity";
 import { UOM } from "../../uom/entities/uom.entity";
+import { TaxGroup } from "../../taxes/entities/tax-groups.entity";
 
 @Entity("services")
 export class Services {
@@ -39,11 +40,11 @@ export class Services {
   company: Company;
 
   @Column({ type: "int", nullable: true })
-  taxId: number;
+  taxGroupId: number;
 
-  @ManyToOne(() => Taxes, { nullable: true })
+  @ManyToOne(() => TaxGroup, { nullable: true })
   @JoinColumn()
-  tax: Taxes;
+  taxGroup: TaxGroup;
   
   @Column({ type: "int", nullable: true })
   itemTypeId: number;
@@ -129,11 +130,13 @@ export class Services {
   @ManyToOne(() => Users)
   @JoinColumn()
   modifiedBy: Users;
+
   @Column({ type: "int", nullable: true })
   createdById: number;
 
   @Column({ type: "int", nullable: true })
   modifiedById: number;
+
   @DeleteDateColumn() // 👈 Automatically set when deleted
   deletedAt?: Date;
 

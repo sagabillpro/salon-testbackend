@@ -9,6 +9,7 @@ import { Branch } from "../branches/entities/branches.entity";
 import { Taxes } from "../taxes/entities/taxes.entity";
 import { checkUniqueConstraints } from "../../utils/check-duplicate.util";
 import { uploadImageToCloudinary } from "../../utils/upload-image-cloudinary.util";
+import { TaxNew } from "../taxes/entities/taxes-new.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<Company>) => {
@@ -71,7 +72,7 @@ const create = async (data: Company) => {
     }
 
     //find for tax and based on the id
-    const taxRepo = dataSource.getRepository(Taxes);
+    const taxRepo = dataSource.getRepository(TaxNew);
     const tax = await taxRepo.findOne({
       where: { id: data.taxId },
     });

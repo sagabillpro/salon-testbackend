@@ -72,15 +72,15 @@ const updateById = async (id: number, data: Services) => {
           statusCode: 409,
         };
       }
-      //get latest tax id
-      const latestTax = await taxesService.findById(data.taxId);
-      if (!latestTax) {
-        throw {
-          message: "Record not found with id: " + data.taxId,
-          statusCode: 404,
-        };
-      }
-      data = { ...data, taxId: latestTax.id };
+      // //get latest tax id
+      // const latestTax = await taxesService.findById(data.taxId);
+      // if (!latestTax) {
+      //   throw {
+      //     message: "Record not found with id: " + data.taxId,
+      //     statusCode: 404,
+      //   };
+      // }
+      // data = { ...data, taxId: latestTax.id };
     }
 
     const repo = await repository();

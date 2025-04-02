@@ -698,6 +698,7 @@ import { Company } from "../company/entities/company.entity";
 import { CoupounsList } from "../send-coupouns/entities/coupons-list.entity";
 import { Request } from "express";
 import { AuthenticatedRequest } from "../../types";
+import { CustomerVisit } from "./entities/customer-visits.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -744,7 +745,7 @@ const create = async (data: SaleHeaders, isService: boolean = false) => {
           unitPrice: value.rate,
           total: Number(value.amount),
           tax: value.taxAmount,
-          taxName: value.tax.name,
+          taxName: value.taxGroup.name,
         });
       });
     }
@@ -831,12 +832,24 @@ const createBulk = async (
     const dataSource = await handler();
     const companyRepo = dataSource.getRepository(Company);
     const couponListRepo = dataSource.getRepository(CoupounsList);
+    const customerVisitsRepo = dataSource.getRepository(CustomerVisit);
+    const customerVist = new CustomerVisit();
     let foundCoupons: any = new CoupounsList();
     if (data.couponId) {
-      foundCoupons =
-        (await couponListRepo.findOneBy({
-          id: data.couponId,
-        })) || null;
+      foundCoupons = await couponListRepo.findOneBy({
+        id: data.couponId,
+      });
+      if (!foundCoupons) {
+        throw { message: "Coupon not found with id: ", statusCode: 404 };
+      }
+    }
+    if (data.paymentTypeId) {
+      foundCoupons = await couponListRepo.findOneBy({
+        id: data.couponId,
+      });
+      if (!foundCoupons) {
+        throw { message: "Coupon not found with id: ", statusCode: 404 };
+      }
     }
     const itemLines = data.saleLines.filter((line) => !line.isService);
     const company = await companyRepo.findOne({
@@ -924,7 +937,7 @@ const createBulk = async (
         description: value?.service?.name,
         quantity: value?.quantity,
         unitCost: value.rate,
-        taxPercentage: value?.tax?.name,
+        taxPercentage: value?.taxGroup?.name,
         taxAmount: value.taxAmount,
         lineTotal: Number(value.amount),
       });
@@ -939,14 +952,14 @@ const createBulk = async (
       //   tax: value.taxAmount,
       //   taxName: value.tax.name,
       // });
-      newInvoiceItems.push({
-        description: value?.service?.name,
-        quantity: value?.quantity,
-        unitCost: value.rate,
-        taxPercentage: value?.tax?.name,
-        taxAmount: value.taxAmount,
-        lineTotal: Number(value.amount),
-      });
+      // newInvoiceItems.push({
+      //   description: value?.service?.name,
+      //   quantity: value?.quantity,
+      //   unitCost: value.rate,
+      //   taxPercentage: value?.tax?.name,
+      //   taxAmount: value.taxAmount,
+      //   lineTotal: Number(value.amount),
+      // });
       itemIds.push(value.service.id);
     });
     console.log("check 2");
@@ -1096,7 +1109,7 @@ const createBulk = async (
         await transactionalEntityManager.save(ItemsStockTrack, stockTrack);
         await transactionalEntityManager.save(ItemAvailable, itemsAvailable);
         //set last visited date
-        await transactionalEntityManager.save(Customer, {
+        await transactionalEntityManager.save(Contact, {
           ...customer,
           lastVisitedDate: new Date().toISOString(),
         });
@@ -1155,7 +1168,7 @@ const saleInvoiceData = async (id: number) => {
       relations: {
         saleLines: {
           service: true,
-          tax: true,
+          taxGroup: true,
         },
         customer: {
           state: true,
@@ -1169,7 +1182,7 @@ const saleInvoiceData = async (id: number) => {
     const companyRepo = dataSource.getRepository(Company);
     const company = await companyRepo.findOne({
       where: {
-        id: 40,
+        id: data.companyId,
       },
       select: {
         id: true,
@@ -1189,7 +1202,7 @@ const saleInvoiceData = async (id: number) => {
       description: line?.service?.name,
       quantity: line?.quantity,
       unitCost: line.rate,
-      taxPercentage: line?.tax?.name,
+      taxPercentage: line?.taxGroup?.name,
       taxAmount: line.taxAmount,
       lineTotal: Number(line.amount),
     }));

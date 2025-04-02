@@ -4,6 +4,7 @@ import * as ejs from "ejs";
 
 export async function sendReferalEmail({
   customer,
+  referredPersonName,
   company,
   couponCode,
   expiresIn,
@@ -11,6 +12,7 @@ export async function sendReferalEmail({
 }: {
   customer: { name: string; email: string };
   couponCode: string;
+  referredPersonName: string;
   company: { tagLine: string; logo: string; name: string; email: string };
   expiresIn: number;
   message: string;
@@ -27,6 +29,7 @@ export async function sendReferalEmail({
   );
   const htmlContent = await ejs.renderFile(templatePath, {
     customerName: customer.name,
+    referredPersonName: referredPersonName,
     companyLogo: company.logo,
     companyName: company.name,
     companyTagline: company.tagLine,
@@ -38,7 +41,7 @@ export async function sendReferalEmail({
   const mailOptions = {
     from: `"${company.name}" <${company.email}>`,
     to: customer.email,
-    subject: `🎉 Happy Birthday from ${company.name}!`,
+    subject: `A Special Gift for You from  ${company.name}! Your Referral Coupon Inside 🎁!`,
     html: htmlContent,
   };
 

@@ -11,7 +11,7 @@ import { TaxGroupComponent } from "./tax-group-compnents.entity";
 
 @Entity({ name: "tax_groups" })
 export class TaxGroup {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: "int" })
   id: number;
   
   @Column({ type: "int", nullable: true, name: "tax_id" })

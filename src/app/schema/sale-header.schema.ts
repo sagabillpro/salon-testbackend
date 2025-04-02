@@ -16,9 +16,9 @@ export const SaleHeadersSchema: any = {
       type: "object",
       properties: {
         id: { type: "integer" },
-        name: { type: "string" },
+        // name: { type: "string" },
       },
-      required: ["id", "name"],
+      //  required: ["id", "name"],
       additionalProperties: false,
     },
     customerId: { type: "integer" },
@@ -31,6 +31,33 @@ export const SaleHeadersSchema: any = {
       items: {
         type: "object",
         properties: {
+          taxGroupComponents: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: {
+                  type: "integer",
+                  minimum: 1,
+                },
+                name: {
+                  type: "string",
+                  minLength: 1,
+                },
+                percentage: {
+                  type: "number",
+                  minimum: 0,
+                  maximum: 100,
+                },
+                taxAmount: {
+                  type: "number",
+                  minimum: 0,
+                },
+              },
+              required: ["id", "name", "percentage", "taxAmount"],
+              additionalProperties: false,
+            },
+          },
           txnHeader: {
             type: "object",
             properties: {
@@ -48,12 +75,12 @@ export const SaleHeadersSchema: any = {
             required: ["id", "name"],
             additionalProperties: false,
           },
-          tax: {
+          taxGroup: {
             type: "object",
             properties: {
               id: { type: "integer" },
               name: { type: "string" },
-              percentage: { type: "number" }, // changed from integer if decimals are possible
+              rate: { type: "number" }, // changed from integer if decimals are possible
             },
             required: ["id", "name"],
             additionalProperties: false,
@@ -81,11 +108,12 @@ export const SaleHeadersSchema: any = {
           modifiedDate: { type: "string", format: "date-time" },
         },
         required: [
+          "taxGroupComponents",
           "service",
           "amount",
           "createdDate",
           "modifiedDate",
-          "tax",
+          "taxGroup",
           "quantity",
           "rate",
         ],

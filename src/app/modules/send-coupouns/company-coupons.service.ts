@@ -16,6 +16,8 @@ import { handler } from "../../config/dbconfig";
 import { Contact } from "../contacts/entities/contact.entity";
 import { sendAnniverseryEmail } from "../../services/send-anniversery-mail.service";
 import { CoupounsList } from "./entities/coupons-list.entity";
+import { generateCode } from "../../utils/get-object-code.util";
+import { sendReferalEmail } from "../../services/send-referal-code.service";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<CompanyCoupouns>) => {
@@ -44,7 +46,7 @@ const findById = async (
 const create = async (data: CompanyCoupouns) => {
   try {
     const repo = await repository();
-    // data = await generateCode(26, data);
+    data = await generateCode(31, data);
     const respo = repo.create({
       ...data,
     });
@@ -289,7 +291,7 @@ const anniverseryScheduler = async () => {
 };
 
 //1. find multiple records
-const sendReferalCode = async (customer: Contact) => {
+const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
   try {
     const dataSource = await handler();
 
@@ -323,30 +325,29 @@ const sendReferalCode = async (customer: Contact) => {
 
     const code = generateCouponCode(5);
     if (customer.email) {
-      await sendAnniverseryEmail({
+      await sendReferalEmail({
+        referredPersonName,
         customer: {
           name: customer.name,
           email: customer.email,
         },
         company: {
-          tagLine: customer.company.tagLine,
+          tagLine: customer?.company?.tagLine,
           logo: customer?.company?.logo,
           name: customer?.company?.name,
           email: customer?.company?.email,
         },
         expiresIn: coupouns?.expiresIn,
-        message: coupouns.description,
+        message: coupouns?.description,
         couponCode: code,
       });
       couponsList.push({
-        discountPer: coupouns.discountPer,
+        discountPer: coupouns?.discountPer,
         code: code,
         couponId: coupouns.id,
         isUsed: 0,
-        companyId: coupouns.companyId,
-        expireAt: new Date(
-          new Date().getTime() + coupouns.expiresIn * 60 * 1000
-        ),
+        companyId: coupouns?.companyId,
+        expireAt: new Date(Date.now() + coupouns.expiresIn * 60 * 1000)
       });
     }
     //create and save couponsList
@@ -367,34 +368,34 @@ const validateCouponCode = async (
   customerId: number
 ) => {
   try {
-    // const dataSource = await handler();
-    // const repo = dataSource.getRepository(CoupounsList);
-    // const coupon = await repo.findOne({
-    //   where: {
-    //     code: couponCode,
-    //     companyId,
-    //     isUsed: 0,
-    //     //and not expired
-    //     expireAt: MoreThan(new Date()),
-    //     //and not used by the customer
-    //   },
-    // });
-    // if (!coupon) {
-    //   //customize below massage based on the error type
-    //   throw {
-    //     statusCode: 404,
-    //     message:
-    //       "The coupon you are looking for is either invalid or has expired.",
-    //   };
-    // }
+    const dataSource = await handler();
+    const repo = dataSource.getRepository(CoupounsList);
+    const coupon = await repo.findOne({
+      where: {
+        code: couponCode,
+        companyId,
+        isUsed: 0,
+        //and not expired
+        expireAt: MoreThan(new Date()),
+        //and not used by the customer
+      },
+    });
+    if (!coupon) {
+      //customize below massage based on the error type
+      throw {
+        statusCode: 404,
+        message:
+          "The coupon you are looking for is either invalid or has expired.",
+      };
+    }
     // //update coupon status to used
     // await repo.save({ ...coupon, isUsed: 1 });
     return {
       message: "Coupon code has been successfully used.",
       data: {
         customerId,
-        discountPer: 2,
-        couponId:2
+        discountPer: coupon.discountPer,
+        couponId:coupon.id
       },
     };
   } catch (error) {

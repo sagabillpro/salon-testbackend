@@ -2,15 +2,16 @@
   "name": "backendkftfoods",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "prestart": "npm run build",
-    "copy-ejs": "copyfiles -f -u 1 'src/templates/**/*.ejs' dist/templates",
-    "start": "node dist/index.js",
-    "dev": "nodemon dist/index.js"
-  },
+  "main": "index.js","scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "clean": "rimraf dist",
+  "copy-assets": "cpx \"src/app/templates/**/*\" \"dist/app/templates\" && cpx \".env\" \"dist/\"",
+  "copy-ejs": "cpx \"src/app/templates/**/*\" \"dist/app/templates\"",
+  "build": "npm run clean && tsc && npm run copy-assets",
+  "prestart": "npm run build",
+  "start": "node dist/index.js",
+  "dev": "concurrently \"tsc --watch\" \"nodemon --watch dist dist/index.js\" \"cpx 'src/app/templates/**/*' 'dist/app/templates' --watch\" \"cpx '.env' 'dist/' --watch\""
+},
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -41,7 +42,11 @@
     "@types/morgan": "^1.9.9",
     "@types/node": "^22.5.4",
     "@types/nodemailer": "^6.4.16",
+    "concurrently": "^9.1.2",
     "copyfiles": "^2.4.1",
-    "nodemon": "^3.1.9"
+    "cpx": "^1.5.0",
+    "nodemon": "^3.1.9",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.8.2"
   }
 }

@@ -17,6 +17,7 @@ import { Branch } from "../../branches/entities/branches.entity";
 import { Users } from "../../auth/entities/user.entity";
 import { handler } from "../../../config/dbconfig";
 import { Taxes } from "../../taxes/entities/taxes.entity";
+import { TaxNew } from "../../taxes/entities/taxes-new.entity";
 
 @Entity("company")
 export class Company {
@@ -40,7 +41,7 @@ export class Company {
 
   @Column({ type: "int", nullable: false })
   taxId: number;
-
+  
   @Column({ type: "varchar", length: 150, nullable: false, unique: true })
   email: string;
 
@@ -53,6 +54,9 @@ export class Company {
   @Column({ type: "varchar", length: 255, nullable: true })
   upiId: string;
 
+  @Column({ type: "varchar", length: 255, nullable: true })
+  gstInNo: string;
+  
   @Column({ type: "varchar", length: 255, nullable: true })
   tagLine: string;
 
@@ -95,9 +99,9 @@ export class Company {
   @Column({ type: "int", default: 0 })
   isInactive: number;
 
-  @ManyToOne(() => Taxes, { nullable: true })
+  @ManyToOne(() => TaxNew, { nullable: true })
   @JoinColumn()
-  tax: Taxes;
+  tax: TaxNew;
 
   @OneToMany(() => Branch, (line) => line.company, {
     cascade: ["soft-remove"],
