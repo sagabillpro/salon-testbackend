@@ -55,7 +55,6 @@ export const getModelSchema = async <T extends EntityTarget<T>>(
     };
     //4. loop through properties
     modelProperties.forEach((value) => {
-      console.log("value",value);
       //1. get the type according to the name
       if (typeOrmToAjvTypesMapping[`${value.type}`]) {
         schemaObject["properties"][`${value.name}`] = {
@@ -183,7 +182,6 @@ export const validateRequestBody = <T extends EntityTarget<T>>(model: T) => {
       }
       next();
     } catch (error) {
-      console.log(error);
       res.status(422).json(error);
     }
   };

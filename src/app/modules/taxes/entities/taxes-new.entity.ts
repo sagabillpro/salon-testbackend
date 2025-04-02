@@ -4,7 +4,7 @@ import { TaxGroup } from "./tax-groups.entity";
 
 @Entity({ name: "taxes_new" })
 export class TaxNew {
-    @PrimaryGeneratedColumn()
+    @PrimaryGeneratedColumn({ type: "int" })
     id: number;
 
     @Column({ type: "varchar", length: 50, nullable: false })

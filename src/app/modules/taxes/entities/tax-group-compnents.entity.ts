@@ -9,7 +9,7 @@ import { TaxGroup } from "./tax-groups.entity";
 
 @Entity({ name: "tax_group_components" })
 export class TaxGroupComponent {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ type: "int" })
   id: number;
 
 
