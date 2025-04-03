@@ -30,12 +30,13 @@ router.get(
 );
 
 router.get(
-  "/stocks",
+  "/stocks/:id",
   authenticateToken,
   async (req: Request, res: Response, next: NextFunction) => {
     try {
+      const id = Number(req.params.id);
       const result = await service.findStocks(
-        await getQuerySecure(req, StockAdjustmentHeaders)
+        id
       );
       res.send(result);
     } catch (error) {

@@ -27,13 +27,13 @@ const find = async (filter?: FindManyOptions<StockAdjustmentHeaders>) => {
 };
 
 //1. find multiple records
-const findStocks = async (filter?: FindManyOptions<StockAdjustmentHeaders>) => {
+const findStocks = async (id: number) => {
   try {
     const dataSource = await handler();
     const stockRepo = dataSource.getRepository(ItemsStockTrack);
     const stockResponse = await stockRepo.find({
       where: {
-        ...filter?.where,
+        ...(id ? { serviceId: id } : {}),
         isInactive: 0,
       },
       select: {
