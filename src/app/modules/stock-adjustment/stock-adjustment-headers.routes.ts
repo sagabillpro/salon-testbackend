@@ -13,6 +13,7 @@ import ejs from "ejs";
 import { validateBodyManual } from "../../utils/validate-req-body.util";
 import { stockAdjustmentSchema } from "../../schema/stock-adjustment.schema";
 import getQuerySecure from "../../utils/get-query-secure.util";
+import { AuthenticatedRequest } from "../../types";
 router.get(
   "/",
   authenticateToken,
@@ -32,12 +33,11 @@ router.get(
 router.get(
   "/stocks/:id",
   authenticateToken,
-  async (req: Request, res: Response, next: NextFunction) => {
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
+      const user: any = req.user;
       const id = Number(req.params.id);
-      const result = await service.findStocks(
-        id
-      );
+      const result = await service.findStocks(id, user.companyId);
       res.send(result);
     } catch (error) {
       next(error);
