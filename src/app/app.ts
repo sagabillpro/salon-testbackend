@@ -11,6 +11,7 @@ import CompanyCoupounsService from "./modules/send-coupouns/company-coupons.serv
 let dataSource: DataSource;
 let httpServer: http.Server; // Keep reference to the server
 import cron from "node-cron";
+import axios from "axios";
 export const startServer = async () => {
   try {
     const app = express();
@@ -19,11 +20,36 @@ export const startServer = async () => {
     dataSource = await handler(); // Establish DB connection
     app.get("/", (req, res) => {
       res.json({
-        "status":"ok",
-        "company": "SAGA BILL PRO",
-        "application": "SAGA BILL PRO",
+        status: "ok",
+        company: "SAGA BILL PRO",
+        application: "SAGA BILL PRO",
       });
     });
+
+    app.get("/ping", (req, res) => {
+      res.json({
+        status: "ok",
+      });
+    });
+    // Cron job to run every 5 minutes
+    if (process.env.NODE_ENV === "development") {
+      cron.schedule("*/5 * * * *", async () => {
+        try {
+          const response = await axios.get(
+            "https://saga-backend-2sva.onrender.com/ping"
+          );
+          console.log(
+            `[${new Date().toISOString()}] API Ping Successful:`,
+            response.status
+          );
+        } catch (error) {
+          console.error(
+            `[${new Date().toISOString()}] API Ping Failed:`,
+            error.message
+          );
+        }
+      });
+    }
 
     // Register routes
     registerRoutes(app);
