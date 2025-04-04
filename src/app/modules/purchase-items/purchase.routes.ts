@@ -17,7 +17,7 @@ const router = Router();
 
 router.get(
   "/",
-    authenticateToken,
+  authenticateToken,
   validateFilter(PurchaseHeaders),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -33,7 +33,7 @@ router.get(
 
 router.post(
   "/",
-    authenticateToken,
+  authenticateToken,
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -98,7 +98,7 @@ router.post(
   validateBodyManual(PurchaseHeadersSchema),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await purchaseService.createBulk(req,req.body);
+      const result = await purchaseService.createBulk(req, req.body);
       res.send(result);
     } catch (error) {
       next(error);
@@ -126,11 +126,14 @@ router.get(
     try {
       const id = Number(req.params.id);
       const invoiceData = await purchaseService.purchaseInvoiceData(id);
-      
+
       // Render the EJS template
-      const templatePath = path.join(__dirname, "../../templates/purchase-invoice.template.ejs");
+      const templatePath = path.join(
+        __dirname,
+        "../../templates/purchase-invoice.template.ejs"
+      );
       const html = await ejs.renderFile(templatePath, invoiceData);
-      
+
       res.send(html);
     } catch (error) {
       next(error);
