@@ -865,6 +865,7 @@ const createBulk = async (
         phoneNumber: true,
         signature: true,
         logo: true,
+        gstInNo: true,
       },
     });
     if (!company) {
@@ -877,6 +878,7 @@ const createBulk = async (
       companyPhone: company.phoneNumber,
       signatureUrl: company.signature,
       logoUrl: company.logo,
+      gstNumber: company.gstInNo,
     };
 
     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
@@ -1208,6 +1210,7 @@ const saleInvoiceData = async (id: number) => {
         phoneNumber: true,
         signature: true,
         logo: true,
+        gstInNo:true
       },
     });
 
@@ -1230,6 +1233,7 @@ const saleInvoiceData = async (id: number) => {
       companyPhone: company.phoneNumber,
       signatureUrl: company.signature,
       logoUrl: company.logo,
+      gstNumber:company.gstInNo
     };
     const invoiceDetails = {
       invoiceNumber: data.code,

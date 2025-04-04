@@ -10,6 +10,7 @@ import nodemailer from "nodemailer";
 interface invoiceDetails {
   companyName: string;
   companyAddress: string;
+  gstNumber: string;
   companyEmail: string;
   companyPhone: string;
   signatureUrl: string;
