@@ -131,8 +131,11 @@ router.get(
 );
 router.get(
   "/revenue",
+  authenticateToken,
+
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
+      const user: any = req?.user;
       const dataSource = await handler();
       const sales = await dataSource
         .getRepository(SaleLines)
@@ -144,6 +147,7 @@ router.get(
           `SUM(CASE WHEN saleLines.isService = 0 THEN saleLines.amount ELSE 0 END) AS "itemRevenue"`,
         ])
         .where("sale.txnDate IS NOT NULL") // Ensuring txnDate exists
+        .andWhere("sale.companyId = :companyId", { companyId: user.companyId })
         .groupBy(`TO_CHAR(DATE_TRUNC('month', sale."txnDate"::TIMESTAMP), 'Mon')`)
         .orderBy(`MIN(DATE_TRUNC('month', sale."txnDate"::TIMESTAMP))`, "ASC")
         .getRawMany();
