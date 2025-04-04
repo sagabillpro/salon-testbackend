@@ -193,7 +193,6 @@ export const PurchaseHeadersSchema: any = {
     "paymentTypeId",
     "purchaseLines",
     "subTotal",
-    "grandTotal",
     "totalDiscount",
     "totalTax",
   ],

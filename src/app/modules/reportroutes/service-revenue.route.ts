@@ -63,6 +63,7 @@ router.get(
 );
 router.get(
   "/download",
+  authenticateToken,
   validateFilterManual(ReportSchema),
   async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
     try {
