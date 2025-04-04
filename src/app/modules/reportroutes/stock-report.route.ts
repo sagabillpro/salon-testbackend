@@ -13,7 +13,7 @@ const router = Router();
 
 router.get(
   "/",
-    authenticateToken,
+  authenticateToken,
   validateFilter(ItemsStockTrack),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -29,6 +29,7 @@ router.get(
 
 router.get(
   "/download",
+  authenticateToken,
   validateFilter(ItemsStockTrack),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
