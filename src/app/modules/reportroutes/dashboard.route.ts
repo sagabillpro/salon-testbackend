@@ -129,5 +129,37 @@ router.get(
     }
   }
 );
+router.get(
+  "/revenue",
+  async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+    try {
+      const dataSource = await handler();
+      const sales = await dataSource
+        .getRepository(SaleLines)
+        .createQueryBuilder("saleLines")
+        .leftJoin("saleLines.txnHeader", "sale") // Joining SaleHeaders to access txnDate
+        .select([
+          `TO_CHAR(DATE_TRUNC('month', sale."txnDate"::TIMESTAMP), 'Mon') AS "month"`,
+          `SUM(CASE WHEN saleLines.isService = 1 THEN saleLines.amount ELSE 0 END) AS "serviceRevenue"`,
+          `SUM(CASE WHEN saleLines.isService = 0 THEN saleLines.amount ELSE 0 END) AS "itemRevenue"`,
+        ])
+        .where("sale.txnDate IS NOT NULL") // Ensuring txnDate exists
+        .groupBy(`TO_CHAR(DATE_TRUNC('month', sale."txnDate"::TIMESTAMP), 'Mon')`)
+        .orderBy(`MIN(DATE_TRUNC('month', sale."txnDate"::TIMESTAMP))`, "ASC")
+        .getRawMany();
+
+      const mainData = sales.map((sale) => ({
+        month: sale.month, // Already in "Mon" format (e.g., "Jan")
+        serviceRevenue: parseFloat(sale.serviceRevenue) || 0,
+        itemRevenue: parseFloat(sale.itemRevenue) || 0,
+      }));
+
+      res.send(mainData);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
+
 
 export default new Route("/dashboards", router);
