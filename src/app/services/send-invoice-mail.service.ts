@@ -1,6 +1,11 @@
 import path from "path";
 import { transporter } from "../config/smtpconfig";
 import * as ejs from "ejs";
+import dotenv from "dotenv";
+
+// Load environment variables from .env file
+dotenv.config({ path: path.join(__dirname, "../../.env") });
+import nodemailer from "nodemailer";
 
 interface invoiceDetails {
   companyName: string;
@@ -32,6 +37,12 @@ interface invoiceDetails {
     taxAmount: number;
     lineTotal: number;
   }[];
+  credentials: {
+    mailerUsername: string;
+    mailerPassword: string;
+    mailerHost: string;
+    mailerPort: string;
+  };
 }
 // class invoiceDetails {
 //   customer: string;
@@ -53,13 +64,22 @@ interface invoiceDetails {
 //   }[];
 // }
 export default async function invoiceMailer<T extends invoiceDetails>(data: T) {
+ 
   try {
     const templatePath = path.join(
       __dirname,
       "../templates",
       "sale-invoice.template.ejs"
     );
-
+    const transporter = nodemailer.createTransport({
+      host: data.credentials.mailerHost,
+      port: Number(data.credentials.mailerPort),
+      secure: true, // Use `true` for port 465, `false` for all other ports
+      auth: {
+        user:data.credentials.mailerUsername,
+        pass: data.credentials.mailerPassword,
+      },
+    });
     const info = await transporter.sendMail({
       from: `${data.companyName} <${data.companyEmail}>`,
       // '"JH hair & Beauty Studio" <jawedhabibgad@gmail.com>', // sender address
@@ -74,7 +94,7 @@ export default async function invoiceMailer<T extends invoiceDetails>(data: T) {
       }), // html body
     });
   } catch (e) {
-    console.log(e);
+
     throw e;
   }
 }

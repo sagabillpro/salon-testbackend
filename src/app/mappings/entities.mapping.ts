@@ -5,6 +5,7 @@ import {
   Country,
   DContactType,
   DCoupounType,
+  DCredentialTypes,
   DDateRangeType,
   DFeatureType,
   DIndustryType,
@@ -49,6 +50,7 @@ import { TaxGroup } from "../modules/taxes/entities/tax-groups.entity";
 import { TaxNew } from "../modules/taxes/entities/taxes-new.entity";
 import { TaxGroupComponent } from "../modules/taxes/entities/tax-group-compnents.entity";
 import { CustomerVisit } from "../modules/sale-items/entities/customer-visits.entity";
+import { CompanyCredentials } from "../modules/company/entities/company-credentials.entity";
 
 export const entities:
   | MixedList<string | Function | EntitySchema<any>>
@@ -82,6 +84,7 @@ export const entities:
   DContactType,
   Contact,
   DDateRangeType,
+  DCredentialTypes,
   Branch,
   Company,
   Feature,
@@ -103,6 +106,7 @@ export const entities:
   TaxGroup,
   TaxNew,
   TaxGroupComponent,
-  CustomerVisit
+  CustomerVisit,
+  CompanyCredentials
  // Array.isArray(historyEntities)&& historyEntities?.map((entity) => entity)
 ];

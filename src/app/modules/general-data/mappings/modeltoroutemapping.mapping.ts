@@ -13,6 +13,7 @@ import {
   DIndustryType,
   DTransactionStatus,
   DCoupounType,
+  DCredentialTypes,
 } from "../entities";
 import { TaxNew } from "../../taxes/entities/taxes-new.entity";
 import { TaxGroup } from "../../taxes/entities/tax-groups.entity";
@@ -35,4 +36,5 @@ export const routeToEntityMap: {
   "/coupons-types": DCoupounType,
   "/taxes-new": TaxNew,
   "/tax-groups": TaxGroup,
+  "/credential-types": DCredentialTypes,
 };

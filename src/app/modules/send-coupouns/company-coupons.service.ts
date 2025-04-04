@@ -18,6 +18,7 @@ import { sendAnniverseryEmail } from "../../services/send-anniversery-mail.servi
 import { CoupounsList } from "./entities/coupons-list.entity";
 import { generateCode } from "../../utils/get-object-code.util";
 import { sendReferalEmail } from "../../services/send-referal-code.service";
+import { CompanyCredentials } from "../company/entities/company-credentials.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<CompanyCoupouns>) => {
@@ -135,12 +136,32 @@ const birthdayScheduler = async () => {
         "company.tagLine",
       ])
       .getMany();
+    const companyCredentialsRepo = dataSource.getRepository(CompanyCredentials);
+    //fetch company credentials and create companyId AND credentials mappping object where company id in uniques
+    const companyIdCredentialsMap: { [key: number]: CompanyCredentials } = {};
+    const companyCredentials = await companyCredentialsRepo.find({
+      where: {
+        companyId: In(uniques),
+        credentialTypeId: 1,
+        isInactive: 0,
+      },
+    });
+    companyCredentials.forEach((c) => {
+      companyIdCredentialsMap[c.companyId] = c;
+    });
 
     const couponsList: CoupounsList[] = [];
     const emailPromises = customers.map(async (record) => {
+      // const credentials = await companyCredentialsRepo.findOne({
+      //   where: {
+      //     companyId: record.companyId,
+      //     credentialTypeId: 1,
+      //     isInactive: 0,
+      //   },
+      // });
       const code = generateCouponCode(5);
       //     const couponCode = await db.getOrGenerateCoupon(customer.id, "BIRTHDAY");
-      if (record.email) {
+      if (record.email && companyIdCredentialsMap[record.companyId]) {
         couponsList.push({
           discountPer: companyIdCouponIdMap[record.companyId].discountPer,
           code: code,
@@ -167,6 +188,12 @@ const birthdayScheduler = async () => {
           expiresIn: companyIdCouponIdMap[record.company.id]?.expiresIn,
           message: companyIdCouponIdMap[record.company.id]?.description,
           couponCode: code,
+          credentials: {
+            mailerUsername: companyIdCredentialsMap[record.companyId]?.userName,
+            mailerPassword: companyIdCredentialsMap[record.companyId]?.password,
+            mailerHost: companyIdCredentialsMap[record.companyId]?.host,
+            mailerPort: companyIdCredentialsMap[record.companyId]?.port,
+          },
         });
       }
     });
@@ -179,7 +206,6 @@ const birthdayScheduler = async () => {
     return;
     //iterate through coupouns
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -242,11 +268,24 @@ const anniverseryScheduler = async () => {
         "company.tagLine",
       ])
       .getMany();
+    const companyCredentialsRepo = dataSource.getRepository(CompanyCredentials);
+    //fetch company credentials and create companyId AND credentials mappping object where company id in uniques
+    const companyIdCredentialsMap: { [key: number]: CompanyCredentials } = {};
+    const companyCredentials = await companyCredentialsRepo.find({
+      where: {
+        companyId: In(uniques),
+        credentialTypeId: 1,
+        isInactive: 0,
+      },
+    });
+    companyCredentials.forEach((c) => {
+      companyIdCredentialsMap[c.companyId] = c;
+    });
     const couponsList: CoupounsList[] = [];
     const emailPromises = customers.map(async (record) => {
       const code = generateCouponCode(5);
       //     const couponCode = await db.getOrGenerateCoupon(customer.id, "BIRTHDAY");
-      if (record.email) {
+      if (record.email && companyIdCredentialsMap[record.companyId]) {
         couponsList.push({
           discountPer: companyIdCouponIdMap[record.companyId].discountPer,
           code: code,
@@ -273,6 +312,12 @@ const anniverseryScheduler = async () => {
           expiresIn: companyIdCouponIdMap[record.company.id]?.expiresIn,
           message: companyIdCouponIdMap[record.company.id]?.description,
           couponCode: code,
+          credentials: {
+            mailerUsername: companyIdCredentialsMap[record.companyId]?.userName,
+            mailerPassword: companyIdCredentialsMap[record.companyId]?.password,
+            mailerHost: companyIdCredentialsMap[record.companyId]?.host,
+            mailerPort: companyIdCredentialsMap[record.companyId]?.port,
+          },
         });
       }
     });
@@ -285,13 +330,15 @@ const anniverseryScheduler = async () => {
     return;
     //iterate through coupouns
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
 
 //1. find multiple records
-const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
+const sendReferalCode = async (
+  customer: Contact,
+  referredPersonName: string
+) => {
   try {
     const dataSource = await handler();
 
@@ -322,9 +369,16 @@ const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
       return;
     }
     const couponListRepo = dataSource.getRepository(CoupounsList);
-
+    const companyCredentialsRepo = dataSource.getRepository(CompanyCredentials);
+    const credentials = await companyCredentialsRepo.findOne({
+      where: {
+        companyId: customer.companyId,
+        credentialTypeId: 1,
+        isInactive: 0,
+      },
+    });
     const code = generateCouponCode(5);
-    if (customer.email) {
+    if (customer.email && credentials) {
       await sendReferalEmail({
         referredPersonName,
         customer: {
@@ -340,6 +394,12 @@ const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
         expiresIn: coupouns?.expiresIn,
         message: coupouns?.description,
         couponCode: code,
+        credentials: {
+          mailerHost: credentials.host,
+          mailerPort: credentials.port,
+          mailerUsername: credentials.userName,
+          mailerPassword: credentials.password,
+        },
       });
       couponsList.push({
         discountPer: coupouns?.discountPer,
@@ -347,7 +407,7 @@ const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
         couponId: coupouns.id,
         isUsed: 0,
         companyId: coupouns?.companyId,
-        expireAt: new Date(Date.now() + coupouns.expiresIn * 60 * 1000)
+        expireAt: new Date(Date.now() + coupouns.expiresIn * 60 * 1000),
       });
     }
     //create and save couponsList
@@ -356,7 +416,6 @@ const sendReferalCode = async (customer: Contact,referredPersonName:string) => {
     return;
     //iterate through coupouns
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
@@ -395,11 +454,10 @@ const validateCouponCode = async (
       data: {
         customerId,
         discountPer: coupon.discountPer,
-        couponId:coupon.id
+        couponId: coupon.id,
       },
     };
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };

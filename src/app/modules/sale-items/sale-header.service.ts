@@ -699,6 +699,7 @@ import { CoupounsList } from "../send-coupouns/entities/coupons-list.entity";
 import { Request } from "express";
 import { AuthenticatedRequest } from "../../types";
 import { CustomerVisit } from "./entities/customer-visits.entity";
+import { CompanyCredentials } from "../company/entities/company-credentials.entity";
 
 //1. find multiple records
 const find = async (filter?: FindManyOptions<SaleHeaders>) => {
@@ -879,6 +880,14 @@ const createBulk = async (
     };
 
     const itemAvailableRepo = dataSource.getRepository(ItemAvailable);
+    const companyCredentialsRepo = dataSource.getRepository(CompanyCredentials);
+    const credentials = await companyCredentialsRepo.findOne({
+      where: {
+        companyId: user.companyId,
+        credentialTypeId: 1,
+        isInactive: 0,
+      },
+    });
     const itemStockTrack = dataSource.getRepository(ItemsStockTrack);
     data = await generateCode(19, data);
     let result: SaleHeaders = new SaleHeaders();
@@ -1134,7 +1143,9 @@ const createBulk = async (
       }
     );
     console.log("check 10");
-    if (customer.email) {
+    //get company credentials for company
+
+    if (customer && credentials) {
       // await invoiceMailer({
       //   customer: customer.name,
       //   txnDate: new Date(data.txnDate).toLocaleDateString(),
@@ -1152,11 +1163,16 @@ const createBulk = async (
         ...invoiceDetails,
         ...customerDetails,
         items: newInvoiceItems,
+        credentials: {
+          mailerHost: credentials.host,
+          mailerPort: credentials.port,
+          mailerUsername: credentials.userName,
+          mailerPassword: credentials.password,
+        },
       });
     }
     return result;
   } catch (error) {
-    console.log(error);
     throw error;
   }
 };
