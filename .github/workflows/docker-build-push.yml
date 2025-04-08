@@ -33,11 +33,6 @@ jobs:
         with:
           images: sagabillpro/saga_main # IMPORTANT: Replace with your Docker Hub username and repo name
           tags: |
-            # Tag with the Git tag on release events
-            type=ref,event=release
-            # Tag with 'latest' on pushes to the default branch (main)
-            type=raw,value=latest,enable={{is_default_branch}}
-            # Tag with the short Git commit SHA
             type=sha,prefix=,format=short
 
       - name: Build and push Docker image
